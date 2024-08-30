@@ -72,4 +72,27 @@ class Predictions {
             })
         }
     }
+    updatePrediction(req, res) {
+        try {
+            const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body
+            const strQry = `
+            UPDATE Predictions
+            SET subcategoryID = ?, SOURCE = ?, predictionDate = ?, VALUE = ?, bullishBearish = ?
+            WHERE predictionID = ${req.params.ID};
+            `
+            db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish], (err) => {
+                if (err) throw new Error('Error updating prediction.')
+                    res.json({
+                status: res.statusCode,
+            msg: "Prediction updated successfully."
+        })
+            })
+        } catch (e) {
+            res.status(500).json({
+                status: 500,
+                msg: "Error updating prediction."
+            })
+        }
+    }
+    
 }
