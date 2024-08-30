@@ -1,31 +1,30 @@
 import express from 'express';
-import { Predictions } from '../model/Predictions.js';
-import { fetchGoogleTrendsData } from '../services/googleTrendsService.js';
-import { fetchTwitterData } from '../services/twitterService.js';
+import { Predictions } from '../model/Predictions.js'; 
 
-const predictionsRouter = express.Router()
+const predictionsRouter = express.Router();
+const predictions = new Predictions(); // Create an instance of Predictions
 
-predictionsRouter.use(express.json())
+predictionsRouter.use(express.json());
 
 predictionsRouter.get('/', (req, res) => {
-    Predictions.fetchPredictions(req, res)
-})
+    predictions.fetchPredictions(req, res); // Call instance method
+});
 
 predictionsRouter.get('/:ID', (req, res) => {
-    Predictions.fetchPrediction(req, res)
-})
+    predictions.fetchPrediction(req, res); // Call instance method
+});
 
 predictionsRouter.post('/', (req, res) => {
-    Predictions.addPrediction(req, res)
-})
+    predictions.addPrediction(req, res); // Call instance method
+});
 
 predictionsRouter.patch('/:ID', (req, res) => {
-    Predictions.updatePrediction(req, res)
-})
+    predictions.updatePrediction(req, res); // Call instance method
+});
 
 predictionsRouter.delete('/:ID', (req, res) => {
-    Predictions.deletePrediction(req, res)
-})
+    predictions.deletePrediction(req, res); // Call instance method
+});
 
 predictionsRouter.post('/google-trends', async (req, res) => {
     try {
@@ -35,37 +34,37 @@ predictionsRouter.post('/google-trends', async (req, res) => {
             Technology: 'iPhone AWS',
             'Food & Beverages': 'Coca-Cola McDonalds',
             Healthcare: 'Pfizer Clicks'
-        }
+        };
         
         const keywords = categoryQueries[category];
         if (!keywords) {
             return res.status(400).json({
                 status: 400,
                 msg: `No keywords defined for category: ${category}`
-            })
+            });
         }
 
         const googleTrendsResults = await fetchGoogleTrendsData(keywords);
 
         const averageValue = googleTrendsResults.default.averages[0];
-        await Predictions.fetchGoogleTrendsPrediction({
+        await predictions.fetchGoogleTrendsPrediction({
             body: {
                 subcategoryID,
                 keywords
             }
-        }, res)
+        }, res);
 
         res.json({
             status: res.statusCode,
             msg: "Google Trends prediction stored successfully."
-        })
+        });
     } catch (e) {
         res.status(500).json({
             status: 500,
             msg: "Error fetching Google Trends prediction."
-        })
+        });
     }
-})
+});
 
 predictionsRouter.post('/twitter', async (req, res) => {
     try {
@@ -75,25 +74,25 @@ predictionsRouter.post('/twitter', async (req, res) => {
             Technology: 'iPhone AWS',
             'Food & Beverages': 'Coca-Cola McDonalds',
             Healthcare: 'Pfizer Clicks'
-        }
+        };
         
         const query = categoryQueries[category];
         if (!query) {
             return res.status(400).json({
                 status: 400,
                 msg: `No query defined for category: ${category}`
-            })
+            });
         }
 
         const twitterResults = await fetchTwitterData(query);
 
         const tweetCount = twitterResults.length;
-        await Predictions.fetchTwitterPrediction({
+        await predictions.fetchTwitterPrediction({
             body: {
                 subcategoryID,
                 query
             }
-        }, res)
+        }, res);
 
         res.json({
             status: res.statusCode,
@@ -103,10 +102,10 @@ predictionsRouter.post('/twitter', async (req, res) => {
         res.status(500).json({
             status: 500,
             msg: "Error fetching Twitter prediction."
-        })
+        });
     }
-})
+});
 
 export {
     predictionsRouter
-}
+};

@@ -1,6 +1,6 @@
-import { connection as db } from "../config/index.js"
-import { fetchGoogleTrendsData } from '../services/googleTrendsService.js'
-import { fetchTwitterData } from '../services/twitterService.js'
+import { connection as db } from "../config/index.js";
+import { fetchGoogleTrendsData } from '../services/googleTrendsService.js';
+import { fetchTwitterData } from '../services/twitterService.js';
 
 class Predictions {
     fetchPredictions(req, res) {
@@ -14,7 +14,7 @@ class Predictions {
             ON S.categoryID = C.categoryID
             `
             db.query(strQry, (err, results) => {
-                if (err) throw new Error('An error occurred while retrieving predictions')
+                if (err) throw new Error('An error occurred while retrieving predictions');
                 res.json({
                     status: res.statusCode,
                     results
@@ -40,7 +40,7 @@ class Predictions {
             WHERE P.predictionID = ${req.params.ID}
             `
             db.query(strQry, (err, result) => {
-                if (err) throw new Error('Error fetching prediction')
+                if (err) throw new Error('Error fetching prediction');
                 res.json({
                     status: res.statusCode,
                     result: result[0]
@@ -56,13 +56,13 @@ class Predictions {
 
     addPrediction(req, res) {
         try {
-            const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body
+            const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body;
             const strQry = `
             INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
             VALUES (?, ?, ?, ?, ?)
             `
             db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish], (err, results) => {
-                if (err) throw new Error('Error adding prediction')
+                if (err) throw new Error('Error adding prediction');
                 res.json({
                     status: res.statusCode,
                     msg: "Prediction added successfully.",
@@ -79,14 +79,14 @@ class Predictions {
 
     updatePrediction(req, res) {
         try {
-            const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body
+            const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body;
             const strQry = `
             UPDATE Predictions
             SET subcategoryID = ?, SOURCE = ?, predictionDate = ?, VALUE = ?, bullishBearish = ?
             WHERE predictionID = ${req.params.ID}
             `
             db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish], (err) => {
-                if (err) throw new Error('Error updating prediction')
+                if (err) throw new Error('Error updating prediction');
                 res.json({
                     status: res.statusCode,
                     msg: "Prediction updated successfully."
@@ -107,7 +107,7 @@ class Predictions {
             WHERE predictionID = ${req.params.ID}
             `
             db.query(strQry, (err) => {
-                if (err) throw new Error('Error deleting prediction')
+                if (err) throw new Error('Error deleting prediction');
                 res.json({
                     status: res.statusCode,
                     msg: "Prediction deleted successfully."
@@ -132,7 +132,7 @@ class Predictions {
                 'Fast Food': ['McDonalds'],
                 'Pharmaceuticals': ['Pfizer'],
                 'Health Stores': ['Clicks']
-            };
+            }
 
             const generalTerm = req.body.category;
             const keywords = keywordsMap[generalTerm];
@@ -148,7 +148,7 @@ class Predictions {
             VALUES (?, 'google_trends', NOW(), ?, 'Bullish')
             `
             db.query(strQry, [req.body.subcategoryID, averageValue], (err, results) => {
-                if (err) throw new Error('Error inserting Google Trends prediction into database')
+                if (err) throw new Error('Error inserting Google Trends prediction into database');
                 res.json({
                     status: res.statusCode,
                     msg: "Google Trends prediction stored successfully."
@@ -176,20 +176,20 @@ class Predictions {
             }
 
             const generalTerm = req.body.category;
-            const keywords = keywordsMap[generalTerm];
+            const query = keywordsMap[generalTerm];
 
-            if (!keywords) {
+            if (!query) {
                 return res.status(400).json({ status: 400, msg: "Invalid category" });
             }
 
-            const twitterResults = await Promise.all(keywords.map(keyword => fetchTwitterData(keyword)));
-            const tweetCount = twitterResults.flat().length;
+            const twitterResults = await fetchTwitterData(query, 'ZA');
+            const tweetCount = twitterResults.length;
             const strQry = `
             INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
             VALUES (?, 'twitter', NOW(), ?, 'Bullish')
             `
             db.query(strQry, [req.body.subcategoryID, tweetCount], (err, results) => {
-                if (err) throw new Error('Error inserting Twitter prediction into database')
+                if (err) throw new Error('Error inserting Twitter prediction into database');
                 res.json({
                     status: res.statusCode,
                     msg: "Twitter prediction stored successfully."
@@ -206,4 +206,4 @@ class Predictions {
 
 export {
     Predictions
-} 
+}
