@@ -94,5 +94,29 @@ class Predictions {
             })
         }
     }
-    
+    deletePrediction(req, res) {
+
+        try {
+            const strQry = `
+            DELETE FROM Predictions
+            WHERE predictionID = ${req.params.ID};
+            `
+            db.query(strQry, (err) => {
+                if (err) throw new Error('Error deleting prediction.')
+                    res.json({
+                status: res.statusCode,
+            msg: "Prediction deleted successfully."
+        })
+            })
+        } catch (e) {
+            res.status(500).json({
+                status: 500,
+                msg: "Error deleting prediction."
+            })
+        }
+    }
+}
+
+export {
+    Predictions
 }
