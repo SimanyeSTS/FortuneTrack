@@ -6,7 +6,7 @@ class Users {
     fetchUsers(req, res) {
         try {
             const strQry = `
-            SELECT userID, firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile, createdAt, updatedAt
+            SELECT UserID, firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile, createdAt, updatedAt
             FROM Users; 
             `
             db.query(strQry, (err, results) => {
@@ -26,7 +26,7 @@ class Users {
     fetchUser(req, res) {
         try {
             const strQry = `
-            SELECT userID, firstName, lastName, userAge, gender, emailAdd, userPass, userProfile, createdAt, updatedAt
+            SELECT UserID, firstName, lastName, userAge, gender, emailAdd, userPass, userProfile, createdAt, updatedAt
             FROM Users
             WHERE UserID = ${req.params.ID}
             `
@@ -112,5 +112,28 @@ class Users {
             })
         }
     }
-    
+    deleteUser(req, res) {
+        try{
+            const strQry = `
+            DELETE FROM Users
+            WHERE UserID = ${req.params.ID};
+            `
+            db.query(strQry, (err) => {
+                if (err) throw new Error('Our apologies, the user couldn\'t be deleted. Please review your delete query to continue.')
+                    res.json({
+                status: res.statusCode,
+            msg: "Our apologies, the user couldn\'t be deleted. Please review your delete query to continue."})
+            res.json({
+                status: res.statusCode,
+                msg: "The user account has been successfully deleted."
+            })
+            })
+        } catch (e) {
+            res.json({
+                status: 404,
+                err: e.message
+            })
+        }
+    }
+
 }
