@@ -50,5 +50,26 @@ class Predictions {
         })
     }
        }
-
+    addPrediction(req, res) {
+        try {
+            const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body
+            const strQry = `
+            INSER INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
+            VALUES (?, ?, ?, ?, ?);
+            `
+            db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish], (err, results) => {
+                if (err) throw new Error('Error adding prediction.')
+                    res.json({
+                status: res.statusCode,
+            msg: "Prediction added successfully.",
+        result: results
+    })
+            })
+        } catch (e) {
+            res.status(500).json({
+                status: 500,
+                msg: "Error adding prediction."
+            })
+        }
+    }
 }
