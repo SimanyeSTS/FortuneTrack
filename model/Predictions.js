@@ -123,10 +123,26 @@ class Predictions {
 
     async fetchGoogleTrendsPrediction(req, res) {
         try {
-            const keywords = req.body.keywords
-            const googleTrendsResults = await fetchGoogleTrendsData(keywords)
+            const keywordsMap = {
+                'Furniture': ['Headboard'],
+                'Fashion': ['H&M'],
+                'Gadgets': ['iPhone'],
+                'Cloud Services': ['AWS'],
+                'Soft Drinks': ['Coca-Cola'],
+                'Fast Food': ['McDonalds'],
+                'Pharmaceuticals': ['Pfizer'],
+                'Health Stores': ['Clicks']
+            };
 
-            const averageValue = googleTrendsResults.default.averages[0]
+            const generalTerm = req.body.category;
+            const keywords = keywordsMap[generalTerm];
+
+            if (!keywords) {
+                return res.status(400).json({ status: 400, msg: "Invalid category" });
+            }
+
+            const googleTrendsResults = await fetchGoogleTrendsData(keywords, 'ZA');
+            const averageValue = googleTrendsResults.default.averages[0];
             const strQry = `
             INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
             VALUES (?, 'google_trends', NOW(), ?, 'Bullish')
@@ -148,10 +164,26 @@ class Predictions {
 
     async fetchTwitterPrediction(req, res) {
         try {
-            const query = req.body.query
-            const twitterResults = await fetchTwitterData(query)
+            const keywordsMap = {
+                'Furniture': ['Headboard'],
+                'Fashion': ['H&M'],
+                'Gadgets': ['iPhone'],
+                'Cloud Services': ['AWS'],
+                'Soft Drinks': ['Coca-Cola'],
+                'Fast Food': ['McDonalds'],
+                'Pharmaceuticals': ['Pfizer'],
+                'Health Stores': ['Clicks']
+            }
 
-            const tweetCount = twitterResults.length
+            const generalTerm = req.body.category;
+            const keywords = keywordsMap[generalTerm];
+
+            if (!keywords) {
+                return res.status(400).json({ status: 400, msg: "Invalid category" });
+            }
+
+            const twitterResults = await Promise.all(keywords.map(keyword => fetchTwitterData(keyword)));
+            const tweetCount = twitterResults.flat().length;
             const strQry = `
             INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
             VALUES (?, 'twitter', NOW(), ?, 'Bullish')
@@ -174,4 +206,4 @@ class Predictions {
 
 export {
     Predictions
-}
+} 
