@@ -15,7 +15,7 @@ const categoryQueries = {
 }
 
 export const fetchTwitterData = async (category) => {
-    const query = categoryQueries[category];
+    const query = categoryQueries[category];        
     
     if (!query) {
         throw new Error(`No query defined for category: ${category}`);
@@ -28,6 +28,6 @@ export const fetchTwitterData = async (category) => {
         return tweets.data
     } catch (err) {
         console.error("Error fetching Twitter data:", err)
-        throw err;
+        throw err
     }
 }

@@ -1,4 +1,4 @@
-import googleTrends from 'google-trends-api';
+const googleTrends = require('google-trends-api');
 
 const categoryKeywords = {
     Retail: ['Headboard', 'H&M'],
@@ -8,7 +8,7 @@ const categoryKeywords = {
 }
 
 export const fetchGoogleTrendsData = async (category) => {
-    const keywords = categoryKeywords[category];
+    const keywords = categoryKeywords[category]
     
     if (!keywords) {
         throw new Error(`No keywords defined for category: ${category}`)
