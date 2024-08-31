@@ -1,4 +1,7 @@
-import googleTrends from 'google-trends-api';
+import axios from 'axios';
+
+const API_KEY = '7aa255c98aabc6fa55c8fa11551cb563c8658ed4597f36fa76a02c52f88f164c'; // Replace with your actual API key
+const BASE_URL = 'https://serpapi.com/search'; // SerpAPI endpoint for Google Trends
 
 // Define keywords for various categories
 const categoryKeywords = {
@@ -16,8 +19,7 @@ const categoryKeywords = {
     'Health Stores': ['Clicks']
 }
 
-// Fetch Google Trends data for a given category
-export const fetchGoogleTrendsData = async (category) => {
+export async function fetchGoogleTrendsData(category) {
     const keywords = categoryKeywords[category];
 
     if (!keywords) {
@@ -27,12 +29,19 @@ export const fetchGoogleTrendsData = async (category) => {
     try {
         // Fetch interest over time for each keyword
         const results = await Promise.all(keywords.map(keyword => 
-            googleTrends.interestOverTime({ keyword, startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }) // Last 7 days
+            axios.get(BASE_URL, {
+                params: {
+                    api_key: API_KEY,
+                    engine: 'google_trends',
+                    q: keyword, // Keyword for SerpAPI
+                    // Add any other parameters as needed
+                }
+            })
         ));
-        
+
         // Process data to calculate lowest, average, and highest values
         const allValues = results.flatMap(result => {
-            const data = JSON.parse(result).default.timelineData;
+            const data = result.data.timelineData;
             return data.map(item => parseFloat(item.value[0]));
         });
 
@@ -53,8 +62,8 @@ export const fetchGoogleTrendsData = async (category) => {
             averageRecord,
             status
         };
-    } catch (e) {
-        console.error(`Error fetching Google Trends data for ${category}:`, e);
-        throw e;
+    } catch (error) {
+        console.error(`Error fetching Google Trends data for ${category}:`, error);
+        throw error;
     }
-};
+}

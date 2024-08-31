@@ -1,130 +1,168 @@
+import cron from 'node-cron';
 import { connection as db } from "../config/index.js";
-import { fetchGoogleTrendsData } from '../services/googleTrendsService.js';
-import { fetchTwitterData } from '../services/twitterService.js';
+import { fetchGoogleTrendsData } from '../services/serpApiService.js'; // Updated import
+// import { fetchTwitterData } from '../services/twitterService.js'; // Commented out
 
 class Predictions {
+    // Fetch all predictions from the database
     fetchPredictions(req, res) {
         try {
             const strQry = `
-            SELECT P.predictionID, P.subcategoryID, S.subcategoryName, C.categoryName, P.SOURCE, P.predictionDate, P.VALUE, P.bullishBearish
-            FROM Predictions P
-            JOIN Subcategories S
-            ON P.subcategoryID = S.subcategoryID
-            JOIN Categories C
-            ON S.categoryID = C.categoryID
-            `
+                SELECT P.predictionID, P.subcategoryID, S.subcategoryName, C.categoryName, P.SOURCE, P.predictionDate, P.VALUE, P.bullishBearish
+                FROM Predictions P
+                JOIN Subcategories S ON P.subcategoryID = S.subcategoryID
+                JOIN Categories C ON S.categoryID = C.categoryID
+            `;
             db.query(strQry, (err, results) => {
-                if (err) throw new Error('An error occurred while retrieving predictions');
+                if (err) {
+                    console.error('Error retrieving predictions:', err);
+                    return res.status(500).json({
+                        status: 500,
+                        msg: "Unable to fetch predictions. Please try again later."
+                    });
+                }
                 res.json({
                     status: res.statusCode,
                     results
-                })
-            })
+                });
+            });
         } catch (e) {
+            console.error('Error in fetchPredictions method:', e);
             res.status(500).json({
                 status: 500,
                 msg: "Unable to fetch predictions. Please try again later."
-            })
+            });
         }
     }
 
+    // Fetch a single prediction by ID
     fetchPrediction(req, res) {
         try {
             const strQry = `
-            SELECT P.predictionID, P.subcategoryID, S.subcategoryName, C.categoryName, P.SOURCE, P.predictionDate, P.VALUE, P.bullishBearish
-            FROM Predictions P
-            JOIN Subcategories S
-            ON P.subcategoryID = S.subcategoryID
-            JOIN Categories C
-            ON S.categoryID = C.categoryID
-            WHERE P.predictionID = ${req.params.ID}
-            `
-            db.query(strQry, (err, result) => {
-                if (err) throw new Error('Error fetching prediction');
+                SELECT P.predictionID, P.subcategoryID, S.subcategoryName, C.categoryName, P.SOURCE, P.predictionDate, P.VALUE, P.bullishBearish
+                FROM Predictions P
+                JOIN Subcategories S ON P.subcategoryID = S.subcategoryID
+                JOIN Categories C ON S.categoryID = C.categoryID
+                WHERE P.predictionID = ?
+            `;
+            db.query(strQry, [req.params.ID], (err, result) => {
+                if (err) {
+                    console.error('Error fetching prediction:', err);
+                    return res.status(500).json({
+                        status: 500,
+                        msg: "Unable to fetch the prediction. Please try again later."
+                    });
+                }
                 res.json({
                     status: res.statusCode,
                     result: result[0]
-                })
-            })
+                });
+            });
         } catch (e) {
+            console.error('Error in fetchPrediction method:', e);
             res.status(500).json({
                 status: 500,
                 msg: "Unable to fetch the prediction. Please try again later."
-            })
+            });
         }
     }
 
+    // Add a new prediction
     addPrediction(req, res) {
         try {
             const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body;
             const strQry = `
-            INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
-            VALUES (?, ?, ?, ?, ?)
-            `
+                INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
+                VALUES (?, ?, ?, ?, ?)
+            `;
             db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish], (err, results) => {
-                if (err) throw new Error('Error adding prediction');
+                if (err) {
+                    console.error('Error adding prediction:', err);
+                    return res.status(500).json({
+                        status: 500,
+                        msg: "Error adding prediction."
+                    });
+                }
                 res.json({
                     status: res.statusCode,
                     msg: "Prediction added successfully.",
                     result: results
-                })
-            })
+                });
+            });
         } catch (e) {
+            console.error('Error in addPrediction method:', e);
             res.status(500).json({
                 status: 500,
                 msg: "Error adding prediction."
-            })
+            });
         }
     }
 
+    // Update an existing prediction
     updatePrediction(req, res) {
         try {
             const { subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish } = req.body;
             const strQry = `
-            UPDATE Predictions
-            SET subcategoryID = ?, SOURCE = ?, predictionDate = ?, VALUE = ?, bullishBearish = ?
-            WHERE predictionID = ${req.params.ID}
-            `
-            db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish], (err) => {
-                if (err) throw new Error('Error updating prediction');
+                UPDATE Predictions
+                SET subcategoryID = ?, SOURCE = ?, predictionDate = ?, VALUE = ?, bullishBearish = ?
+                WHERE predictionID = ?
+            `;
+            db.query(strQry, [subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish, req.params.ID], (err) => {
+                if (err) {
+                    console.error('Error updating prediction:', err);
+                    return res.status(500).json({
+                        status: 500,
+                        msg: "Error updating prediction."
+                    });
+                }
                 res.json({
                     status: res.statusCode,
                     msg: "Prediction updated successfully."
-                })
-            })
+                });
+            });
         } catch (e) {
+            console.error('Error in updatePrediction method:', e);
             res.status(500).json({
                 status: 500,
                 msg: "Error updating prediction."
-            })
+            });
         }
     }
 
+    // Delete a prediction
     deletePrediction(req, res) {
         try {
             const strQry = `
-            DELETE FROM Predictions
-            WHERE predictionID = ${req.params.ID}
-            `
-            db.query(strQry, (err) => {
-                if (err) throw new Error('Error deleting prediction');
+                DELETE FROM Predictions
+                WHERE predictionID = ?
+            `;
+            db.query(strQry, [req.params.ID], (err) => {
+                if (err) {
+                    console.error('Error deleting prediction:', err);
+                    return res.status(500).json({
+                        status: 500,
+                        msg: "Error deleting prediction."
+                    });
+                }
                 res.json({
                     status: res.statusCode,
                     msg: "Prediction deleted successfully."
-                })
-            })
+                });
+            });
         } catch (e) {
+            console.error('Error in deletePrediction method:', e);
             res.status(500).json({
                 status: 500,
                 msg: "Error deleting prediction."
-            })
+            });
         }
     }
 
-    async fetchGoogleTrendsPrediction(req, res) {
+    // Store Google Trends predictions
+    async storeGoogleTrendsPrediction() {
         try {
             const keywordsMap = {
-                'Furniture': ['Headboard'],
+                'Retail': ['Headboard'],
                 'Fashion': ['H&M'],
                 'Gadgets': ['iPhone'],
                 'Cloud Services': ['AWS'],
@@ -132,40 +170,41 @@ class Predictions {
                 'Fast Food': ['McDonalds'],
                 'Pharmaceuticals': ['Pfizer'],
                 'Health Stores': ['Clicks']
+            };
+
+            for (const [category, keywords] of Object.entries(keywordsMap)) {
+                const googleTrendsResults = await fetchGoogleTrendsData(category);
+                const { lowestRecord, averageRecord, highestRecord, status } = googleTrendsResults;
+
+                const subcategoryID = await this.getSubcategoryID(category);
+
+                if (subcategoryID) {
+                    const strQry = `
+                        INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
+                        VALUES (?, 'google_trends', NOW(), ?, ?)
+                    `;
+                    db.query(strQry, [subcategoryID, averageRecord, status], (err) => {
+                        if (err) {
+                            console.error(`Error inserting Google Trends prediction for ${category}:`, err);
+                        } else {
+                            console.log(`Google Trends prediction for ${category} stored successfully.`);
+                        }
+                    });
+                } else {
+                    console.warn(`No subcategoryID found for category: ${category}`);
+                }
             }
-
-            const generalTerm = req.body.category;
-            const keywords = keywordsMap[generalTerm];
-
-            if (!keywords) {
-                return res.status(400).json({ status: 400, msg: "Invalid category" });
-            }
-
-            const googleTrendsResults = await fetchGoogleTrendsData(keywords, 'ZA');
-            const averageValue = googleTrendsResults.default.averages[0];
-            const strQry = `
-            INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
-            VALUES (?, 'google_trends', NOW(), ?, 'Bullish')
-            `
-            db.query(strQry, [req.body.subcategoryID, averageValue], (err, results) => {
-                if (err) throw new Error('Error inserting Google Trends prediction into database');
-                res.json({
-                    status: res.statusCode,
-                    msg: "Google Trends prediction stored successfully."
-                })
-            })
         } catch (e) {
-            res.status(500).json({
-                status: 500,
-                msg: "Error fetching Google Trends prediction."
-            })
+            console.error("Error fetching Google Trends prediction:", e);
         }
     }
 
-    async fetchTwitterPrediction(req, res) {
+    // Commented out Twitter prediction method
+    /*
+    async storeTwitterPrediction() {
         try {
             const keywordsMap = {
-                'Furniture': ['Headboard'],
+                'Retail': ['Headboard'],
                 'Fashion': ['H&M'],
                 'Gadgets': ['iPhone'],
                 'Cloud Services': ['AWS'],
@@ -173,37 +212,62 @@ class Predictions {
                 'Fast Food': ['McDonalds'],
                 'Pharmaceuticals': ['Pfizer'],
                 'Health Stores': ['Clicks']
+            };
+
+            for (const [category, query] of Object.entries(keywordsMap)) {
+                const twitterResults = await fetchTwitterData(category);
+                const tweetCount = twitterResults.averagePercentage;
+
+                const subcategoryID = await this.getSubcategoryID(category);
+
+                if (subcategoryID) {
+                    const strQry = `
+                        INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
+                        VALUES (?, 'twitter', NOW(), ?, 'Bullish')
+                    `;
+                    db.query(strQry, [subcategoryID, tweetCount], (err) => {
+                        if (err) {
+                            console.error(`Error inserting Twitter prediction for ${category}:`, err);
+                        } else {
+                            console.log(`Twitter prediction for ${category} stored successfully.`);
+                        }
+                    });
+                } else {
+                    console.warn(`No subcategoryID found for category: ${category}`);
+                }
             }
-
-            const generalTerm = req.body.category;
-            const query = keywordsMap[generalTerm];
-
-            if (!query) {
-                return res.status(400).json({ status: 400, msg: "Invalid category" });
-            }
-
-            const twitterResults = await fetchTwitterData(query, 'ZA');
-            const tweetCount = twitterResults.length;
-            const strQry = `
-            INSERT INTO Predictions (subcategoryID, SOURCE, predictionDate, VALUE, bullishBearish)
-            VALUES (?, 'twitter', NOW(), ?, 'Bullish')
-            `
-            db.query(strQry, [req.body.subcategoryID, tweetCount], (err, results) => {
-                if (err) throw new Error('Error inserting Twitter prediction into database');
-                res.json({
-                    status: res.statusCode,
-                    msg: "Twitter prediction stored successfully."
-                })
-            })
         } catch (e) {
-            res.status(500).json({
-                status: 500,
-                msg: "Error fetching Twitter prediction."
-            })
+            console.error("Error fetching Twitter prediction:", e);
         }
+    }
+    */
+
+    // Retrieve subcategoryID by category name
+    async getSubcategoryID(category) {
+        const strQry = `SELECT subcategoryID FROM Subcategories WHERE subcategoryName = ?`;
+        return new Promise((resolve, reject) => {
+            db.query(strQry, [category], (err, results) => {
+                if (err) {
+                    console.error('Error retrieving subcategoryID:', err);
+                    return reject(err);
+                }
+                console.log(`Query results for ${category}:`, results); // Log query results
+                if (results.length === 0) {
+                    console.warn(`No subcategoryID found for category: ${category}`);
+                }
+                resolve(results[0]?.subcategoryID);
+            });
+        });
     }
 }
+
+// Schedule the cron job to run daily at midnight
+cron.schedule('0 0 * * *', () => {
+    const predictions = new Predictions();
+    predictions.storeGoogleTrendsPrediction();
+    // predictions.storeTwitterPrediction(); // Commented out
+});
 
 export {
     Predictions
-}
+} 

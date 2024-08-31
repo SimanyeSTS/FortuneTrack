@@ -1,111 +1,73 @@
 import express from 'express';
-import { Predictions } from '../model/Predictions.js'; 
+import bodyParser from 'body-parser';
+import { Predictions } from '../model/Predictions.js'; // Adjust the import path if needed
 
-const predictionsRouter = express.Router()
-const predictions = new Predictions()
+const predictionsRouter = express.Router();
+const predictions = new Predictions(); // Create an instance of the Predictions class
 
-predictionsRouter.use(express.json())
+predictionsRouter.use(bodyParser.json());
 
+// Route to fetch all predictions
 predictionsRouter.get('/', (req, res) => {
-    predictions.fetchPredictions(req, res)
-})
+    predictions.fetchPredictions(req, res);
+});
 
+// Route to fetch a single prediction by ID
 predictionsRouter.get('/:ID', (req, res) => {
-    predictions.fetchPrediction(req, res)
-})
+    predictions.fetchPrediction(req, res);
+});
 
+// Route to add a new prediction
 predictionsRouter.post('/', (req, res) => {
-    predictions.addPrediction(req, res)
-})
+    predictions.addPrediction(req, res);
+});
 
+// Route to update an existing prediction
 predictionsRouter.patch('/:ID', (req, res) => {
-    predictions.updatePrediction(req, res)
-})
+    predictions.updatePrediction(req, res);
+});
 
+// Route to delete a prediction
 predictionsRouter.delete('/:ID', (req, res) => {
-    predictions.deletePrediction(req, res)
-})
+    predictions.deletePrediction(req, res);
+});
 
-predictionsRouter.post('/google-trends', async (req, res) => {
+// Route to store Google Trends predictions
+predictionsRouter.post('/store-google-trends', async (req, res) => {
     try {
-        const { category, subcategoryID } = req.body
-        const categoryQueries = {
-            Retail: 'Headboard H&M',
-            Technology: 'iPhone AWS',
-            'Food & Beverages': 'Coca-Cola McDonalds',
-            Healthcare: 'Pfizer Clicks'
-        }
-        
-        const keywords = categoryQueries[category]
-        if (!keywords) {
-            return res.status(400).json({
-                status: 400,
-                msg: `No keywords defined for category: ${category}`
-            })
-        }
-
-        const googleTrendsResults = await fetchGoogleTrendsData(keywords);
-
-        const averageValue = googleTrendsResults.default.averages[0];
-        await predictions.fetchGoogleTrendsPrediction({
-            body: {
-                subcategoryID,
-                keywords
-            }
-        }, res)
-
+        await predictions.storeGoogleTrendsPrediction();
         res.json({
             status: res.statusCode,
-            msg: "Google Trends prediction stored successfully."
-        })
+            msg: "Google Trends predictions stored successfully."
+        });
     } catch (e) {
+        console.error('Error storing Google Trends predictions:', e);
         res.status(500).json({
             status: 500,
-            msg: "Error fetching Google Trends prediction."
-        })
+            msg: "Error storing Google Trends predictions."
+        });
     }
-})
+});
 
-predictionsRouter.post('/twitter', async (req, res) => {
+// Uncomment the following lines if you want to expose endpoints for storing Twitter predictions only
+/*
+predictionsRouter.post('/store-twitter', async (req, res) => {
     try {
-        const { category, subcategoryID } = req.body;
-        const categoryQueries = {
-            Retail: 'Headboard H&M',
-            Technology: 'iPhone AWS',
-            'Food & Beverages': 'Coca-Cola McDonalds',
-            Healthcare: 'Pfizer Clicks'
-        }
-        
-        const query = categoryQueries[category];
-        if (!query) {
-            return res.status(400).json({
-                status: 400,
-                msg: `No query defined for category: ${category}`
-            })
-        }
-
-        const twitterResults = await fetchTwitterData(query);
-
-        const tweetCount = twitterResults.length;
-        await predictions.fetchTwitterPrediction({
-            body: {
-                subcategoryID,
-                query
-            }
-        }, res)
-
+        await predictions.storeTwitterPrediction();
         res.json({
             status: res.statusCode,
-            msg: "Twitter prediction stored successfully."
-        })
+            msg: "Twitter predictions stored successfully."
+        });
     } catch (e) {
+        console.error('Error storing Twitter predictions:', e);
         res.status(500).json({
             status: 500,
-            msg: "Error fetching Twitter prediction."
-        })
+            msg: "Error storing Twitter predictions."
+        });
     }
-})
+});
+*/
 
 export {
     predictionsRouter
-}
+};
