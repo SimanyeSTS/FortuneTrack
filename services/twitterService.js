@@ -1,4 +1,4 @@
-import { TwitterApi } from 'twitter-api-v2';
+const { TwitterApi } = require('twitter-api-v2');
 
 const twitterClient = new TwitterApi({
     appKey: process.env.TWITTER_APP_KEY,
@@ -8,17 +8,17 @@ const twitterClient = new TwitterApi({
 })
 
 const categoryQueries = {
-    Retail: 'Headboard H&M',
-    Technology: 'iPhone AWS',
-    'Food & Beverages': 'Coca-Cola McDonalds',
-    Healthcare: 'Pfizer Clicks'
+    Retail: ['Headboard H&M'],
+    Technology: ['iPhone AWS'],
+    'Food & Beverages': ['Coca-Cola McDonalds'],
+    Healthcare: ['Pfizer Clicks']
 }
 
 export const fetchTwitterData = async (category) => {
-    const query = categoryQueries[category];        
+    const query = categoryQueries[category]
     
     if (!query) {
-        throw new Error(`No query defined for category: ${category}`);
+        throw new Error(`No query defined for category: ${category}`)
     }
 
     try {
