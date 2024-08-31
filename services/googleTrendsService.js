@@ -1,4 +1,4 @@
-const googleTrends = require('google-trends-api');
+import googleTrends from 'google-trends-api';
 
 const categoryKeywords = {
     Retail: ['Headboard', 'H&M'],
