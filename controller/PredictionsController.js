@@ -1,55 +1,88 @@
-import express from 'express';
+import express from 'express'
 import bodyParser from 'body-parser';
-import { Predictions } from '../model/Predictions.js'; // Adjust the import path if needed
+import { Predictions } from '../model/Predictions.js'
 
-const predictionsRouter = express.Router();
-const predictions = new Predictions(); // Create an instance of the Predictions class
+const predictionsRouter = express.Router()
+const predictions = new Predictions()
 
-predictionsRouter.use(bodyParser.json());
+predictionsRouter.use(bodyParser.json())
 
-// Route to fetch all predictions
-predictionsRouter.get('/', (req, res) => {
-    predictions.fetchPredictions(req, res);
-});
+predictionsRouter.get('/', async (req, res) => {
+    try {
+        await predictions.fetchPredictions(req, res)
+    } catch (e) {
+        console.error('Error fetching all predictions:', e)
+        res.status(500).json({
+            status: 500,
+            msg: "Unable to fetch predictions. Please try again later."
+        })
+    }
+})
 
-// Route to fetch a single prediction by ID
-predictionsRouter.get('/:ID', (req, res) => {
-    predictions.fetchPrediction(req, res);
-});
+predictionsRouter.get('/:ID', async (req, res) => {
+    try {
+        await predictions.fetchPrediction(req, res)
+    } catch (e) {
+        console.error('Error fetching prediction by ID:', e)
+        res.status(500).json({
+            status: 500,
+            msg: "Unable to fetch the prediction. Please try again later."
+        })
+    }
+})
 
-// Route to add a new prediction
-predictionsRouter.post('/', (req, res) => {
-    predictions.addPrediction(req, res);
-});
+predictionsRouter.post('/', async (req, res) => {
+    try {
+        await predictions.addPrediction(req, res)
+    } catch (e) {
+        console.error('Error adding new prediction:', e)
+        res.status(500).json({
+            status: 500,
+            msg: "Error adding prediction."
+        })
+    }
+})
 
-// Route to update an existing prediction
-predictionsRouter.patch('/:ID', (req, res) => {
-    predictions.updatePrediction(req, res);
-});
+predictionsRouter.patch('/:ID', async (req, res) => {
+    try {
+        await predictions.updatePrediction(req, res)
+    } catch (e) {
+        console.error('Error updating prediction:', e)
+        res.status(500).json({
+            status: 500,
+            msg: "Error updating prediction."
+        })
+    }
+})
 
-// Route to delete a prediction
-predictionsRouter.delete('/:ID', (req, res) => {
-    predictions.deletePrediction(req, res);
-});
+predictionsRouter.delete('/:ID', async (req, res) => {
+    try {
+        await predictions.deletePrediction(req, res)
+    } catch (e) {
+        console.error('Error deleting prediction:', e)
+        res.status(500).json({
+            status: 500,
+            msg: "Error deleting prediction."
+        })
+    }
+})
 
-// Route to store Google Trends predictions
 predictionsRouter.post('/store-google-trends', async (req, res) => {
     try {
-        await predictions.storeGoogleTrendsPrediction();
+        await predictions.storeGoogleTrendsPrediction()
         res.json({
             status: res.statusCode,
             msg: "Google Trends predictions stored successfully."
         });
     } catch (e) {
-        console.error('Error storing Google Trends predictions:', e);
+        console.error('Error storing Google Trends predictions:', e)
         res.status(500).json({
             status: 500,
             msg: "Error storing Google Trends predictions."
-        });
+        })
     }
-});
+})
 
-// Uncomment the following lines if you want to expose endpoints for storing Twitter predictions only
 /*
 predictionsRouter.post('/store-twitter', async (req, res) => {
     try {
@@ -70,4 +103,4 @@ predictionsRouter.post('/store-twitter', async (req, res) => {
 
 export {
     predictionsRouter
-};
+}
