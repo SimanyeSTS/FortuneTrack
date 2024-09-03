@@ -1,106 +1,72 @@
-import express from 'express'
-import bodyParser from 'body-parser';
-import { Predictions } from '../model/Predictions.js'
+import express from 'express';
+import { Prediction } from '../models/Predictions'
 
-const predictionsRouter = express.Router()
-const predictions = new Predictions()
+const router = express.Router();
 
-predictionsRouter.use(bodyParser.json())
-
-predictionsRouter.get('/', async (req, res) => {
-    try {
-        await predictions.fetchPredictions(req, res)
-    } catch (e) {
-        console.error('Error fetching all predictions:', e)
-        res.status(500).json({
-            status: 500,
-            msg: "Unable to fetch predictions. Please try again later."
-        })
-    }
+router.get('/', async (req, res) => {
+  try {
+    const predictions = await Prediction.getAll()
+    res.json(predictions);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching predictions' })
+  }
 })
 
-predictionsRouter.get('/:ID', async (req, res) => {
-    try {
-        await predictions.fetchPrediction(req, res)
-    } catch (e) {
-        console.error('Error fetching prediction by ID:', e)
-        res.status(500).json({
-            status: 500,
-            msg: "Unable to fetch the prediction. Please try again later."
-        })
-    }
+router.get('/:type', async (req, res) => {
+  try {
+    const type = req.params.type;
+    const predictions = await Prediction.getByType(type)
+    res.json(predictions);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching predictions by type' })
+  }
 })
 
-predictionsRouter.post('/', async (req, res) => {
-    try {
-        await predictions.addPrediction(req, res)
-    } catch (e) {
-        console.error('Error adding new prediction:', e)
-        res.status(500).json({
-            status: 500,
-            msg: "Error adding prediction."
-        })
+router.get('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const prediction = await Prediction.getById(id)
+    if (!prediction) {
+      res.status(404).json({ message: 'Prediction not found' })
+    } else {
+      res.json(prediction)
     }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching prediction by ID' })
+  }
 })
 
-predictionsRouter.patch('/:ID', async (req, res) => {
-    try {
-        await predictions.updatePrediction(req, res)
-    } catch (e) {
-        console.error('Error updating prediction:', e)
-        res.status(500).json({
-            status: 500,
-            msg: "Error updating prediction."
-        })
-    }
+router.post('/add', async (req, res) => {
+  try {
+    const prediction = req.body
+    const newPrediction = await Prediction.create(prediction)
+    res.json(newPrediction)
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding prediction' })
+  }
 })
 
-predictionsRouter.delete('/:ID', async (req, res) => {
-    try {
-        await predictions.deletePrediction(req, res)
-    } catch (e) {
-        console.error('Error deleting prediction:', e)
-        res.status(500).json({
-            status: 500,
-            msg: "Error deleting prediction."
-        })
-    }
+router.patch('/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const updatedPrediction = req.body
+    await Prediction.update(id, updatedPrediction)
+    res.json({ message: 'Prediction updated successfully' })
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating prediction' })
+  }
 })
 
-predictionsRouter.post('/store-google-trends', async (req, res) => {
-    try {
-        await predictions.storeGoogleTrendsPrediction()
-        res.json({
-            status: res.statusCode,
-            msg: "Google Trends predictions stored successfully."
-        });
-    } catch (e) {
-        console.error('Error storing Google Trends predictions:', e)
-        res.status(500).json({
-            status: 500,
-            msg: "Error storing Google Trends predictions."
-        })
-    }
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    await Prediction.delete(id)
+    res.json({ message: 'Prediction deleted successfully' })
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting prediction' })
+  }
 })
-
-/*
-predictionsRouter.post('/store-twitter', async (req, res) => {
-    try {
-        await predictions.storeTwitterPrediction();
-        res.json({
-            status: res.statusCode,
-            msg: "Twitter predictions stored successfully."
-        });
-    } catch (e) {
-        console.error('Error storing Twitter predictions:', e);
-        res.status(500).json({
-            status: 500,
-            msg: "Error storing Twitter predictions."
-        });
-    }
-});
-*/
 
 export {
-    predictionsRouter
+    predictionRouter
 }
