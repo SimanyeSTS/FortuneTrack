@@ -1,18 +1,18 @@
 import { Users } from "./Users.js";
-import { Predictions } from "./Predictions.js";
-import { ForecastAffectors } from "./ForecastAffectors.js";
-import { ForecastContributors } from "./ForecastContributors.js";
+import { Prediction } from "./Predictions.js";
+import { ForecastAffector } from "./ForecastAffectors.js";
+import { ForecastContributor } from "./ForecastContributors.js";
 
 
 const users = new Users()
-const predictions = new Predictions()
-const forecastAffectors = new ForecastAffectors()
-const forecastContributors = new ForecastContributors()
+const prediction = new Prediction()
+const forecastAffector = new ForecastAffector()
+const forecastContributor = new ForecastContributor()
 
 
 export {
     users,
-    predictions,
-    forecastAffectors,
-    forecastContributors
+    prediction,
+    forecastAffector,
+    forecastContributor
 }

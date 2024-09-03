@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { connection as db } from '/config/index.js';
+import { connection as db } from '../../config/index.js';
 
 const fetchCryptoData = async (symbol) => {
   const apiKey = 'PIJIS96UCXDW58KF'
@@ -30,6 +30,6 @@ const fetchCryptoData = async (symbol) => {
   }
 }
 
-export {
+export default {
     fetchCryptoData
 }

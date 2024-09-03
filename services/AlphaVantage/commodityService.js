@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { connection as db } from '/config/index.js';
+import { connection as db } from '../../config/index.js';
 
 const fetchCommodityData = async (symbol) => {
   const apiKey = 'K9HED7RC8QLPJTT0'
@@ -42,6 +42,6 @@ const fetchCommodityData = async (symbol) => {
   }
 }
 
-export {
+export default {
     fetchCommodityData
 }

@@ -1,9 +1,9 @@
 import express from 'express';
-import { Prediction } from '../models/Predictions'
+import { Prediction } from '../model/Predictions.js'
 
-const router = express.Router();
+const predictionRouter = express.Router();
 
-router.get('/', async (req, res) => {
+predictionRouter.get('/', async (req, res) => {
   try {
     const predictions = await Prediction.getAll()
     res.json(predictions);
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.get('/:type', async (req, res) => {
+predictionRouter.get('/:type', async (req, res) => {
   try {
     const type = req.params.type;
     const predictions = await Prediction.getByType(type)
@@ -22,7 +22,7 @@ router.get('/:type', async (req, res) => {
   }
 })
 
-router.get('/:id', async (req, res) => {
+predictionRouter.get('/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const prediction = await Prediction.getById(id)
@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/add', async (req, res) => {
+predictionRouter.post('/add', async (req, res) => {
   try {
     const prediction = req.body
     const newPrediction = await Prediction.create(prediction)
@@ -46,7 +46,7 @@ router.post('/add', async (req, res) => {
   }
 })
 
-router.patch('/:id', async (req, res) => {
+predictionRouter.patch('/:id', async (req, res) => {
   try {
     const id = req.params.id
     const updatedPrediction = req.body
@@ -57,7 +57,7 @@ router.patch('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+predictionRouter.delete('/:id', async (req, res) => {
   try {
     const id = req.params.id
     await Prediction.delete(id)

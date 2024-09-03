@@ -1,21 +1,21 @@
 import express from 'express';
-import { Prediction } from '../models/Predictions';
-import forexService from '../service/alphaVantage/forexService';
+import { Prediction } from '../model/Predictions.js';
+import forexService from '../services/AlphaVantage/forexService.js';
 
-const router = express.Router()
+const forexRouter = express.Router()
 
-router.get('/', async (req, res) => {
+forexRouter.get('/', async (req, res) => {
   const predictions = await Prediction.getAll('forex')
   res.json(predictions)
 })
 
-router.get('/:symbol', async (req, res) => {
+forexRouter.get('/:symbol', async (req, res) => {
   const symbol = req.params.symbol
   const prediction = await forexService.fetchForexData(symbol)
   res.json(prediction)
 })
 
-router.post('/fetch', async (req, res) => {
+forexRouter.post('/fetch', async (req, res) => {
   const symbol = req.body.symbol;
   await forexService.fetchForexData(symbol)
   res.send(`Data fetched for ${symbol}`);

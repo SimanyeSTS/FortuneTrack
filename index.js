@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { userRouter } from "./controller/UserController.js";
-import { equityRouter } from './controllers/equityController';
-import { forexRouter }from './controllers/forexController';
-import { cryptoRouter } from './controllers/cryptoController';
-import { commodityRouter } from './controllers/commodityController';
+import { equityRouter } from "./controller/equityController.js";
+import { forexRouter } from "./controller/forexController.js";
+import { cryptoRouter } from "./controller/cryptoController.js";
+import { commodityRouter } from "./controller/commodityController.js";
 import { predictionRouter } from "./controller/PredictionsController.js";
 
 const app = express()
