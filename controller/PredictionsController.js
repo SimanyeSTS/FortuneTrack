@@ -6,9 +6,18 @@ const predictionRouter = express.Router();
 predictionRouter.get('/', async (req, res) => {
   try {
     const predictions = await Prediction.getAll()
-    res.json(predictions);
+    res.json({
+      status: 200,
+      results: predictions,
+      message: predictions.length === 0 ? 'No predictions found' : ''
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching predictions' })
+    console.error(error)
+    res.status(500).json({ 
+      status: 500, 
+      results: [], 
+      message: 'Error fetching predictions' 
+    })
   }
 })
 
@@ -16,9 +25,18 @@ predictionRouter.get('/:type', async (req, res) => {
   try {
     const type = req.params.type;
     const predictions = await Prediction.getByType(type)
-    res.json(predictions);
+    res.json({
+      status: 200,
+      results: predictions,
+      message: predictions.length === 0 ? `No predictions found for type ${type}` : ''
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching predictions by type' })
+    console.error(error)
+    res.status(500).json({ 
+      status: 500, 
+      results: [], 
+      message: 'Error fetching predictions by type' 
+    })
   }
 })
 
@@ -27,12 +45,25 @@ predictionRouter.get('/:id', async (req, res) => {
     const id = req.params.id;
     const prediction = await Prediction.getById(id)
     if (!prediction) {
-      res.status(404).json({ message: 'Prediction not found' })
+      res.status(404).json({ 
+        status: 404, 
+        results: [], 
+        message: 'Prediction not found' 
+      })
     } else {
-      res.json(prediction)
+      res.json({
+        status: 200,
+        results: prediction,
+        message: ''
+      })
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching prediction by ID' })
+    console.error(error)
+    res.status(500).json({ 
+      status: 500, 
+      results: [], 
+      message: 'Error fetching prediction by ID' 
+    })
   }
 })
 
@@ -40,9 +71,18 @@ predictionRouter.post('/add', async (req, res) => {
   try {
     const prediction = req.body
     const newPrediction = await Prediction.create(prediction)
-    res.json(newPrediction)
+    res.json({
+      status: 201,
+      results: newPrediction,
+      message: 'Prediction added successfully'
+    })
   } catch (error) {
-    res.status(500).json({ message: 'Error adding prediction' })
+    console.error(error)
+    res.status(500).json({ 
+      status: 500, 
+      results: [], 
+      message: 'Error adding prediction' 
+    })
   }
 })
 
@@ -51,9 +91,18 @@ predictionRouter.patch('/:id', async (req, res) => {
     const id = req.params.id
     const updatedPrediction = req.body
     await Prediction.update(id, updatedPrediction)
-    res.json({ message: 'Prediction updated successfully' })
+    res.json({
+      status: 200,
+      results: [],
+      message: 'Prediction updated successfully'
+    })
   } catch (error) {
-    res.status(500).json({ message: 'Error updating prediction' })
+    console.error(error)
+    res.status(500).json({ 
+      status: 500, 
+      results: [], 
+      message: 'Error updating prediction' 
+    })
   }
 })
 
@@ -61,12 +110,21 @@ predictionRouter.delete('/:id', async (req, res) => {
   try {
     const id = req.params.id
     await Prediction.delete(id)
-    res.json({ message: 'Prediction deleted successfully' })
+    res.json({
+      status: 200,
+      results: [],
+      message: 'Prediction deleted successfully'
+    })
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting prediction' })
+    console.error(error)
+    res.status(500).json({ 
+      status: 500, 
+      results: [], 
+      message: 'Error deleting prediction' 
+    })
   }
 })
 
 export {
-    predictionRouter
+  predictionRouter
 }

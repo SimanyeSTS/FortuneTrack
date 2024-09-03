@@ -28,6 +28,7 @@ app.use('/users', userRouter)
 app.use('/user', userRouter)
 
 app.use('/predictions', predictionRouter)
+app.use('/prediction', predictionRouter)
 
 app.use('/equity', equityRouter)
 
