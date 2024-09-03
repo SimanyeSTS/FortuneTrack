@@ -1,5 +1,5 @@
-import { createPool} from "mysql2";
-import 'dotenv/config.js';
+import { createPool } from "mysql2/promise"
+import 'dotenv/config.js'
 
 const connection = createPool({
     host: process.env.hostDb,
@@ -12,12 +12,12 @@ const connection = createPool({
 
 connection.on('error', (err) => {
     console.error('Database connection error:', err)
-  })
+})
   
-  connection.on('connection', () => {
+connection.on('connection', () => {
     console.log('Database connection established')
-  })
+})
 
-  export {
+export {
     connection
-  }
+}

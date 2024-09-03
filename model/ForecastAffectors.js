@@ -5,7 +5,7 @@ class ForecastAffector {
     const query = `
     SELECT * FROM forecast_affectors;
     `
-    const affectors = await db.query(query)
+    const [affectors] = await db.execute(query)
     return affectors
   }
 
@@ -13,7 +13,7 @@ class ForecastAffector {
     const query = `
     SELECT * FROM forecast_affectors WHERE prediction_id = ?;
     `
-    const affectors = await db.query(query, predictionId)
+    const [affectors] = await db.execute(query, [predictionId])
     return affectors
   }
 
@@ -21,7 +21,7 @@ class ForecastAffector {
     const query = `
     INSERT INTO forecast_affectors SET ?
     `
-    const result = await db.query(query, affector)
+    const [result] = await db.execute(query, [affector])
     return result.insertId
   }
 
@@ -29,17 +29,17 @@ class ForecastAffector {
     const query = `
     UPDATE forecast_affectors SET ? WHERE id = ?
     `
-    await db.query(query, [affector, id])
+    await db.execute(query, [affector, id])
   }
 
   static async delete(id) {
     const query = `
     DELETE FROM forecast_affectors WHERE id = ?;
     `
-    await db.query(query, id)
+    await db.execute(query, [id])
   }
 }
 
 export {
-    ForecastAffector
+  ForecastAffector
 }

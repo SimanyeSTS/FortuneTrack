@@ -5,7 +5,7 @@ class ForecastContributor {
     const query = `
     SELECT * FROM forecast_contributors;
     `
-    const contributors = await db.query(query)
+    const [contributors] = await db.execute(query)
     return contributors
   }
 
@@ -13,7 +13,7 @@ class ForecastContributor {
     const query = `
     SELECT * FROM forecast_contributors WHERE prediction_id = ?;
     `
-    const contributors = await db.query(query, predictionId)
+    const [contributors] = await db.execute(query, [predictionId])
     return contributors
   }
 
@@ -21,7 +21,7 @@ class ForecastContributor {
     const query = `
     INSERT INTO forecast_contributors SET ?;
     `
-    const result = await db.query(query, contributor)
+    const [result] = await db.execute(query, [contributor])
     return result.insertId
   }
 
@@ -29,17 +29,17 @@ class ForecastContributor {
     const query = `
     UPDATE forecast_contributors SET ? WHERE id = ?;
     `
-    await db.query(query, [contributor, id])
+    await db.execute(query, [contributor, id])
   }
 
   static async delete(id) {
     const query = `
     DELETE FROM forecast_contributors WHERE id = ?;
     `
-    await db.query(query, id)
+    await db.execute(query, [id])
   }
 }
 
 export {
-    ForecastContributor
+  ForecastContributor
 }
