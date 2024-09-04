@@ -7,7 +7,7 @@ userRouter.use(bodyParser.json());
 
 userRouter.get('/', async (req, res) => {
     try {
-      const result = await users.fetchUsers(req, res)
+      const result = await users.fetchUsers()
       res.json({
         status: 200,
         results: result,
@@ -25,7 +25,8 @@ userRouter.get('/', async (req, res) => {
   
   userRouter.get('/:ID', async (req, res) => {
     try {
-      const result = await users.fetchUser(req, res)
+      const UserID = req.params.ID
+      const result = await users.fetchUser(UserID)
       if (!result) {
         res.status(404).json({ 
           status: 404, 
@@ -51,30 +52,41 @@ userRouter.get('/', async (req, res) => {
   
   userRouter.post('/register', async (req, res) => {
     try {
-      const result = await users.registerUser(req, res)
+      const result = await users.registerUser(req.body)
       res.json({
         status: 201,
         results: result,
         message: 'User registered successfully'
       })
     } catch (err) {
-      console.error(err)
-      res.status(500).json({ 
-        status: 500, 
-        results: [], 
-        message: 'Error registering user' 
-      })
+      if (err.status === 409) {
+        res.status(err.status).json({ 
+          status: err.status, 
+          results: [], 
+          message: err.msg 
+        })
+      } else {
+        console.error(err)
+        res.status(500).json({ 
+          status: 500, 
+          results: [], 
+          message: 'Error registering user' 
+        })
+      }
     }
   })
   
   userRouter.patch('/:ID', async (req, res) => {
     try {
-      const result = await users.updateUser(req, res)
-      if (!result) {
+      const UserID = req.params.ID
+      const data = req.body
+      const result = await users.updateUser(UserID, data)
+      
+      if (result.affectedRows === 0) {
         res.status(404).json({ 
           status: 404, 
           results: [], 
-          message: `User not found with ID ${req.params.ID}` 
+          message: `User not found with ID ${UserID}` 
         })
       } else {
         res.json({
@@ -84,23 +96,33 @@ userRouter.get('/', async (req, res) => {
         })
       }
     } catch (err) {
-      console.error(err)
-      res.status(404).json({ 
-        status: 404, 
-        results: [], 
-        message: `User not found with ID ${req.params.ID}` 
-      })
+      if (err.code === 'ER_DUP_ENTRY') {
+        res.status(409).json({ 
+          status: 409, 
+          results: [], 
+          message: "Email is already registered. Please log in or choose a different email." 
+        })
+      } else {
+        console.error(err)
+        res.status(500).json({ 
+          status: 500, 
+          results: [], 
+          message: 'Error updating user' 
+        })
+      }
     }
   })
   
   userRouter.delete('/:ID', async (req, res) => {
     try {
-      const result = await users.deleteUser(req, res)
+      const UserID = req.params.ID
+      const result = await users.deleteUser(UserID)
+      
       if (!result) {
         res.status(404).json({ 
           status: 404, 
           results: [], 
-          message: `User not found with ID ${req.params.ID}` 
+          message: `User not found with ID ${UserID}` 
         })
       } else {
         res.json({
@@ -114,14 +136,14 @@ userRouter.get('/', async (req, res) => {
       res.status(404).json({ 
         status: 404, 
         results: [], 
-        message: `User not found with ID ${req.params.ID}` 
+        message: `User not found with ID ${UserID}` 
       })
     }
   })
   
   userRouter.post('/login', async (req, res) => {
     try {
-      const result = await users.loginUser(req, res)
+      const result = await users.loginUser(req.body)
       res.json({
         status: 200,
         results: result,
@@ -136,7 +158,7 @@ userRouter.get('/', async (req, res) => {
       })
     }
   })
-
-export {
-  userRouter
-}
+  
+  export {
+    userRouter
+  }

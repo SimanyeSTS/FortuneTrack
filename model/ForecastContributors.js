@@ -3,7 +3,7 @@ import { connection as db } from '../config/index.js';
 class ForecastContributor {
   static async getAll() {
     const query = `
-    SELECT * FROM forecast_contributors;
+    SELECT id, prediction_id, contributor_symbol, open, high, low, close FROM forecast_contributors;
     `
     const [contributors] = await db.execute(query)
     return contributors
@@ -11,7 +11,7 @@ class ForecastContributor {
 
   static async getByPredictionId(predictionId) {
     const query = `
-    SELECT * FROM forecast_contributors WHERE prediction_id = ?;
+    SELECT id, prediction_id, contributor_symbol, open, high, low, close FROM forecast_contributors WHERE prediction_id = ?;
     `
     const [contributors] = await db.execute(query, [predictionId])
     return contributors
