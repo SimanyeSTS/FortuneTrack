@@ -1,5 +1,5 @@
-import Retail from '../model/Retail.js';
 import axios from 'axios';
+import Retail from '../model/Retail.js';
 
 const apikey = 'UZKLRJ8NRMMH51PQ';
 const baseUrl = 'https://www.alphavantage.co/query';
@@ -11,7 +11,11 @@ const getRetailData = async (req, res) => {
     const response = await axios.get(url);
     const data = response.data;
 
+    console.log('Data:', data); // Log data
+
+    // Store data in database
     await Retail.saveRetailData(data);
+
     res.json(data);
   } catch (error) {
     console.error(error);
