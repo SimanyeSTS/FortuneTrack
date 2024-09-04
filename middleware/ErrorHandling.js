@@ -10,10 +10,12 @@ function errorHandling(err, req, res, next) {
         return res.json({
             status: res.statusCode,
             err: "We apologize, an error seems to have occurred. Please try again later."
-        });
+        })
     }
 
-    next();
+    next()
 }
 
-export { errorHandling };
+export { 
+    errorHandling 
+}

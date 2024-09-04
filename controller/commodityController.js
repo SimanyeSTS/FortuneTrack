@@ -56,42 +56,42 @@ commodityRouter.post('/fetch', async (req, res) => {
 commodityRouter.post('/', async (req, res) => {
     try {
       const prediction = req.body;
-      const id = await Prediction.create(prediction);
-      res.json({ status: 201, message: 'Commodity prediction created', id });
+      const id = await Prediction.create(prediction)
+      res.json({ status: 201, message: 'Commodity prediction created', id })
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error creating commodity prediction' });
+      console.error(err)
+      res.status(500).json({ message: 'Error creating commodity prediction' })
     }
-  });
+  })
   
   commodityRouter.put('/:id', async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(req.params.id)
       if (isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid ID' });
+        return res.status(400).json({ message: 'Invalid ID' })
       }
       const prediction = req.body;
       await Prediction.update(id, prediction);
-      res.json({ status: 200, message: 'Commodity prediction updated' });
+      res.json({ status: 200, message: 'Commodity prediction updated' })
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error updating commodity prediction' });
+      res.status(500).json({ message: 'Error updating commodity prediction' })
     }
-  });
+  })
   
   commodityRouter.delete('/:id', async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(req.params.id)
       if (isNaN(id)) {
-        return res.status(400).json({ message: 'Invalid ID' });
+        return res.status(400).json({ message: 'Invalid ID' })
       }
       await Prediction.delete(id);
-      res.json({ status: 200, message: 'Commodity prediction deleted' });
+      res.json({ status: 200, message: 'Commodity prediction deleted' })
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error deleting commodity prediction' });
+      res.status(500).json({ message: 'Error deleting commodity prediction' })
     }
-  });
+  })
 
 export {
   commodityRouter
