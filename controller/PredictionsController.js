@@ -23,7 +23,14 @@ predictionRouter.get('/', async (req, res) => {
 
 predictionRouter.get('/:type', async (req, res) => {
   try {
-    const type = req.params.type;
+    const type = req.params.type?.trim().toLowerCase()
+    if (!type) {
+      return res.status(400).json({ 
+        status: 400, 
+        results: [], 
+        message: 'Type is required' 
+      })
+    }
     const predictions = await Prediction.getByType(type)
     res.json({
       status: 200,
@@ -42,7 +49,14 @@ predictionRouter.get('/:type', async (req, res) => {
 
 predictionRouter.get('/:id', async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = parseInt(req.params.id)
+    if (isNaN(id)) {
+      return res.status(400).json({ 
+        status: 400, 
+        results: [], 
+        message: 'Invalid ID' 
+      })
+    }
     const prediction = await Prediction.getById(id)
     if (!prediction) {
       res.status(404).json({ 
@@ -70,6 +84,13 @@ predictionRouter.get('/:id', async (req, res) => {
 predictionRouter.post('/add', async (req, res) => {
   try {
     const prediction = req.body
+    if (!prediction) {
+      return res.status(400).json({ 
+        status: 400, 
+        results: [], 
+        message: 'Prediction data is required' 
+      })
+    }
     const newPrediction = await Prediction.create(prediction)
     res.json({
       status: 201,
@@ -88,8 +109,22 @@ predictionRouter.post('/add', async (req, res) => {
 
 predictionRouter.patch('/:id', async (req, res) => {
   try {
-    const id = req.params.id
+    const id = parseInt(req.params.id)
+    if (isNaN(id)) {
+      return res.status(400).json({ 
+        status: 400, 
+        results: [], 
+        message: 'Invalid ID' 
+      })
+    }
     const updatedPrediction = req.body
+    if (!updatedPrediction) {
+      return res.status(400).json({ 
+        status: 400, 
+        results: [], 
+        message: 'Prediction data is required' 
+      })
+    }
     await Prediction.update(id, updatedPrediction)
     res.json({
       status: 200,
@@ -107,24 +142,31 @@ predictionRouter.patch('/:id', async (req, res) => {
 })
 
 predictionRouter.delete('/:id', async (req, res) => {
-  try {
-    const id = req.params.id
-    await Prediction.delete(id)
-    res.json({
-      status: 200,
-      results: [],
-      message: 'Prediction deleted successfully'
-    })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ 
-      status: 500, 
-      results: [], 
-      message: 'Error deleting prediction' 
-    })
+    try {
+      const id = parseInt(req.params.id)
+      if (isNaN(id)) {
+        return res.status(400).json({ 
+          status: 400, 
+          results: [], 
+          message: 'Invalid ID' 
+        })
+      }
+      await Prediction.delete(id)
+      res.json({
+        status: 200,
+        results: [],
+        message: 'Prediction deleted successfully'
+      })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ 
+        status: 500, 
+        results: [], 
+        message: 'Error deleting prediction' 
+      })
+    }
+  })
+  
+  export {
+    predictionRouter
   }
-})
-
-export {
-  predictionRouter
-}
