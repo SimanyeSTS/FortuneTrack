@@ -7,6 +7,7 @@ import { forexRouter } from "./controller/forexController.js";
 import { cryptoRouter } from "./controller/cryptoController.js";
 import { commodityRouter } from "./controller/commodityController.js";
 import { predictionRouter } from "./controller/PredictionsController.js";
+import { router } from './model/index.js';
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -37,6 +38,8 @@ app.use('/forex', forexRouter)
 app.use('/crypto', cryptoRouter)
 
 app.use('/commodity', commodityRouter)
+
+app.use('/api', router);
 
 app.get('^/$|FortuneTrack', (req, res) => {
   res.status(200).sendFile(path.resolve('./static/index.html'))
