@@ -7,10 +7,10 @@ class Retail {
       SELECT * FROM Retail
       `
       const [rows] = await db.query(query)
-      return rows;
+      return rows
     } catch (error) {
       console.error('Error fetching retail data:', error)
-      throw error;
+      throw error
     }
   }
 
