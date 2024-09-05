@@ -5,7 +5,7 @@ import { ForecastContributor } from "./ForecastContributors.js";
 import express from 'express';
 import retailController from '../controller/retailController.js';
 import technologyController from '../controller/technologyController.js';
-import foodAndBeveragesController from '../controller/foodAndBeverages.js';
+import foodAndBeveragesController from '../controller/foodAndBeveragesController.js';
 import healthcareController from '../controller/healthcareController.js';
 
 const router = express.Router();
