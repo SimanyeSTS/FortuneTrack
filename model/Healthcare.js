@@ -1,15 +1,37 @@
 import { connection as db } from "../config/index.js";
+
 class Healthcare {
   static async getHealthcareData() {
-    const query = 'SELECT * FROM Healthcare';
-    const [rows] = await db.query(query);
-    return rows;
+    try {
+      const query = `
+      SELECT * FROM Healthcare
+      `
+      const [rows] = await db.query(query)
+      return rows
+    } catch (error) {
+      console.error('Error fetching healthcare data:', error)
+      throw error
+    }
   }
 
   static async saveHealthcareData(data) {
-    const query = 'INSERT INTO Healthcare SET ?';
-    await db.query(query, data);
+    try {
+      if (!data) {
+        throw new Error('Data cannot be null or undefined')
+      }
+      const columns = Object.keys(data)
+      const values =  Object.values(data)
+      const placeholders = Array(columns.length).fill('?').join(', ')
+
+      const query = `
+      INSERT INTO Healthcare (${columns}) VALUES (${placeholders})
+      `
+      await db.execute(query, values)
+    } catch (error) {
+      console.error('Error saving healthcare data:', error)
+      throw error
+    }
   }
 }
 
-export default Healthcare;
+export default Healthcare
