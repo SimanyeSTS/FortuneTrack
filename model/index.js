@@ -9,22 +9,22 @@ import foodAndBeveragesController from '../controller/foodAndBeveragesController
 import healthcareController from '../controller/healthcareController.js';
 
 const router = express.Router();
-router.get('/retail', retailController.getRetailData);
-router.patch('/retail/:id', retailController.patchRetailData);
-router.delete('/retail/:id', retailController.deleteRetailData);
+router.get('/retail', retailController.getRetailData)
+router.patch('/retail/:id', retailController.patchRetailData)
+router.delete('/retail/:id', retailController.deleteRetailData)
 
-router.get('/technology', technologyController.getTechnologyData);
-router.get('/food-and-beverages', foodAndBeveragesController.getFoodAndBeveragesData);
-router.get('/healthcare', healthcareController.getHealthcareData);
+router.get('/technology', technologyController.getTechnologyData)
+router.get('/food-and-beverages', foodAndBeveragesController.getFoodAndBeveragesData)
+router.get('/healthcare', healthcareController.getHealthcareData)
 
-router.patch('/technology/:id', technologyController.patchTechnologyData);
-router.delete('/technology/:id', technologyController.deleteTechnologyData);
+router.patch('/technology/:id', technologyController.patchTechnologyData)
+router.delete('/technology/:id', technologyController.deleteTechnologyData)
 
-router.patch('/food-and-beverages/:id', foodAndBeveragesController.patchFoodAndBeveragesData);
-router.delete('/food-and-beverages/:id', foodAndBeveragesController.deleteFoodAndBeveragesData);
+router.patch('/food-and-beverages/:id', foodAndBeveragesController.patchFoodAndBeveragesData)
+router.delete('/food-and-beverages/:id', foodAndBeveragesController.deleteFoodAndBeveragesData)
 
-router.patch('/healthcare/:id', healthcareController.patchHealthcareData);
-router.delete('/healthcare/:id', healthcareController.deleteHealthcareData);
+router.patch('/healthcare/:id', healthcareController.patchHealthcareData)
+router.delete('/healthcare/:id', healthcareController.deleteHealthcareData)
 
 const users = new Users()
 const prediction = new Prediction()

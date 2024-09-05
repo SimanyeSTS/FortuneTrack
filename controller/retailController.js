@@ -80,10 +80,10 @@ const getRetailData = async (req, res) => {
       const data = req.body
   
       await Retail.patchRetailData(id, data)
-      res.json({ message: 'Retail data patched successfully' })
+      res.json({ message: 'Retail data updated successfully' })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ message: 'Error patching retail data' })
+      res.status(500).json({ message: 'Error updating retail data' })
     }
   }
   

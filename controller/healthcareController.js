@@ -73,8 +73,36 @@ const getHealthcareData = async (req, res) => {
     console.error(error)
     res.status(500).json({ message: 'Error fetching healthcare data' })
   }
+
+  const patchHealthcareData = async (req, res) => {
+    try {
+      const id = req.params.id
+      const data = req.body
+
+      await Healthcare.patchHealthcareData(id, data)
+      res.json({ message: 'Healthcare data updated successfully' })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Error updating healthcare data' })
+    }
+  }
+
+  const deleteHealthcareData = async (req, res) => {
+    try {
+      const id = req.params.id
+      const data = req.body
+
+      await Healthcare.deleteHealthcareData(id)
+      res.json({ message: 'Healthcare data deleted successfully' })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Error deleting healthcare data' })
+    }
+  }
 }
 
 export default {
-   getHealthcareData 
+   getHealthcareData,
+   patchHealthcareData,
+   deleteHealthcareData
 }

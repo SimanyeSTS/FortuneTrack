@@ -32,6 +32,40 @@ class FoodAndBeverages {
       throw error
     }
   }
+
+  static async patchFoodAndBeveragesData(id, data) {
+    try {
+      if (!data) {
+        throw new Error('Data cannot be null or undefined')
+      }
+
+      const columns = Object.keys(data)
+      const values =  Object.values(data)
+      values.push(id)
+
+      const placeholders = columns.map((column) => `${column} = ?`).join(', ')
+
+      const query = `
+      UPDATE FoodAndBeverages SET ${placeholders} WHERE id = 
+      `
+      await db.execute(query, values)
+    } catch (error) {
+      console.error('Error updating FoodAndBeverages data:', error)
+      throw error
+    }
+  }
+
+  static async deleteFoodAndBeveragesData(id) {
+    try {
+      const query = `
+      DELETE FROM FoodAndBeverages WHERE id = ?
+      `
+      await db.execute(query, [id])
+    } catch (error) {
+      console.error('Error deleting FoodAndBeverages data:', error)
+      throw error
+    }
+  }
 }
 
 export default FoodAndBeverages;

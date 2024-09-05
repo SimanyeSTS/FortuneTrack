@@ -72,8 +72,35 @@ const getFoodAndBeveragesData = async (req, res) => {
     console.error(error)
     res.status(500).json({ message: 'Error fetching food and beverages data' })
   }
+
+  const patchFoodAndBeveragesData = async  (req, res) => {
+    try {
+      const id = req.params.id
+      const data = req.body
+
+      await FoodAndBeverages.patchFoodAndBeveragesData(id, data)
+      res.json({ message: 'Food/Beverage data updated successfully'})
+    } catch (error) {
+      console.error(error)
+      res.json(500).json({ message: 'Error updating Food/Beverage data'})
+    }
+  }
+
+  const deleteFoodAndBeveragesData = async (req, res) => {
+    try {
+      const id = req.params.id
+
+      await FoodAndBeverages.deleteFoodAndBeveragesData(id)
+      res.json({ message: 'Food/Beverage data deleted successfully' })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Error deleting Food/Beverage data' })
+    }
+  }
 }
 
 export default { 
-  getFoodAndBeveragesData 
+  getFoodAndBeveragesData,
+  patchFoodAndBeveragesData,
+  deleteFoodAndBeveragesData
 }
