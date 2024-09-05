@@ -1,12 +1,12 @@
 import Technology from '../model/Technology.js'
-import axios from 'axios';
+import axios from 'axios'
 
-const apikey = 'R4015USIUYJ56RBE';
-const baseUrl = 'https://www.alphavantage.co/query';
+const apikey = 'R4015USIUYJ56RBE'
+const baseUrl = 'https://www.alphavantage.co/query'
 
 const getTechnologyData = async (req, res) => {
   try {
-    const symbol = 'INTC';
+    const symbol = 'INTC'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
     const response = await axios.get(url)
     const data = response.data
@@ -70,7 +70,6 @@ const getTechnologyData = async (req, res) => {
     
     res.json(data)
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'Error fetching technology data' })
   }
 }
@@ -83,7 +82,6 @@ const patchTechnologyData = async (req, res) => {
     await Technology.patchTechnologyData(id, data)
     res.json({ message: 'Technology data updated successfully' })
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'Error updating technology data' })
   }
 }
@@ -95,7 +93,6 @@ const deleteTechnologyData = async (req, res) => {
     await Technology.deleteTechnologyData(id)
     res.json({ message: 'Technology data deleted successfully'})
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'Error deleting technology data' })
   }
 }

@@ -9,7 +9,6 @@ class Technology {
       const [rows] = await db.query(query)
       return rows
     } catch (error) {
-      console.error('Error fetching technoloogy data:', error)
       throw error
     }
   }
@@ -29,7 +28,6 @@ class Technology {
       `
       await db.query(query, values)
     } catch (error) {
-      console.error('Error saving technology data:', error)
       throw error
     }
   }
@@ -37,7 +35,7 @@ class Technology {
   static async patchTechnologyData(id, data) {
     try {
       if (!data) {
-        throw new  Error('Data cannot be null or undefined')
+        throw new Error('Data cannot be null or undefined')
       }
 
       const columns = Object.keys(data)
@@ -47,12 +45,11 @@ class Technology {
       const placeholders = columns.map((column) => `${column} = ?`).join(', ')
 
       const query = `
-      UPDATE Retail SET ${placeholders} WHERE id = ?
+      UPDATE Technology SET ${placeholders} WHERE id = ?
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error updating technology data:', error)
-      throw new error
+      throw error
     }
   }
 
@@ -63,7 +60,7 @@ class Technology {
       `
       await db.execute(query, [id])
     } catch (error) {
-      console.error('Error deleting technology data:', error)
+      throw error
     }
   }
 }

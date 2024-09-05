@@ -12,11 +12,10 @@ const connection = createPool({
 })
 
 connection.on('error', (err) => {
-  console.error('Database connection error:', err)
+  throw new Error(`Database connection error: ${err.message}`)
 })
 
 connection.on('connection', () => {
-  console.log('Database connection established')
 })
 
 export {

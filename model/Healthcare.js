@@ -9,7 +9,6 @@ class Healthcare {
       const [rows] = await db.query(query)
       return rows
     } catch (error) {
-      console.error('Error fetching healthcare data:', error)
       throw error
     }
   }
@@ -28,7 +27,6 @@ class Healthcare {
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error saving healthcare data:', error)
       throw error
     }
   }
@@ -50,7 +48,6 @@ class Healthcare {
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error updating healthcare data:', error)
       throw error
     }
   }
@@ -58,11 +55,10 @@ class Healthcare {
   static async deleteHealthcareData(id) {
     try {
       const query = `
-      DELETE FROM Healthcare where id = ?
+      DELETE FROM Healthcare WHERE id = ?
       `
       await db.execute(query, [id])
     } catch (error) {
-      console.error('Error deleting healthcare data:', error)
       throw error
     }
   }

@@ -9,7 +9,6 @@ class Retail {
       const [rows] = await db.query(query)
       return rows
     } catch (error) {
-      console.error('Error fetching retail data:', error)
       throw error
     }
   }
@@ -29,7 +28,6 @@ class Retail {
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error saving retail data:', error)
       throw error
     }
   }
@@ -51,7 +49,6 @@ class Retail {
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error updating retail data:', error)
       throw error
     }
   }
@@ -63,7 +60,6 @@ class Retail {
       `
       await db.execute(query, [id])
     } catch (error) {
-      console.error('Error deleting retail data:', error)
       throw error
     }
   }

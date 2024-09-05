@@ -32,10 +32,10 @@ const forecastAffector = new ForecastAffector()
 const forecastContributor = new ForecastContributor()
 
 
-export {
-    users,
-    prediction,
-    forecastAffector,
-    forecastContributor,
-    router
+export { 
+  users, 
+  prediction, 
+  forecastAffector, 
+  forecastContributor, 
+  router 
 }

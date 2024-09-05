@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { connection } from '../../config/index.js';
+import { connection as db } from '../../config/index.js';
 
 const apikey = 'UZKLRJ8NRMMH51PQ';
 const baseUrl = 'https://www.alphavantage.co/query';
@@ -15,19 +15,19 @@ const getRetailData = async () => {
     await saveRetailData(data)
     return data
   } catch (error) {
-    console.error(error)
+    throw error
   }
 }
 
 const saveRetailData = async (data) => {
-  const db = await connection()
-
-  const query = `
-  INSERT INTO Retail SET ?
-  `
-  await db.query(query, data)
-
-  await db.end()
+  try {
+    const query = `
+    INSERT INTO Retail SET ?
+    `
+    await db.query(query, data)
+  } catch (error) {
+    throw error
+  }
 }
 
 export default getRetailData

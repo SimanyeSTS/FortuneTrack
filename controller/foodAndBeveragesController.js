@@ -11,6 +11,7 @@ const getFoodAndBeveragesData = async (req, res) => {
     const response = await axios.get(url)
     const data = response.data
 
+
     const foodAndBeveragesData = {
       Symbol: data.Symbol,
       AssetType: data.AssetType,
@@ -70,7 +71,6 @@ const getFoodAndBeveragesData = async (req, res) => {
     
     res.json(data)
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'Error fetching food and beverages data' })
   }
 }
@@ -83,7 +83,6 @@ const patchFoodAndBeveragesData = async (req, res) => {
     await FoodAndBeverages.patchFoodAndBeveragesData(id, data)
     res.json({ message: 'Food/Beverage data updated successfully'})
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'Error updating Food/Beverage data'})
   }
 }
@@ -95,7 +94,6 @@ const deleteFoodAndBeveragesData = async (req, res) => {
     await FoodAndBeverages.deleteFoodAndBeveragesData(id)
     res.json({ message: 'Food/Beverage data deleted successfully' })
   } catch (error) {
-    console.error(error)
     res.status(500).json({ message: 'Error deleting Food/Beverage data' })
   }
 }

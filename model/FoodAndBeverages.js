@@ -9,7 +9,6 @@ class FoodAndBeverages {
       const [rows] = await db.query(query)
       return rows
     } catch (error) {
-      console.error('Error fetching retail data:', error)
       throw error
     }
   }
@@ -28,7 +27,6 @@ class FoodAndBeverages {
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error saving FoodAndBeverages data:', error)
       throw error
     }
   }
@@ -46,11 +44,10 @@ class FoodAndBeverages {
       const placeholders = columns.map((column) => `${column} = ?`).join(', ')
 
       const query = `
-      UPDATE FoodAndBeverages SET ${placeholders} WHERE id = 
+      UPDATE FoodAndBeverages SET ${placeholders} WHERE id = ?
       `
       await db.execute(query, values)
     } catch (error) {
-      console.error('Error updating FoodAndBeverages data:', error)
       throw error
     }
   }
@@ -62,7 +59,6 @@ class FoodAndBeverages {
       `
       await db.execute(query, [id])
     } catch (error) {
-      console.error('Error deleting FoodAndBeverages data:', error)
       throw error
     }
   }
