@@ -73,30 +73,30 @@ const getTechnologyData = async (req, res) => {
     console.error(error)
     res.status(500).json({ message: 'Error fetching technology data' })
   }
+}
 
-  const patchTechnologyData = async (req, res) => {
-    try {
-      const id = req.params.id
-      const data = req.body
+const patchTechnologyData = async (req, res) => {
+  try {
+    const id = req.params.id
+    const data = req.body
       
-      await Technology.patchTechnologyData(id, data)
-      res.json({ message: 'Technology data updated successfully' })
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: 'Error updating retail data' })
-    }
+    await Technology.patchTechnologyData(id, data)
+    res.json({ message: 'Technology data updated successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Error updating technology data' })
   }
+}
 
-  const deleteTechnologyData = async (req, res) => {
-    try {
-      const id = req.params.id
+const deleteTechnologyData = async (req, res) => {
+  try {
+    const id = req.params.id
 
-      await Technology.deleteTechnologyData(id)
-      res.json({ message: 'Technology data deleted successfully'})
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: 'Error deleting technology data' })
-    }
+    await Technology.deleteTechnologyData(id)
+    res.json({ message: 'Technology data deleted successfully'})
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Error deleting technology data' })
   }
 }
 

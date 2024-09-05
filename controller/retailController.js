@@ -1,12 +1,12 @@
-import axios from 'axios';
-import Retail from '../model/Retail.js';
+import axios from 'axios'
+import Retail from '../model/Retail.js'
 
-const apikey = 'UZKLRJ8NRMMH51PQ';
-const baseUrl = 'https://www.alphavantage.co/query';
+const apikey = 'UZKLRJ8NRMMH51PQ'
+const baseUrl = 'https://www.alphavantage.co/query'
 
 const getRetailData = async (req, res) => {
   try {
-    const symbol = 'COST';
+    const symbol = 'COST'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
     const response = await axios.get(url)
     const data = response.data
@@ -73,34 +73,34 @@ const getRetailData = async (req, res) => {
     console.error(error)
     res.status(500).json({ message: 'Error fetching retail data' })
   }
+}
 
-  const patchRetailData = async (req, res) => {
-    try {
-      const id = req.params.id
-      const data = req.body
-  
-      await Retail.patchRetailData(id, data)
-      res.json({ message: 'Retail data updated successfully' })
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: 'Error updating retail data' })
-    }
-  }
-  
-  const deleteRetailData = async (req, res) => {
-    try {
-      const id = req.params.id
-  
-      await Retail.deleteRetailData(id)
-      res.json({ message: 'Retail data deleted successfully' })
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ message: 'Error deleting retail data' })
-    }
+const patchRetailData = async (req, res) => {
+  try {
+    const id = req.params.id
+    const data = req.body
+
+    await Retail.patchRetailData(id, data)
+    res.json({ message: 'Retail data updated successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Error updating retail data' })
   }
 }
 
-export default { 
+const deleteRetailData = async (req, res) => {
+  try {
+    const id = req.params.id
+
+    await Retail.deleteRetailData(id)
+    res.json({ message: 'Retail data deleted successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Error deleting retail data' })
+  }
+}
+
+export default {
   getRetailData,
   patchRetailData,
   deleteRetailData
