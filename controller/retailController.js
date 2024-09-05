@@ -73,8 +73,35 @@ const getRetailData = async (req, res) => {
     console.error(error)
     res.status(500).json({ message: 'Error fetching retail data' })
   }
+
+  const patchRetailData = async (req, res) => {
+    try {
+      const id = req.params.id
+      const data = req.body
+  
+      await Retail.patchRetailData(id, data)
+      res.json({ message: 'Retail data patched successfully' })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Error patching retail data' })
+    }
+  }
+  
+  const deleteRetailData = async (req, res) => {
+    try {
+      const id = req.params.id
+  
+      await Retail.deleteRetailData(id)
+      res.json({ message: 'Retail data deleted successfully' })
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ message: 'Error deleting retail data' })
+    }
+  }
 }
 
 export default { 
-  getRetailData 
+  getRetailData,
+  patchRetailData,
+  deleteRetailData
 }

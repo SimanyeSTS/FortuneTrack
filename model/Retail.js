@@ -33,6 +33,40 @@ class Retail {
       throw error
     }
   }
+
+  static async patchRetailData(id, data) {
+    try {
+      if (!data) {
+        throw new Error('Data cannot be null or undefined')
+      }
+
+      const columns = Object.keys(data)
+      const values = Object.values(data)
+      values.push(id)
+
+      const placeholders = columns.map((column) => `${column} = ?`).join(', ')
+  
+      const query = `
+      UPDATE Retail SET ${placeholders} WHERE id = ?
+      `
+      await db.execute(query, values)
+    } catch (error) {
+      console.error('Error updating retail data:', error)
+      throw error
+    }
+  }
+
+  static async deleteRetailData(id) {
+    try {
+      const query = `
+      DELETE FROM Retail WHERE id = ?
+      `
+      await db.execute(query, [id])
+    } catch (error) {
+      console.error('Error deleting retail data:', error)
+      throw error
+    }
+  }
 }
 
 export default Retail
