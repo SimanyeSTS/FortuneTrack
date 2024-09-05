@@ -75,6 +75,21 @@ const getFoodAndBeveragesData = async (req, res) => {
   }
 }
 
+const getFoodAndBeveragesDataById = async (req, res) => {
+  try {
+    const id = req.params.id
+    const data = await FoodAndBeverages.getFoodAndBeveragesDataById(id)
+
+    if (!data) {
+      res.status(404).json({ message: 'Food and beverages data not found' })
+    } else {
+      res.json(data)
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching food and beverages data' })
+  }
+}
+
 const patchFoodAndBeveragesData = async (req, res) => {
   try {
     const id = req.params.id
@@ -100,6 +115,7 @@ const deleteFoodAndBeveragesData = async (req, res) => {
 
 export default { 
   getFoodAndBeveragesData,
+  getFoodAndBeveragesDataById,
   patchFoodAndBeveragesData,
   deleteFoodAndBeveragesData
 }

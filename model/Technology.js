@@ -53,6 +53,18 @@ class Technology {
     }
   }
 
+  static async getTechnologyDataById(id) {
+    try {
+      const query = `
+      SELECT * FROM Technology WHERE id = ?
+      `
+      const [rows] = await db.query(query, [id])
+      return rows[0]
+    } catch (error) {
+      throw error
+    }
+  }
+
   static async deleteTechnologyData(id) {
     try {
       const query = `

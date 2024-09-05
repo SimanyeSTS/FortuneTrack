@@ -31,6 +31,18 @@ class FoodAndBeverages {
     }
   }
 
+  static async getFoodAndBeveragesDataById(id) {
+    try {
+      const query = `
+      SELECT * FROM FoodAndBeverages WHERE id = ?
+      `
+      const [rows] = await db.query(query, [id])
+      return rows[0]
+    } catch (error) {
+      throw error
+    }
+  }
+
   static async patchFoodAndBeveragesData(id, data) {
     try {
       if (!data) {

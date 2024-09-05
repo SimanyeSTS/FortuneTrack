@@ -13,6 +13,18 @@ class Retail {
     }
   }
 
+  static async getRetailDataById(id) {
+    try {
+      const query = `
+      SELECT * FROM Retail WHERE id = ?
+      `
+      const [rows] = await db.query(query, [id])
+      return rows[0]
+    } catch (error) {
+      throw error
+    }
+  }
+
   static async saveRetailData(data) {
     try {
       if (!data) {

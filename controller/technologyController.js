@@ -74,6 +74,21 @@ const getTechnologyData = async (req, res) => {
   }
 }
 
+const getTechnologyDataById = async (req, res) => {
+  try {
+    const id = req.params.id
+    const data = await Technology.getTechnologyDataById(id)
+
+    if (!data) {
+      res.status(404).json({ message: 'Technology data not found' })
+    } else {
+      res.json(data)
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching technology data' })
+  }
+}
+
 const patchTechnologyData = async (req, res) => {
   try {
     const id = req.params.id
@@ -99,6 +114,7 @@ const deleteTechnologyData = async (req, res) => {
 
 export default { 
   getTechnologyData,
+  getTechnologyDataById,
   patchTechnologyData,
   deleteTechnologyData
 }

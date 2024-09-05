@@ -31,6 +31,18 @@ class Healthcare {
     }
   }
 
+  static async getHealthcareDataById(id) {
+    try {
+      const query = `
+      SELECT * FROM Healthcare WHERE id = ?
+      `
+      const [rows] = await db.query(query, [id])
+      return rows[0]
+    } catch (error) {
+      throw error
+    }
+  }
+
   static async patchHealthcareData(id, data) {
     try {
       if (!data) {
