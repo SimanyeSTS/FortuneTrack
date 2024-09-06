@@ -1,4 +1,9 @@
 import { connection as db } from "../config/index.js";
+import axios from 'axios'
+import cron from 'node-cron'
+
+const apikey = 'R4015USIUYJ56RBE'
+const baseUrl = 'https://www.alphavantage.co/query'
 
 class Technology {
   static async getTechnologyData() {
@@ -75,6 +80,21 @@ class Technology {
       throw error
     }
   }
+
+  static async updateTechnologyData() {
+    try {
+      const symbol = 'INTC'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Technology.patchTechnologyData(1, data)
+    } catch (error) {
+      throw new Error(`Failed to update technology data: ${error.message}`)
+    }
+  }
 }
+
+cron.schedule('0 */2 * * *', Technology.updateTechnologyData)
 
 export default Technology

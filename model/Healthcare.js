@@ -1,5 +1,9 @@
-import { connection as db } from "../config/index.js";
+import { connection as db } from "../config/index.js"
+import axios from "axios"
+import cron from 'node-cron'
 
+const apikey = 'PIJIS96UCXDW58KF'
+const baseUrl = 'https://www.alphavantage.co/query'
 class Healthcare {
   static async getHealthcareData() {
     try {
@@ -74,6 +78,20 @@ class Healthcare {
       throw error
     }
   }
+
+  static async updateHealthcareData() {
+    try {
+      const symbol = 'JNJ'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Healthcare.patchHealthcareData(1, data)
+    } catch (error) {
+      throw new Error(`Failed to update healthcarecdata: ${error.message}`)
+    }
+  }
 }
 
+cron.schedule('0 */2 * * *', Healthcare.updateHealthcareData)
 export default Healthcare

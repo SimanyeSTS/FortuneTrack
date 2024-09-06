@@ -1,4 +1,10 @@
-import { connection as db } from "../config/index.js";
+import { connection as db } from "../config/index.js"
+import axios from "axios"
+import cron from 'node-cron'
+import Retail from "./Retail.js"
+
+const apikey = 'K9HED7RC8QLPJTT0'
+const baseUrl = 'https://www.alphavantage.co/query'
 
 class FoodAndBeverages {
   static async getFoodAndBeveragesData() {
@@ -74,6 +80,21 @@ class FoodAndBeverages {
       throw error
     }
   }
+
+  static async updateFoodAndBeveragesData() {
+    try {
+      const symbol = 'MCD'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Retail.patchFoodAndBeveragesData(1, data)
+    } catch (error) {
+      throw new Error(`Failed to update Food/Beverage data: ${error.message}`)
+    }
+  }
 }
 
-export default FoodAndBeverages;
+cron.schedule('0 */2 * * *', FoodAndBeverages.updateFoodAndBeveragesData)
+
+export default FoodAndBeverages
