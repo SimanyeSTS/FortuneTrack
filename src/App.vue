@@ -19,9 +19,13 @@ import FooterComp from './components/FooterComp.vue'
 }
 </script>
 
-<style scoped>
+<style >
 .wrapper{
   background-color: #000080;
+}
+body{
+  background-color: #000080;
+
 }
 
 </style>
