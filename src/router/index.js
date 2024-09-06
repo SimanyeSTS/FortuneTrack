@@ -1,5 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import AboutView from '../views/AboutView.vue'
+import PredictView from '@/views/PredictView.vue'
+import ReachMeView from '@/views/ReachMeView.vue'
+import AdminDashboardView from '@/views/AdminDashboardView.vue'
+import UserDashboardView from '@/views/UserDashboardView.vue'
+import RegistrationView from '@/views/RegistrationView.vue'
+import PredictionDataView from '@/views/PredictionDataView.vue'
+
 
 const routes = [
   {
@@ -9,11 +17,38 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    name: 'about-me',
+    component: AboutView
+  },
+  {
+    path: '/predict',
+    name: 'predictions',
+    component: PredictView
+  },
+  {
+    path: '/contact',
+    name: 'reach-me',
+    component: ReachMeView
+  },
+  {
+    path: '/admin',
+    name:  'admin-dashboard',
+    component: AdminDashboardView
+  },
+  {
+    path: '/user',
+    name: 'user-dashboard',
+    component: UserDashboardView
+  },
+  {
+    path: '/register',
+    name: '/sign-up',
+    component: RegistrationView
+  },
+  {
+    path: '/real-time-prediiction',
+    name: 'prediction-data',
+    component: PredictionDataView
   }
 ]
 
