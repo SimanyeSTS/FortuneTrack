@@ -86,7 +86,21 @@ const getFoodAndBeveragesDataById = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching food and beverages data' })
+    res.status(500).json({ message: 'Error fetching food/beverages data' })
+  }
+}
+
+const getAllFoodAndBeveragesData = async (req, res) => {
+  try {
+    const data = await FoodAndBeverages.getAllFoodAndBeveragesData()
+    
+    if (!data.length) {
+      res.status(404).json({ message: 'No food/beverages data found' })
+    } else {
+      res.json(data)
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching food/beverages data' })
   }
 }
 
@@ -116,6 +130,7 @@ const deleteFoodAndBeveragesData = async (req, res) => {
 export default { 
   getFoodAndBeveragesData,
   getFoodAndBeveragesDataById,
+  getAllFoodAndBeveragesData,
   patchFoodAndBeveragesData,
   deleteFoodAndBeveragesData
 }

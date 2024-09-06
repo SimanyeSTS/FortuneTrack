@@ -70,6 +70,18 @@ class Technology {
     }
   }
 
+  static async getAllTechnologyData() {
+    try {
+      const query = `
+        SELECT * FROM Technology
+      `
+      const [rows] = await db.query(query)
+      return rows
+    } catch (error) {
+      throw new Error(`Failed to retrieve all Technology data: ${error.message}`)
+    }
+  }
+
   static async deleteTechnologyData(id) {
     try {
       const query = `

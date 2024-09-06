@@ -30,6 +30,18 @@ class Retail {
     }
   }
 
+  static async getAllRetailData() {
+    try {
+      const query = `
+        SELECT * FROM Retail
+      `
+      const [rows] = await db.query(query)
+      return rows
+    } catch (error) {
+      throw new Error(`Failed to retrieve all retail data: ${error.message}`)
+    }
+  }
+
   static async saveRetailData(data) {
     try {
       if (!data) {

@@ -89,6 +89,20 @@ const getRetailDataById = async (req, res) => {
   }
 }
 
+const getAllRetailData = async (req, res) => {
+  try {
+    const data = await Retail.getAllRetailData()
+    
+    if (!data.length) {
+      res.status(404).json({ message: 'No retail data found' })
+    } else {
+      res.json(data)
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching retail data' })
+  }
+}
+
 const patchRetailData = async (req, res) => {
   try {
     const id = req.params.id
@@ -115,6 +129,7 @@ const deleteRetailData = async (req, res) => {
 export default {
   getRetailData,
   getRetailDataById,
+  getAllRetailData,
   patchRetailData,
   deleteRetailData
 }

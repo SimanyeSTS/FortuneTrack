@@ -49,6 +49,18 @@ class FoodAndBeverages {
     }
   }
 
+  static async getAllFoodAndBeveragesData() {
+    try {
+      const query = `
+        SELECT * FROM FoodAndBeverages
+      `
+      const [rows] = await db.query(query)
+      return rows
+    } catch (error) {
+      throw new Error(`Failed to retrieve all food and beverages data: ${error.message}`)
+    }
+  }
+
   static async patchFoodAndBeveragesData(id, data) {
     try {
       if (!data) {

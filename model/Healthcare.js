@@ -47,6 +47,18 @@ class Healthcare {
     }
   }
 
+  static async getAllHealthcareData() {
+    try {
+      const query = `
+        SELECT * FROM Healthcare
+      `
+      const [rows] = await db.query(query)
+      return rows
+    } catch (error) {
+      throw new Error(`Failed to retrieve all healthcare data: ${error.message}`)
+    }
+  }
+
   static async patchHealthcareData(id, data) {
     try {
       if (!data) {
