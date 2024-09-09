@@ -17,7 +17,7 @@ userRouter.get('/', async (req, res) => {
     res.status(500).json({ 
       status: 500, 
       results: [], 
-      message: 'Error fetching users' 
+      message: err.message 
     })
   }
 })

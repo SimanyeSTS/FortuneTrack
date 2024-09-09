@@ -71,7 +71,7 @@ const getFoodAndBeveragesData = async (req, res) => {
     
     res.json(data)
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching food and beverages data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -86,7 +86,7 @@ const getFoodAndBeveragesDataById = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching food/beverages data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -100,7 +100,7 @@ const getAllFoodAndBeveragesData = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching food/beverages data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -112,7 +112,7 @@ const patchFoodAndBeveragesData = async (req, res) => {
     await FoodAndBeverages.patchFoodAndBeveragesData(id, data)
     res.json({ message: 'Food/Beverage data updated successfully'})
   } catch (error) {
-    res.status(500).json({ message: 'Error updating Food/Beverage data'})
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -123,7 +123,7 @@ const deleteFoodAndBeveragesData = async (req, res) => {
     await FoodAndBeverages.deleteFoodAndBeveragesData(id)
     res.json({ message: 'Food/Beverage data deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting Food/Beverage data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -134,7 +134,7 @@ const addFoodAndBeveragesData = async (req, res) => {
     await FoodAndBeverages.addFoodAndBeveragesData(data)
     res.json({ message: 'Food/Beverage data added successfully'})
   } catch (error) {
-    res.status(500).json({ message: 'Error adding food/beverage data'})
+    res.status(500).json({ message: error.message })
   }
 }
 

@@ -70,7 +70,7 @@ const getTechnologyData = async (req, res) => {
     
     res.json(data)
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching technology data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -85,7 +85,7 @@ const getTechnologyDataById = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching technology data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -99,7 +99,7 @@ const getAllTechnologyData = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching technology data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -111,7 +111,7 @@ const patchTechnologyData = async (req, res) => {
     await Technology.patchTechnologyData(id, data)
     res.json({ message: 'Technology data updated successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error updating technology data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -122,7 +122,7 @@ const deleteTechnologyData = async (req, res) => {
     await Technology.deleteTechnologyData(id)
     res.json({ message: 'Technology data deleted successfully'})
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting technology data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -133,7 +133,7 @@ const addTechnologyData = async (req, res) => {
     await Technology.addTechnologyData(data)
     res.json({ message: 'Technology data added successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error adding technology data' })
+    res.status(500).json({ message: error.message })
   }
 }
 

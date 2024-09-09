@@ -99,7 +99,7 @@ const getAllRetailData = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching retail data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -111,7 +111,7 @@ const patchRetailData = async (req, res) => {
     await Retail.patchRetailData(id, data)
     res.json({ message: 'Retail data updated successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error updating retail data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -122,7 +122,7 @@ const deleteRetailData = async (req, res) => {
     await Retail.deleteRetailData(id)
     res.json({ message: 'Retail data deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting retail data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -133,7 +133,7 @@ const addRetailData = async (req, res) => {
     await Retail.addRetailData(data)
     res.json({ message: 'Retail data added successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error adding retail data' })
+    res.status(500).json({ message: error.message })
   }
 }
 

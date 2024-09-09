@@ -70,7 +70,7 @@ const getHealthcareData = async (req, res) => {
 
     res.json(data)
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching healthcare data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -85,7 +85,7 @@ const getHealthcareDataById = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching healthcare data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -99,7 +99,7 @@ const getAllHealthcareData = async (req, res) => {
       res.json(data)
     }
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching healthcare data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -111,7 +111,7 @@ const patchHealthcareData = async (req, res) => {
     await Healthcare.patchHealthcareData(id, data)
     res.json({ message: 'Healthcare data updated successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error updating healthcare data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -122,7 +122,7 @@ const deleteHealthcareData = async (req, res) => {
     await Healthcare.deleteHealthcareData(id)
     res.json({ message: 'Healthcare data deleted successfully' })
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting healthcare data' })
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -133,7 +133,7 @@ const addHealthcareData = async (req, res) => {
     await Healthcare.addHealthcareData(data)
     res.json({message: 'Healthcare data added successfully'})
   } catch (error) {
-    res.status(500).json({message: 'Error adding healthcare data'})
+    res.status(500).json({message: error.message })
   }
 }
 
