@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container-fluid">
-            <router-link class="navbar-brand" to="/">
+        <div class="container-fluid p-0">
+            <router-link class="navbar-brand p-0" to="/">
                 <img src="https://i.postimg.cc/2jBN8jdG/Fortune-Track-Logo.png" alt="logo" class="img-fluid"
                     loading="lazy">
             </router-link>
@@ -18,18 +18,18 @@
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/about" @click="closeNavbar">
+                        <router-link class="nav-link" to="../about" @click="closeNavbar">
                                 About
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/predict" @click="closeNavbar">
+                        <router-link class="nav-link" to="../predict" @click="closeNavbar">
                                 Predict
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/contact" @click="closeNavbar">
-                                Reach me
+                        <router-link class="nav-link" to="../contact" @click="closeNavbar">
+                                Reach Me
                         </router-link>
                     </li>
                 </ul>
@@ -47,8 +47,10 @@ nav {
 
 .navbar-brand,
 .nav-link {
-    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
     color: black;
+    font-size: 24px;
 }
 .nav-link:hover{
     color: white;
@@ -59,16 +61,11 @@ nav {
 }
 
 .navbar-toggler-icon{
-    background-color: #4169E1;
+    color: black !important;
 }
 
 .nav-item i{
     margin-right: 5px;
-}
-
-img{
-    padding: 0px;
-    margin: 0px;
 }
 </style>
 

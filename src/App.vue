@@ -1,9 +1,7 @@
 <template>
   <div class="wrapper">
   <NavBar />
-  <main class="container">
     <router-view />
-  </main>
     <FooterComp />
   </div>
 </template>
@@ -19,13 +17,9 @@ import FooterComp from './components/FooterComp.vue'
 }
 </script>
 
-<style >
-.wrapper{
-  background-color: #000080;
-}
+<style>
 body{
   background-color: #000080;
-
 }
 
 </style>

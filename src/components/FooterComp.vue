@@ -23,7 +23,10 @@ export default {
     background-color: #4169E1;
 }
 .container-fluid, p{
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
-    font-weight: bold;
+    font-weight: 900;
+    color: black;
+    font-size: 24px;
 }
 </style>
