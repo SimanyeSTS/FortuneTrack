@@ -7,6 +7,7 @@ import retailController from '../controller/retailController.js';
 import technologyController from '../controller/technologyController.js';
 import foodAndBeveragesController from '../controller/foodAndBeveragesController.js';
 import healthcareController from '../controller/healthcareController.js';
+import { allSectorsRouter } from "../controller/allSectorsController.js";
 
 const router = express.Router();
 router.get('/retail', retailController.getRetailData) //this is for fetching from api only
@@ -42,11 +43,11 @@ const prediction = new Prediction()
 const forecastAffector = new ForecastAffector()
 const forecastContributor = new ForecastContributor()
 
-
 export { 
   users, 
   prediction, 
   forecastAffector, 
   forecastContributor, 
-  router 
+  router,
+  allSectorsRouter
 }

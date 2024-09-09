@@ -15,7 +15,7 @@ allSectorsRouter.get('/', async (req, res) => {
     res.status(500).json({
       status: 500,
       results: [],
-      message: 'Error fetching sectors',
+      message: error.message
     })
   }
 })

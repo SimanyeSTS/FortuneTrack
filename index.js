@@ -45,7 +45,8 @@ app.use('/from/api', router) //this is for fetching from api only
 app.use('/from/db', router) //this is for fetching from db only
 app.use('/to/db', router) //this is for posting to db only
 
-app.use('db/all-predictions', allSectorsRouter)
+app.use('/from/db/all-predictions', allSectorsRouter) //this is for fetching all predictions from db only
+
 
 
 app.get('^/$|FortuneTrack', (req, res) => {
