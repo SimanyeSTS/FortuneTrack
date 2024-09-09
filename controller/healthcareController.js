@@ -126,10 +126,22 @@ const deleteHealthcareData = async (req, res) => {
   }
 }
 
+const addHealthcareData = async (req, res) => {
+  try {
+    const data = req.body
+
+    await Healthcare.addHealthcareData(data)
+    res.json({message: 'Healthcare data added successfully'})
+  } catch (error) {
+    res.status(500).json({message: 'Error adding healthcare data'})
+  }
+}
+
 export default {
   getHealthcareData,
   getHealthcareDataById,
   getAllHealthcareData,
   patchHealthcareData,
-  deleteHealthcareData
+  deleteHealthcareData,
+  addHealthcareData
 }

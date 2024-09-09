@@ -41,9 +41,11 @@ app.use('/crypto', cryptoRouter)
 
 app.use('/commodity', commodityRouter)
 
-app.use('/api', router);
+app.use('/from/api', router) //this is for fetching from api only
+app.use('/from/db', router) //this is for fetching from db only
+app.use('/to/db', router) //this is for posting to db only
 
-app.use('/all-predictions', allSectorsRouter);
+app.use('db/all-predictions', allSectorsRouter)
 
 
 app.get('^/$|FortuneTrack', (req, res) => {

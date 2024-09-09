@@ -105,6 +105,25 @@ class FoodAndBeverages {
       throw new Error(`Failed to update Food/Beverage data: ${error.message}`)
     }
   }
+
+  static async addFoodAndBeveragesData(data) {
+    try {
+      if (!data) {
+        throw new Error('Data cannot be null or undefined')
+      }
+
+      const columns = Object.keys(data)
+      const values = Object.values(data)
+      const placeholders = Array(columns.length).fill('?').join(', ')
+
+      const query = `
+      INSERT INTO FoodAndBeverages (${columns}) VALUES (${placeholders})
+      `
+      await db.execute(query, values)
+    } catch (error) {
+      throw new Error(`Failed to add food/beverages data ${error.message}`)
+    }
+  }
 }
 
 cron.schedule('0 */2 * * *', FoodAndBeverages.updateFoodAndBeveragesData)

@@ -103,6 +103,24 @@ class Healthcare {
       throw new Error(`Failed to update healthcarecdata: ${error.message}`)
     }
   }
+
+  static async addHealthcareData(data) {
+    try {
+      if (!data) {
+        throw new Error('Data cannot be null or undefined')
+      }
+      const columns = Object.keys(data)
+      const values = Object.values(data)
+      const placeholders = Array(columns.length).fill('?').join(', ')
+
+      const query = `
+      INSERT INTO Healthcare (${columns}) VALUES (${placeholders})
+      `
+      await db.execute(query, values)
+    } catch (error) {
+      throw new Error(`Failed to add retail data: ${error.message}`)
+    }
+  }
 }
 
 cron.schedule('0 */2 * * *', Healthcare.updateHealthcareData)

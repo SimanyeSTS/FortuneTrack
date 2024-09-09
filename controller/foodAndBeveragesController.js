@@ -127,10 +127,22 @@ const deleteFoodAndBeveragesData = async (req, res) => {
   }
 }
 
+const addFoodAndBeveragesData = async (req, res) => {
+  try {
+    const  data = req.body
+
+    await FoodAndBeverages.addFoodAndBeveragesData(data)
+    res.json({ message: 'Food/Beverage data added successfully'})
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding food/beverage data'})
+  }
+}
+
 export default { 
   getFoodAndBeveragesData,
   getFoodAndBeveragesDataById,
   getAllFoodAndBeveragesData,
   patchFoodAndBeveragesData,
-  deleteFoodAndBeveragesData
+  deleteFoodAndBeveragesData,
+  addFoodAndBeveragesData
 }

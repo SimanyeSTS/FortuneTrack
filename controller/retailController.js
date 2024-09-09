@@ -126,10 +126,22 @@ const deleteRetailData = async (req, res) => {
   }
 }
 
+const addRetailData = async (req, res) => {
+  try {
+    const data = req.body
+
+    await Retail.addRetailData(data)
+    res.json({ message: 'Retail data added successfully' })
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding retail data' })
+  }
+}
+
 export default {
   getRetailData,
   getRetailDataById,
   getAllRetailData,
   patchRetailData,
-  deleteRetailData
+  deleteRetailData,
+  addRetailData
 }

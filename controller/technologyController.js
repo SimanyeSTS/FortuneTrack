@@ -126,10 +126,22 @@ const deleteTechnologyData = async (req, res) => {
   }
 }
 
+const addTechnologyData = async (req, res) => {
+  try {
+    const data = req.body
+
+    await Technology.addTechnologyData(data)
+    res.json({ message: 'Technology data added successfully' })
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding technology data' })
+  }
+}
+
 export default { 
   getTechnologyData,
   getTechnologyDataById,
   getAllTechnologyData,
   patchTechnologyData,
-  deleteTechnologyData
+  deleteTechnologyData,
+  addTechnologyData
 }

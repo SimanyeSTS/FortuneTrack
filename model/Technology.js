@@ -105,6 +105,25 @@ class Technology {
       throw new Error(`Failed to update technology data: ${error.message}`)
     }
   }
+
+  static async addTechnologyData(data) {
+    try {
+      if (!data) {
+        throw new Error('Data cannot be null or undefined')
+      }
+
+      const columns = Object.keys(data)
+      const values = Object.values(data)
+      const placeholders = Array(columns.length).fill('?').join(', ')
+
+      const query = `
+      INSERT INTO Technology (${columns}) VALUES (${placeholders})
+      `
+      await db.execute(query, values)
+    } catch (error) {
+      throw new Error(`Failed to add technology data: ${error.message}`)
+    }
+  }
 }
 
 cron.schedule('0 */2 * * *', Technology.updateTechnologyData)
