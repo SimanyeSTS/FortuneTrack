@@ -43,7 +43,7 @@ class Healthcare {
       const [rows] = await db.query(query, [id])
       return rows[0]
     } catch (error) {
-      throw error
+      throw Error(`Failed to retrieve Healthcare data by ID: ${error.message}`)
     }
   }
 

@@ -45,7 +45,7 @@ class FoodAndBeverages {
       const [rows] = await db.query(query, [id])
       return rows[0]
     } catch (error) {
-      throw error
+      throw new Error(`Failed to retrieve food/beverage data by ID: ${error.message}`)
     }
   }
 

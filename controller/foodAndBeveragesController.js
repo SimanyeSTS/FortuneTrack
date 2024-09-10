@@ -138,7 +138,7 @@ const addFoodAndBeveragesData = async (req, res) => {
   }
 }
 
-export default { 
+export default{ 
   getFoodAndBeveragesData,
   getFoodAndBeveragesDataById,
   getAllFoodAndBeveragesData,

@@ -137,7 +137,7 @@ const addTechnologyData = async (req, res) => {
   }
 }
 
-export default { 
+export default{ 
   getTechnologyData,
   getTechnologyDataById,
   getAllTechnologyData,

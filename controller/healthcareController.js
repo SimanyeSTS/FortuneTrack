@@ -137,7 +137,7 @@ const addHealthcareData = async (req, res) => {
   }
 }
 
-export default {
+export default{
   getHealthcareData,
   getHealthcareDataById,
   getAllHealthcareData,

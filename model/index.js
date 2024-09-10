@@ -9,30 +9,35 @@ import foodAndBeveragesController from '../controller/foodAndBeveragesController
 import healthcareController from '../controller/healthcareController.js';
 import { allSectorsRouter } from "../controller/allSectorsController.js";
 
-const router = express.Router();
-router.get('/retail', retailController.getRetailData) //this is for fetching from api only
+const router = express.Router()
+
+// Retail routes
+router.get('/retail', retailController.getRetailData); // fetching from API only
 router.get('/retail/:id', retailController.getRetailDataById)
 router.get('/retail-data', retailController.getAllRetailData)
 router.patch('/retail/:id', retailController.patchRetailData)
 router.delete('/retail/:id', retailController.deleteRetailData)
 router.post('/retail-data', retailController.addRetailData)
 
-router.get('/technology', technologyController.getTechnologyData) //this is for fetching from api only
-router.get('/technology/:id', retailController.getRetailDataById)
+// Technology routes
+router.get('/technology', technologyController.getTechnologyData); // fetching from API only
+router.get('/technology/:id', technologyController.getTechnologyDataById)
 router.get('/technology-data', technologyController.getAllTechnologyData)
 router.patch('/technology/:id', technologyController.patchTechnologyData)
 router.delete('/technology/:id', technologyController.deleteTechnologyData)
 router.post('/technology-data', technologyController.addTechnologyData)
 
-router.get('/food-and-beverages', foodAndBeveragesController.getFoodAndBeveragesData) //this is for fetching from api only
-router.get('/food-and-beverages/:id', retailController.getRetailDataById)
+// Food and Beverages routes
+router.get('/food-and-beverages', foodAndBeveragesController.getFoodAndBeveragesData); // fetching from API only
+router.get('/food-and-beverages/:id', foodAndBeveragesController.getFoodAndBeveragesDataById)
 router.get('/food-and-beverages-data', foodAndBeveragesController.getAllFoodAndBeveragesData)
 router.patch('/food-and-beverages/:id', foodAndBeveragesController.patchFoodAndBeveragesData)
 router.delete('/food-and-beverages/:id', foodAndBeveragesController.deleteFoodAndBeveragesData)
 router.post('/food-and-beverages-data', foodAndBeveragesController.addFoodAndBeveragesData)
 
-router.get('/healthcare', healthcareController.getHealthcareData) //this is for fetching from api only
-router.get('/healthcare/:id', retailController.getRetailDataById)
+// Healthcare routes
+router.get('/healthcare', healthcareController.getHealthcareData); // fetching from API only
+router.get('/healthcare/:id', healthcareController.getHealthcareDataById)
 router.get('/healthcare-data', healthcareController.getAllHealthcareData)
 router.patch('/healthcare/:id', healthcareController.patchHealthcareData)
 router.delete('/healthcare/:id', healthcareController.deleteHealthcareData)
