@@ -130,6 +130,12 @@ export default createStore({
     },
     REMOVE_HEALTHCARE: (state, id) => {
       state.healthcare = state.healthcare.filter(healthcare => healthcare.id !== id)
+    },
+    LOGIN_USER: (state, user) => {
+      state.user = user
+    },
+    LOGOUT_USER: (state) => {
+      state.user = null;
     }
   },
   actions: {
@@ -511,7 +517,40 @@ export default createStore({
       } finally {
         commit('SET_LOADING', false)
       }
-    }
+    },
+
+    async loginUser({ commit }, loginData) {
+      commit('SET_LOADING', true)
+      try {
+        const response = await axios.post(`${hostedData}user/login`, loginData)
+        if (response.status === 200) {
+          commit('SET_USER', response.data.user)
+          localStorage.setItem('token', response.data.token)
+          localStorage.setItem('user', JSON.stringify(response.data.user))
+        } else {
+          throw new Error(`Failed to login: ${response.statusText}`)
+        }
+      } catch (error) {
+        commit('SET_ERROR', error.message)
+      } finally {
+        commit('SET_LOADING', false)
+      }
+    },
+  
+      async logoutUser({ commit }) {
+        commit('SET_LOADING', true)
+        try {
+          await axios.post(`${hostedData}user/logout`)
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          commit('SET_USER', null)
+          delete axios.defaults.headers.common['Authorization'];
+        } catch (error) {
+          console.error(error)
+        } finally {
+          commit('SET_LOADING', false)
+        }
+      }
   },
   modules: {}
 })

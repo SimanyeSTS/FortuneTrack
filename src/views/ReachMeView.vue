@@ -51,7 +51,7 @@
         </div>
   
         <div class="button-group">
-          <button type="submit" class="btn btn-secondary">Send Message</button>
+          <button type="submit" class="btn btn-secondary">Send</button>
         </div>
   
         <p v-if="error" class="error-message">{{ error }}</p>
@@ -71,26 +71,23 @@
           message: ''
         },
         error: ''
-      };
+      }
     },
     methods: {
       handleSubmit() {
         this.error = '';
-        // Validate input fields
         if (!this.form.name || !this.form.email || !this.form.subject || !this.form.message) {
           this.error = "Please complete all fields before submitting.";
           return;
         }
-        // Show loading alert
         Swal.fire({
           title: 'Sending...',
           html: '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>',
           showConfirmButton: false,
           allowOutsideClick: false,
           allowEscapeKey: false,
-        });
-        // Use Formspree for form submission
-        fetch("https://formspree.io/f/YOUR_FORM_ID", {
+        })
+        fetch("https://formspree.io/f/mdknjqwv", {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -103,16 +100,16 @@
             Swal.fire({
               icon: 'success',
               title: 'Message Sent',
-              text: 'Thank you for getting in touch! I will be sure to reply at my earliest convenience.',
-            });
-            this.clearForm();
+              text: 'Thank you for getting in touch! I will be sure to reply at my earliest convenience.'
+            })
+            this.clearForm()
           } else {
-            this.error = 'There was an error sending your message. Please try again later.';
+            this.error = 'There was an error sending your message. Please try again later.'
           }
         })
         .catch(() => {
-          this.error = 'There was an error sending your message. Please try again later.';
-        });
+          this.error = 'There was an error sending your message. Please try again later.'
+        })
       },
       clearForm() {
         this.form = {
@@ -124,7 +121,7 @@
         this.error = '';
       }
     }
-  };
+  }
   </script>
 
 <style scoped>
@@ -208,11 +205,11 @@ button:hover {
 }
 
 .spacing {
-  margin-left: 2%; /* Adds spacing between the icon and the text */
+  margin-left: 2%; 
 }
 
 .indent {
-  margin-left: 8%; /* Adjust this value to control how far to move the lines to the right */
+  margin-left: 8%;
 }
 
 .bi {
