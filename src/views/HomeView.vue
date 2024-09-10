@@ -108,7 +108,7 @@
 }
 
 .specializations {
-  background-color: #0a2472;
+  background-color: #000080;
   padding: 40px 20px;
   text-align: center;
 }
