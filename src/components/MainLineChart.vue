@@ -88,6 +88,7 @@
     height: 100%;
     width: 100%;
     padding-left: 7%;
+    cursor: pointer;
   }
   </style>
   
