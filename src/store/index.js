@@ -1,8 +1,18 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 const hostedData = "http://localhost:3001/"
 
+const handleError = (commit, error) => {
+  const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred'
+  commit('SET_ERROR', errorMessage)
+  toast.error(errorMessage, {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 3000
+  })
+}
 
 export default createStore({
   state: {
@@ -17,7 +27,8 @@ export default createStore({
     foodAndBeverages: [],
     foodAndBeveragesPrediction: null,
     healthcare: [],
-    healthcarePrediction: null
+    healthcarePrediction: null,
+    allSectorsData: []
   },
   getters: {
     allUsers: (state) => state.users,
@@ -29,7 +40,8 @@ export default createStore({
     allFoodAndBeverages: (state) => state.foodAndBeverages,
     singleFoodAndBeveragesPrediction: (state) => state.foodAndBeveragesPrediction,
     allHealthcare: (state) => state.healthcare,
-    singleHealthcarePrediction: (state) => state.healthcarePrediction
+    singleHealthcarePrediction: (state) => state.healthcarePrediction,
+    allSectorsData: (state) => state.allSectorsData
   },
   mutations: {
     SET_USERS(state, users) {
@@ -62,6 +74,9 @@ export default createStore({
     SET_HEALTHCARE_PREDICTION(state, healthcarePrediction) {
       state.healthcarePrediction = healthcarePrediction
     },
+    SET_ALL_SECTORS_DATA(state, allSectorsData) {
+      state.allSectorsData = allSectorsData
+    },
     SET_LOADING(state, isLoading) {
       state.isLoading = isLoading
     },
@@ -80,7 +95,6 @@ export default createStore({
     REMOVE_USER: (state, id) => {
       state.users = state.users.filter(user => user.id !== id)
     },
-  
     ADD_RETAIL: (state, newRetail) => {
       state.retail.push(newRetail)
     },
@@ -93,7 +107,6 @@ export default createStore({
     REMOVE_RETAIL: (state, id) => {
       state.retail = state.retail.filter(retail => retail.id !== id)
     },
-  
     ADD_TECHNOLOGY: (state, newTechnology) => {
       state.technology.push(newTechnology)
     },
@@ -106,7 +119,6 @@ export default createStore({
     REMOVE_TECHNOLOGY: (state, id) => {
       state.technology = state.technology.filter(tech => tech.id !== id)
     },
-  
     ADD_FOOD_AND_BEVERAGES: (state, newFoodAndBeverages) => {
       state.foodAndBeverages.push(newFoodAndBeverages)
     },
@@ -135,7 +147,7 @@ export default createStore({
       state.user = user
     },
     LOGOUT_USER: (state) => {
-      state.user = null;
+      state.user = null
     }
   },
   actions: {
@@ -143,13 +155,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}users`)
-        if (response.status === 200) {
-          commit('SET_USERS', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_USERS', data)
         } else {
-          throw new Error(`Failed to fetch users: ${response.statusText}`)
+          throw new Error(`Failed to fetch users: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -159,13 +172,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}user/${UserID}`)
-        if (response.status === 200) {
-          commit('SET_USER', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_USER', data)
         } else {
-          throw new Error(`Failed to fetch user: ${response.statusText}`)
+          throw new Error(`Failed to fetch user: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -175,13 +189,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/retail-data`)
-        if (response.status === 200) {
-          commit('SET_RETAIL', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_RETAIL', data)
         } else {
-          throw new Error(`Failed to fetch retail: ${response.statusText}`)
+          throw new Error(`Failed to fetch retail: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -191,13 +206,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/retail/${id}`)
-        if (response.status === 200) {
-          commit('SET_RETAIL_PREDICTION', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_RETAIL_PREDICTION', data)
         } else {
-          throw new Error(`Failed to fetch retail prediction: ${response.statusText}`)
+          throw new Error(`Failed to fetch retail prediction: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -207,13 +223,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/technology-data`)
-        if (response.status === 200) {
-          commit('SET_TECHNOLOGY', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_TECHNOLOGY', data)
         } else {
-          throw new Error(`Failed to fetch technology: ${response.statusText}`)
+          throw new Error(`Failed to fetch technology: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -223,13 +240,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/technology/${id}`)
-        if (response.status === 200) {
-          commit('SET_TECHNOLOGY_PREDICTION', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_TECHNOLOGY_PREDICTION', data)
         } else {
-          throw new Error(`Failed to fetch technology prediction: ${response.statusText}`)
+          throw new Error(`Failed to fetch technology prediction: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -239,13 +257,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/food-and-beverages-data`)
-        if (response.status === 200) {
-          commit('SET_FOOD_AND_BEVERAGES', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_FOOD_AND_BEVERAGES', data)
         } else {
-          throw new Error(`Failed to fetch food and beverages: ${response.statusText}`)
+          throw new Error(`Failed to fetch food and beverages: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -255,13 +274,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/food-and-beverages/${id}`)
-        if (response.status === 200) {
-          commit('SET_FOOD_AND_BEVERAGES_PREDICTION', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_FOOD_AND_BEVERAGES_PREDICTION', data)
         } else {
-          throw new Error(`Failed to fetch food and beverages prediction: ${response.statusText}`)
+          throw new Error(`Failed to fetch food and beverages prediction: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -271,13 +291,14 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/healthcare-data`)
-        if (response.status === 200) {
-          commit('SET_HEALTHCARE', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_HEALTHCARE', data)
         } else {
-          throw new Error(`Failed to fetch healthcare: ${response.statusText}`)
+          throw new Error(`Failed to fetch healthcare: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -287,13 +308,31 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.get(`${hostedData}from/db/healthcare/${id}`)
-        if (response.status === 200) {
-          commit('SET_HEALTHCARE_PREDICTION', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_HEALTHCARE_PREDICTION', data)
         } else {
-          throw new Error(`Failed to fetch healthcare prediction: ${response.statusText}`)
+          throw new Error(`Failed to fetch healthcare prediction: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
+      } finally {
+        commit('SET_LOADING', false)
+      }
+    },
+
+    async fetchAllSectorsData({ commit }) {
+      commit('SET_LOADING', true)
+      try {
+        const response = await axios.get(`${hostedData}from/db/all-predictions`)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_ALL_SECTORS_DATA', data)
+        } else {
+          throw new Error(`Failed to fetch all sectors data: ${response.statusText || response.status}`)
+        }
+      } catch (error) {
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -303,13 +342,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}user/register`, userData)
-        if (response.status === 201) {
-          commit('SET_USER', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 201 && data) {
+          commit('SET_USER', data)
+          toast.success('User registered successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to register user: ${response.statusText}`)
+          throw new Error(`Failed to register user: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -319,13 +363,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.patch(`${hostedData}user/${id}`, userData)
-        if (response.status === 200) {
-          commit('SET_USER', response.data.result)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_USER', data)
+          toast.success('User updated successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to update user: ${response.statusText}`)
+          throw new Error(`Failed to update user: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -334,10 +383,18 @@ export default createStore({
     async deleteUser({ commit }, id) {
       commit('SET_LOADING', true)
       try {
-        await axios.delete(`${hostedData}user/${id}`)
-        commit('SET_USER', null)
+        const response = await axios.delete(`${hostedData}user/${id}`)
+        if (response.status === 200) {
+          commit('SET_USER', null)
+          toast.success('User deleted successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
+        } else {
+          throw new Error(`Failed to delete user: ${response.statusText || response.status}`)
+        }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -347,13 +404,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}to/db/retail-data`, retailData)
-        if (response.status === 201) {
-          commit('SET_RETAIL', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 201 && data) {
+          commit('SET_RETAIL', data)
+          toast.success('Retail data created successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to create retail: ${response.statusText}`)
+          throw new Error(`Failed to create retail: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -363,13 +425,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.patch(`${hostedData}from/db/retail/${id}`, retailData)
-        if (response.status === 200) {
-          commit('SET_RETAIL', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_RETAIL', data)
+          toast.success('Retail data updated successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to update retail: ${response.statusText}`)
+          throw new Error(`Failed to update retail: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -378,10 +445,18 @@ export default createStore({
     async deleteRetail({ commit }, id) {
       commit('SET_LOADING', true)
       try {
-        await axios.delete(`${hostedData}from/db/retail/${id}`)
-        commit('SET_RETAIL', null)
+        const response = await axios.delete(`${hostedData}from/db/retail/${id}`)
+        if (response.status === 200) {
+          commit('SET_RETAIL', null)
+          toast.success('Retail data deleted successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
+        } else {
+          throw new Error(`Failed to delete retail: ${response.statusText || response.status}`)
+        }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -391,13 +466,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}to/db/technology-data`, technologyData)
-        if (response.status === 201) {
-          commit('SET_TECHNOLOGY', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 201 && data) {
+          commit('SET_TECHNOLOGY', data)
+          toast.success('Technology data created successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to create technology: ${response.statusText}`)
+          throw new Error(`Failed to create technology: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -407,13 +487,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.patch(`${hostedData}from/db/technology/${id}`, technologyData)
-        if (response.status === 200) {
-          commit('SET_TECHNOLOGY', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_TECHNOLOGY', data)
+          toast.success('Technology data updated successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to update technology: ${response.statusText}`)
+          throw new Error(`Failed to update technology: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -422,10 +507,18 @@ export default createStore({
     async deleteTechnology({ commit }, id) {
       commit('SET_LOADING', true)
       try {
-        await axios.delete(`${hostedData}from/db/technology/${id}`)
-        commit('SET_TECHNOLOGY', null)
+        const response = await axios.delete(`${hostedData}from/db/technology/${id}`)
+        if (response.status === 200) {
+          commit('SET_TECHNOLOGY', null)
+          toast.success('Technology data deleted successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
+        } else {
+          throw new Error(`Failed to delete technology: ${response.statusText || response.status}`)
+        }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -435,13 +528,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}to/db/food-and-beverages-data`, foodAndBeveragesData)
-        if (response.status === 201) {
-          commit('SET_FOOD_AND_BEVERAGES', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 201 && data) {
+          commit('SET_FOOD_AND_BEVERAGES', data)
+          toast.success('Food and beverages data created successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to create food and beverages: ${response.statusText}`)
+          throw new Error(`Failed to create food and beverages: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -451,13 +549,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.patch(`${hostedData}from/db/food-and-beverages/${id}`, foodAndBeveragesData)
-        if (response.status === 200) {
-          commit('SET_FOOD_AND_BEVERAGES', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_FOOD_AND_BEVERAGES', data)
+          toast.success('Food and beverages data updated successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to update food and beverages: ${response.statusText}`)
+          throw new Error(`Failed to update food and beverages: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -466,10 +569,18 @@ export default createStore({
     async deleteFoodAndBeverages({ commit }, id) {
       commit('SET_LOADING', true)
       try {
-        await axios.delete(`${hostedData}from/db/food-and-beverages/${id}`)
-        commit('SET_FOOD_AND_BEVERAGES', null)
+        const response = await axios.delete(`${hostedData}from/db/food-and-beverages/${id}`)
+        if (response.status === 200) {
+          commit('SET_FOOD_AND_BEVERAGES', null)
+          toast.success('Food and beverages data deleted successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
+        } else {
+          throw new Error(`Failed to delete food and beverages: ${response.statusText || response.status}`)
+        }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -479,13 +590,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}to/db/healthcare-data`, healthcareData)
-        if (response.status === 201) {
-          commit('SET_HEALTHCARE', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 201 && data) {
+          commit('SET_HEALTHCARE', data)
+          toast.success('Healthcare data created successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to create healthcare: ${response.statusText}`)
+          throw new Error(`Failed to create healthcare: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -495,13 +611,18 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.patch(`${hostedData}from/db/healthcare/${id}`, healthcareData)
-        if (response.status === 200) {
-          commit('SET_HEALTHCARE', response.data.results)
+        const data = response.data?.results || response.data
+        if (response.status === 200 && data) {
+          commit('SET_HEALTHCARE', data)
+          toast.success('Healthcare data updated successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to update healthcare: ${response.statusText}`)
+          throw new Error(`Failed to update healthcare: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -510,10 +631,18 @@ export default createStore({
     async deleteHealthcare({ commit }, id) {
       commit('SET_LOADING', true)
       try {
-        await axios.delete(`${hostedData}from/db/healthcare/${id}`)
-        commit('SET_HEALTHCARE', null)
+        const response = await axios.delete(`${hostedData}from/db/healthcare/${id}`)
+        if (response.status === 200) {
+          commit('SET_HEALTHCARE', null)
+          toast.success('Healthcare data deleted successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
+        } else {
+          throw new Error(`Failed to delete healthcare: ${response.statusText || response.status}`)
+        }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
@@ -523,34 +652,47 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}user/login`, loginData)
-        if (response.status === 200) {
-          commit('SET_USER', response.data.user)
-          localStorage.setItem('token', response.data.token)
-          localStorage.setItem('user', JSON.stringify(response.data.user))
+        const data = response.data
+        if (response.status === 200 && data.user) {
+          commit('SET_USER', data.user)
+          localStorage.setItem('token', data.token)
+          localStorage.setItem('user', JSON.stringify(data.user))
+          toast.success('Logged in successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000
+          })
         } else {
-          throw new Error(`Failed to login: ${response.statusText}`)
+          throw new Error(`Failed to login: ${response.statusText || response.status}`)
         }
       } catch (error) {
-        commit('SET_ERROR', error.message)
+        handleError(commit, error)
       } finally {
         commit('SET_LOADING', false)
       }
     },
-  
-      async logoutUser({ commit }) {
-        commit('SET_LOADING', true)
-        try {
-          await axios.post(`${hostedData}user/logout`)
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-          commit('SET_USER', null)
-          delete axios.defaults.headers.common['Authorization'];
-        } catch (error) {
-          console.error(error)
-        } finally {
-          commit('SET_LOADING', false)
-        }
+
+    async logoutUser({ commit }) {
+      commit('SET_LOADING', true)
+      try {
+        await axios.post(`${hostedData}user/logout`)
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        commit('SET_USER', null)
+        delete axios.defaults.headers.common['Authorization']
+        toast.success('Logged out successfully', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000
+        })
+      } catch (error) {
+        console.error(error)
+        toast.error('Failed to logout', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000
+        })
+      } finally {
+        commit('SET_LOADING', false)
       }
+    }
   },
   modules: {}
 })
