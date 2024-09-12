@@ -11,6 +11,8 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.4",
+    "chartjs-gauge": "^0.3.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "core-js": "^3.8.3",
     "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",

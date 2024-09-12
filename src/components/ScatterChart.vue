@@ -9,7 +9,7 @@
   import Chart from 'chart.js/auto';
   
   export default defineComponent({
-    name: 'RadarChart',
+    name: 'ScatterChart',
     props: {
       chartData: {
         type: Object,
@@ -27,7 +27,7 @@
       const createChart = () => {
         const ctx = chartCanvas.value.getContext('2d');
         chart = new Chart(ctx, {
-          type: 'radar',
+          type: 'scatter',
           data: props.chartData,
           options: props.options
         });

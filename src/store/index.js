@@ -16,6 +16,14 @@ const handleError = (commit, error) => {
 
 export default createStore({
   state: {
+    growthMetricsData: null,
+    financialPerformanceData: null,
+    profitabilityMetricsData: null,
+    efficiencyMetricsData: null,
+    valuationMetricsData: null,
+    analystExpectationsData: null,
+    stockPerformanceData: null,
+    analystTargetPriceData: null,
     users: [],
     user: null,
     error: null,
@@ -28,7 +36,8 @@ export default createStore({
     foodAndBeveragesPrediction: null,
     healthcare: [],
     healthcarePrediction: null,
-    allSectorsData: []
+    allSectorsData: [],
+    symbolData: null
   },
   getters: {
     allUsers: (state) => state.users,
@@ -41,9 +50,34 @@ export default createStore({
     singleFoodAndBeveragesPrediction: (state) => state.foodAndBeveragesPrediction,
     allHealthcare: (state) => state.healthcare,
     singleHealthcarePrediction: (state) => state.healthcarePrediction,
-    allSectorsData: (state) => state.allSectorsData
+    allSectorsData: (state) => state.allSectorsData,
+    getSymbolData: (state) => state.symbolData,
   },
   mutations: {
+    SET_GROWTH_METRICS_DATA(state, data) {
+      state.growthMetricsData = data;
+    },
+    SET_FINANCIAL_PERFORMANCE_DATA(state, data) {
+      state.financialPerformanceData = data;
+    },
+    SET_PROFITABILITY_METRICS_DATA(state, data) {
+      state.profitabilityMetricsData = data;
+    },
+    SET_EFFICIENCY_METRICS_DATA(state, data) {
+      state.efficiencyMetricsData = data;
+    },
+    SET_VALUATION_METRICS_DATA(state, data) {
+      state.valuationMetricsData = data;
+    },
+    SET_ANALYST_EXPECTATIONS_DATA(state, data) {
+      state.analystExpectationsData = data;
+    },
+    SET_STOCK_PERFORMANCE_DATA(state, data) {
+      state.stockPerformanceData = data;
+    },
+    SET_ANALYST_TARGET_PRICE_DATA(state, data) {
+      state.analystTargetPriceData = data;
+    },
     SET_USERS(state, users) {
       state.users = users
     },
@@ -85,6 +119,17 @@ export default createStore({
     },
     ADD_USER: (state, newUser) => {
       state.users.push(newUser)
+    },
+    SET_SYMBOL_DATA(state, data) {
+      state.symbolData = data;
+      state.growthMetricsData = data.growthMetrics;
+      state.financialPerformanceData = data.financialPerformance;
+      state.profitabilityMetricsData = data.profitabilityMetrics;
+      state.efficiencyMetricsData = data.efficiencyMetrics;
+      state.valuationMetricsData = data.valuationMetrics;
+      state.analystExpectationsData = data.analystExpectations;
+      state.stockPerformanceData = data.stockPerformance;
+      state.analystTargetPriceData = data.analystTargetPrice;
     },
     UPDATE_USER: (state, updatedUser) => {
       const index = state.users.findIndex(user => user.id === updatedUser.id)
@@ -692,7 +737,40 @@ export default createStore({
       } finally {
         commit('SET_LOADING', false)
       }
+    },
+
+    async fetchSymbolData({ commit }, { symbol, sector }) {
+      commit('SET_LOADING', true);
+      try {
+        let response;
+        switch(sector) {
+          case 'Retail':
+            response = await axios.get(`${hostedData}from/db/retail/${symbol}`);
+            break;
+          case 'Technology':
+            response = await axios.get(`${hostedData}from/db/technology/${symbol}`);
+            break;
+          case 'Food and Beverages':
+            response = await axios.get(`${hostedData}from/db/food-and-beverages/${symbol}`);
+            break;
+          case 'Healthcare':
+            response = await axios.get(`${hostedData}from/db/healthcare/${symbol}`);
+            break;
+          default:
+            throw new Error('Invalid sector');
+        }
+        const data = response.data?.result || response.data;
+    if (response.status === 200 && data) {
+      commit('SET_SYMBOL_DATA', data);
+    } else {
+      throw new Error(`Failed to fetch symbol data: ${response.statusText || response.status}`);
     }
+  } catch (error) {
+    handleError(commit, error);
+  } finally {
+    commit('SET_LOADING', false);
+  }
+}
   },
   modules: {}
 })

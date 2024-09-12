@@ -46,9 +46,10 @@ const routes = [
     component: RegistrationView
   },
   {
-    path: '/real-time-prediiction',
+    path: '/real-time-prediction/:symbol',
     name: 'prediction-data',
-    component: PredictionDataView
+    component: PredictionDataView,
+    props: true
   }
 ]
 

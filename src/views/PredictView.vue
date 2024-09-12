@@ -16,7 +16,7 @@
   <script>
   import { defineComponent, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
-  import MainLineChart from '../components/MainLineChart.vue';
+  import MainLineChart from '@/components/MainLineChart.vue';
   import MainSideWindow from '@/components/MainSideWindow.vue';
   
   export default defineComponent({
