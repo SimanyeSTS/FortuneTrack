@@ -30,6 +30,18 @@ class Retail {
     }
   }
 
+  static async getRetailDataBySymbol(Symbol) {
+    try {
+      const query = `
+      SELECT * FROM Retail WHERE Symbol = ?
+      `
+      const [rows] = await db.query(query, [Symbol])
+      return rows[0]
+    } catch (error) {
+      throw new Error(`Failed to retrieve retail data by Symbol: ${error.message}`)
+    }
+  }
+
   static async getAllRetailData() {
     try {
       const query = `

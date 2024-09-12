@@ -89,6 +89,21 @@ const getRetailDataById = async (req, res) => {
   }
 }
 
+const getRetailDataBySymbol = async (req, res) => {
+  try {
+    const symbol = req.params.symbol
+    const data = await Retail.getRetailDataBySymbol(symbol)
+
+    if (!data) {
+      res.status(404).json({ message: 'Retail data not found for the given symbol' })
+    } else {
+      res.json(data)
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching retail data by symbol' })
+  }
+}
+
 const getAllRetailData = async (req, res) => {
   try {
     const data = await Retail.getAllRetailData()
@@ -143,5 +158,6 @@ export default {
   getAllRetailData,
   patchRetailData,
   deleteRetailData,
-  addRetailData
+  addRetailData,
+  getRetailDataBySymbol
 }
