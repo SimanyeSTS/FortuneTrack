@@ -32,7 +32,6 @@
         </p>
       </div>
   
-      <!-- Form Section -->
       <form @submit.prevent="handleSubmit" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
         <div class="form-group">
           <input placeholder="Your Name" type="text" id="name" v-model="form.name" required />

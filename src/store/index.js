@@ -111,6 +111,9 @@ export default createStore({
     SET_ALL_SECTORS_DATA(state, allSectorsData) {
       state.allSectorsData = allSectorsData
     },
+    SET_SYMBOL_DATA(state, data) {
+      state.symbolData = data;
+    },
     SET_LOADING(state, isLoading) {
       state.isLoading = isLoading
     },
@@ -119,17 +122,6 @@ export default createStore({
     },
     ADD_USER: (state, newUser) => {
       state.users.push(newUser)
-    },
-    SET_SYMBOL_DATA(state, data) {
-      state.symbolData = data;
-      state.growthMetricsData = data.growthMetrics;
-      state.financialPerformanceData = data.financialPerformance;
-      state.profitabilityMetricsData = data.profitabilityMetrics;
-      state.efficiencyMetricsData = data.efficiencyMetrics;
-      state.valuationMetricsData = data.valuationMetrics;
-      state.analystExpectationsData = data.analystExpectations;
-      state.stockPerformanceData = data.stockPerformance;
-      state.analystTargetPriceData = data.analystTargetPrice;
     },
     UPDATE_USER: (state, updatedUser) => {
       const index = state.users.findIndex(user => user.id === updatedUser.id)
@@ -742,35 +734,36 @@ export default createStore({
     async fetchSymbolData({ commit }, { symbol, sector }) {
       commit('SET_LOADING', true);
       try {
-        let response;
-        switch(sector) {
-          case 'Retail':
-            response = await axios.get(`${hostedData}from/db/retail/${symbol}`);
-            break;
-          case 'Technology':
-            response = await axios.get(`${hostedData}from/db/technology/${symbol}`);
-            break;
-          case 'Food and Beverages':
-            response = await axios.get(`${hostedData}from/db/food-and-beverages/${symbol}`);
-            break;
-          case 'Healthcare':
-            response = await axios.get(`${hostedData}from/db/healthcare/${symbol}`);
-            break;
-          default:
-            throw new Error('Invalid sector');
-        }
+        const response = await axios.get(`${hostedData}from/db/${sector.toLowerCase().replace(/ /g, '-')}/${symbol}`);
         const data = response.data?.result || response.data;
-    if (response.status === 200 && data) {
-      commit('SET_SYMBOL_DATA', data);
-    } else {
-      throw new Error(`Failed to fetch symbol data: ${response.statusText || response.status}`);
-    }
-  } catch (error) {
-    handleError(commit, error);
-  } finally {
-    commit('SET_LOADING', false);
-  }
-}
+        if (response.status === 200 && data) {
+          commit('SET_SYMBOL_DATA', data);
+        } else {
+          throw new Error(`Failed to fetch symbol data: ${response.statusText || response.status}`);
+        }
+      } catch (error) {
+        handleError(commit, error);
+      } finally {
+        commit('SET_LOADING', false);
+      }
+    },
+
+    async fetchPredictionData({ commit }, { symbol, sector }) {
+      commit('SET_LOADING', true)
+      try {
+        const response = await axios.get(`${hostedData}from/db/${sector.toLowerCase().replace(/ /g, '-')}/${symbol}`)
+        const data = response.data?.result || response.data
+        if (response.status === 200 && data) {
+          commit('SET_SYMBOL_DATA', data)
+        } else {
+          throw new Error(`Failed to fetch prediction data: ${response.statusText || response.status}`)
+        }
+      } catch (error) {
+        handleError(commit, error)
+      } finally {
+        commit('SET_LOADING', false)
+      }
+    },
   },
   modules: {}
 })

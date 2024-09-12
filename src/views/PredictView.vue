@@ -1,17 +1,21 @@
 <template>
-    <div class="predict-view">
-      <h1>Predict</h1>
-      <div v-for="(sector, sectorIndex) in sectors" :key="sectorIndex" class="sector-charts">
-        <h2>{{ sector.name }}</h2>
-        <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
-          <div class="chart-container">
-            <MainLineChart :chartData="prepareChartData(data)" />
+  <div class="predict-view">
+    <h1>Predict</h1>
+    <div class="button-container">
+      <button class="acc" @click="redirectToAccount">Account</button>      
+      <button class="logout">Logout</button>
+    </div>
+    <div v-for="(sector, sectorIndex) in sectors" :key="sectorIndex" class="sector-charts">
+      <h2>{{ sector.name }}</h2>
+      <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
+        <div class="chart-container">
+          <MainLineChart :chartData="prepareChartData(data)" />
         </div>
         <MainSideWindow :data="data" :sector="sector.name" @predict="handlePredict(data)" />
-        </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
   <script>
   import { defineComponent, computed, onMounted } from 'vue';
@@ -25,6 +29,11 @@
       MainLineChart,
       MainSideWindow
     },
+    methods: {
+    redirectToAccount() {
+      this.$router.push({ name: 'user-dashboard' });
+    },
+  },
     setup() {
       const store = useStore();
   
@@ -74,18 +83,12 @@
         store.dispatch('fetchFoodAndBeverages')
         store.dispatch('fetchHealthcare')
       })
-  
-      const handlePredict = (data) => {
-        // Implement predict logic here
-        console.log('Predict button clicked for:', data.Symbol);
-      };
-  
+      
       return {
         isLoading,
         error,
         sectors,
         prepareChartData,
-        handlePredict
       }
     }
   })
@@ -115,20 +118,51 @@
     display: flex;
     align-items: stretch;
     margin-bottom: 40px;
-    gap: 0; /* Remove gap between chart and card */
+    gap: 0;
   }
   
   .chart-container {
-    flex: 1; /* Ensure the chart takes the remaining space */
+    flex: 1;
     height: 400px;
     padding-left: 6%;
   }
   
   MainSideWindow {
-    flex: 0 0 300px; /* Set a fixed width for the card */
+    flex: 0 0 300px;
     padding: 20px;
   }
-  .card{
+  
+  .card {
     margin-right: 17rem;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 20px;
+    top: 6rem !important;
+    position: fixed;
+  }
+  
+  button {
+    background-color: white;
+    color: black;
+    border: 2px solid #3668ff;
+    padding: 8px !important;
+    width: 6rem !important;
+    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 20%;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #3668ff;
+    color: white;
+    border: solid black;
   }
   </style>
