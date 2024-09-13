@@ -1,0 +1,25 @@
+name: Cron Job
+
+on:
+  schedule:
+    - cron: 0 */2 * * *
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Run cron script
+        run: node cron.js
+        env:
+          HOST_DB: ${{ secrets.HOST_DB }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          USER_DB: ${{ secrets.USER_DB }}
+          PW_DB: ${{ secrets.PW_DB }}
