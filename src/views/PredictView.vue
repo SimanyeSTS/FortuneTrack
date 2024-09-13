@@ -1,9 +1,6 @@
 <template>
   <div class="predict-view">
-    <!-- Spinner will be shown while loading -->
     <SpinnerComp v-if="isLoading" />
-
-    <!-- Main content when loading is complete -->
     <div v-else>
       <h1>Predict</h1>
       <div class="button-container">
