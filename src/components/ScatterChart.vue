@@ -25,34 +25,40 @@
       let chart = null;
   
       const createChart = () => {
-        const ctx = chartCanvas.value.getContext('2d');
+        const ctx = chartCanvas.value.getContext('2d')
         chart = new Chart(ctx, {
           type: 'scatter',
           data: props.chartData,
           options: props.options
-        });
-      };
+        })
+      }
   
       onMounted(() => {
         createChart();
-      });
+      })
   
       watch(() => props.chartData, (newVal) => {
         if (chart) {
           chart.data = newVal;
-          chart.update();
+          chart.update()
         }
-      }, { deep: true });
+      }, { deep: true })
   
-      return { chartCanvas };
+      return { chartCanvas }
     }
-  });
+  })
   </script>
   
   <style scoped>
-  .chart-container {
+ .chart-container {
+    position: relative;
     width: 100%;
     height: 400px;
+    cursor: pointer;
+  }
+
+  canvas{
+    background-color: white;
   }
   </style>
   

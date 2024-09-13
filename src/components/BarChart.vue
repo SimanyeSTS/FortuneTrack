@@ -30,29 +30,35 @@
           type: 'bar',
           data: props.chartData,
           options: props.options
-        });
-      };
-  
+        })
+      }
+
       onMounted(() => {
-        createChart();
-      });
+        createChart()
+      })
   
       watch(() => props.chartData, (newVal) => {
         if (chart) {
           chart.data = newVal;
-          chart.update();
+          chart.update()
         }
-      }, { deep: true });
+      }, { deep: true })
   
-      return { chartCanvas };
+      return { chartCanvas }
     }
-  });
+  })
   </script>
   
   <style scoped>
   .chart-container {
+    position: relative;
     width: 100%;
     height: 400px;
+    cursor: pointer;
+  }
+
+  canvas{
+    background-color: white;
   }
   </style>
   

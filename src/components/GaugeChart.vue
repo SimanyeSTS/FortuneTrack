@@ -31,9 +31,8 @@ export default defineComponent({
       // Registering plugins
       Chart.register(ChartDataLabels);
       
-      // Create the gauge chart
       chart = new Chart(ctx, {
-        type: 'gauge',  // Type is gauge
+        type: 'gauge', 
         data: props.chartData,
         options: {
           ...props.options,
@@ -43,7 +42,7 @@ export default defineComponent({
               formatter: function (value, context) {
                 return context.chart.data.labels[context.dataIndex];  // Label for each section
               },
-              color: 'rgba(0, 0, 0, 1.0)',  // Label color
+              color: 'rgba(0, 0, 0, 1.0)',
               font: {
                 size: 20,
                 weight: 'bold'
@@ -54,12 +53,10 @@ export default defineComponent({
       });
     };
 
-    // Create the chart on component mount
     onMounted(() => {
       createChart();
     });
 
-    // Watch for chartData changes and update the chart
     watch(() => props.chartData, (newVal) => {
       if (chart) {
         chart.data = newVal;
@@ -74,7 +71,13 @@ export default defineComponent({
 
 <style scoped>
 .chart-container {
-  width: 100%;
-  height: 400px;
-}
+    position: relative;
+    width: 100%;
+    height: 400px;
+    cursor: pointer;
+  }
+
+  canvas{
+    background-color: white;
+  }
 </style>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
-const hostedData = "http://localhost:3001/";
+const hostedData = "https://fortunetrack.onrender.com/";
 
 const handleError = (commit, error) => {
   const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred';
@@ -29,7 +29,7 @@ export default createStore({
     healthcare: [],
     healthcarePrediction: null,
     allSectorsData: [],
-    singlePrediction: null, // Store the data for an individual prediction
+    singlePrediction: null,
   },
   getters: {
     allUsers: (state) => state.users,

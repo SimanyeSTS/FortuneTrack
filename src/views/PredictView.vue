@@ -1,41 +1,49 @@
 <template>
   <div class="predict-view">
-    <h1>Predict</h1>
-    <div class="button-container">
-      <button class="acc" @click="redirectToAccount">Account</button>      
-      <button class="logout">Logout</button>
-    </div>
-    <div v-for="(sector, sectorIndex) in sectors" :key="sectorIndex" class="sector-charts">
-      <h2>{{ sector.name }}</h2>
-      <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
-        <div class="chart-container">
-          <MainLineChart :chartData="prepareChartData(data)" />
+    <!-- Spinner will be shown while loading -->
+    <SpinnerComp v-if="isLoading" />
+
+    <!-- Main content when loading is complete -->
+    <div v-else>
+      <h1>Predict</h1>
+      <div class="button-container">
+        <button class="acc" @click="redirectToAccount">Account</button>      
+        <button class="logout">Logout</button>
+      </div>
+      <div v-for="(sector, sectorIndex) in sectors" :key="sectorIndex" class="sector-charts">
+        <h2>{{ sector.name }}</h2>
+        <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
+          <div class="chart-container">
+            <MainLineChart :chartData="prepareChartData(data)" />
+          </div>
+          <MainSideWindow :data="data" :sector="sector.name" />
         </div>
-        <MainSideWindow :data="data" :sector="sector.name" />
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
-import { defineComponent, computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
-import MainLineChart from '@/components/MainLineChart.vue';
-import MainSideWindow from '@/components/MainSideWindow.vue';
+import { defineComponent, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import MainLineChart from '@/components/MainLineChart.vue'
+import MainSideWindow from '@/components/MainSideWindow.vue'
+import SpinnerComp from '@/components/SpinnerComp.vue'
 
 export default defineComponent({
   name: 'PredictView',
   components: {
     MainLineChart,
-    MainSideWindow
+    MainSideWindow,
+    SpinnerComp
   },
   methods: {
     redirectToAccount() {
-      this.$router.push({ name: 'user-dashboard' });
-    },
+      this.$router.push({ name: 'user-dashboard' })
+    }
   },
   setup() {
-    const store = useStore();
+    const store = useStore()
 
     const isLoading = computed(() => store.state.isLoading)
     const error = computed(() => store.state.error)
@@ -83,7 +91,7 @@ export default defineComponent({
       store.dispatch('fetchFoodAndBeverages')
       store.dispatch('fetchHealthcare')
     })
-    
+
     return {
       isLoading,
       error,
@@ -93,76 +101,76 @@ export default defineComponent({
   }
 })
 </script>
-  
-  <style scoped>
-  .predict-view {
-    padding: 20px;
-  }
-  
-  h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    color: white;
-    font-size: 30px;
-  }
-  
-  h2 {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    color: white;
-    font-size: 25px;
-    text-align: center;
-  }
-  
-  .chart-container-wrapper {
-    display: flex;
-    align-items: stretch;
-    margin-bottom: 40px;
-    gap: 0;
-  }
-  
-  .chart-container {
-    flex: 1;
-    height: 400px;
-    padding-left: 6%;
-  }
-  
-  MainSideWindow {
-    flex: 0 0 300px;
-    padding: 20px;
-  }
-  
-  .card {
-    margin-right: 17rem;
-  }
-  
-  .button-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 20px;
-    top: 6rem !important;
-    position: fixed;
-  }
-  
-  button {
-    background-color: white;
-    color: black;
-    border: 2px solid #3668ff;
-    padding: 8px !important;
-    width: 6rem !important;
-    margin-bottom: 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 20%;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #3668ff;
-    color: white;
-    border: solid black;
-  }
-  </style>
+
+<style scoped>
+.predict-view {
+  padding: 20px;
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 30px;
+}
+
+h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 25px;
+  text-align: center;
+}
+
+.chart-container-wrapper {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 40px;
+  gap: 0;
+}
+
+.chart-container {
+  flex: 1;
+  height: 400px;
+  padding-left: 6%;
+}
+
+MainSideWindow {
+  flex: 0 0 300px;
+  padding: 20px;
+}
+
+.card {
+  margin-right: 17rem;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 20px;
+  top: 6rem !important;
+  position: fixed;
+}
+
+button {
+  background-color: white;
+  color: black;
+  border: 2px solid #3668ff;
+  padding: 8px !important;
+  width: 6rem !important;
+  margin-bottom: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 20%;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #3668ff;
+  color: white;
+  border: solid black;
+}
+</style>

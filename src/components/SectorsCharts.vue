@@ -131,9 +131,9 @@
     },
     mounted() {
       this.$store.dispatch('fetchRetail');
-      this.$store.dispatch('fetchFoodAndBeverages');
-      this.$store.dispatch('fetchTechnology');
-      this.$store.dispatch('fetchHealthcare');
+      this.$store.dispatch('fetchFoodAndBeverages')
+      this.$store.dispatch('fetchTechnology')
+      this.$store.dispatch('fetchHealthcare')
     }
   }
   </script>

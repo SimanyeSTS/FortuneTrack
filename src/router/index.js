@@ -42,7 +42,7 @@ const routes = [
   },
   {
     path: '/register',
-    name: '/sign-up',
+    name: 'sign-up',
     component: RegistrationView
   },
   {

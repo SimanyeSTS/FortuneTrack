@@ -51,8 +51,14 @@
   
   <style scoped>
   .chart-container {
+    position: relative;
     width: 100%;
     height: 400px;
+    cursor: pointer;
+  }
+
+  canvas{
+    background-color: white;
   }
   </style>
   

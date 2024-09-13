@@ -55,10 +55,12 @@
   
         <p v-if="error" class="error-message">{{ error }}</p>
       </form>
+      <SpinnerComp v-if="isSubmitting" />
     </div>
   </template>
   
   <script>
+  import SpinnerComp from '@/components/SpinnerComp.vue';
   import Swal from 'sweetalert2';
   export default {
     data() {
@@ -67,9 +69,11 @@
           name: '',
           email: '',
           subject: '',
-          message: ''
+          message: '',
+          SpinnerComp
         },
-        error: ''
+        error: '',
+        isSubmitting: false
       }
     },
     methods: {
@@ -79,6 +83,7 @@
           this.error = "Please complete all fields before submitting.";
           return;
         }
+        this.isSubmitting = true;
         Swal.fire({
           title: 'Sending...',
           html: '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>',
@@ -95,6 +100,7 @@
           body: JSON.stringify(this.form)
         })
         .then(response => {
+          this.isSubmitting = false;
           if (response.ok) {
             Swal.fire({
               icon: 'success',
@@ -107,6 +113,7 @@
           }
         })
         .catch(() => {
+          this.isSubmitting = false;
           this.error = 'There was an error sending your message. Please try again later.'
         })
       },
