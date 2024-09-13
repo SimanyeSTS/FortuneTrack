@@ -4,10 +4,344 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="shortcut icon" href="" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/2jBN8jdG/Fortune-Track-Logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/2jBN8jdG/Fortune-Track-Logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/2jBN8jdG/Fortune-Track-Logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>FortuneTrack API Documentation</title>
 </head>
 <body>
-    
+    <div class="header">
+    <h1>Please see below tables for FortuneTrack API defined endpoints.</h1>
+    <img src="https://i.postimg.cc/2jBN8jdG/Fortune-Track-Logo.png" alt="logo">
+    </div>
+
+<br>
+<br>
+
+<h3>Home</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/(API Home Documentation Page)</td>
+        <td>This is the home page of the FortuneTrack Restful API. It contains information about the API and it's endpoints.</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<br>
+<br>
+<hr>
+<br>
+
+<h3>Users</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/users</td>
+        <td>This endpoint when used retrieves all the registered users and their details from the database.</td>
+        <td>-</td>
+
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/user/:id</td>
+        <td>This endpoint is used to retrieve a specific user and their details according to their UserID from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/user/register</td>
+        <td>This endpoint is used to register a new user to the database and FortuneTrack.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/user/login</td>
+        <td>This endpoint is used to login a registered user/admin to FortuneTrack using their emailAdd and userPass.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>PATCH/PUT</td>
+        <td>/user/:id</td>
+        <td>This endpoint is used to update a registered user's details according to their UserID from the database.</td>
+        <td>-</td>
+
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/user/:id</td>
+        <td>This endpoint is used to remove a registered user and their details according to their UserID from the database.</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<br>
+<br>
+<hr>
+<br>
+
+<h3>All Predictions</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/all-predictions</td>
+        <td>This endpoint when used retrieves all the predictions from the database.</td>
+        <td>-</td>
+
+    </tr>
+    </tr>
+</table>
+
+<br>
+<br>
+<hr>
+<br>
+
+<h3>Retail</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/retail</td>
+        <td>This endpoint when used retrieves the default retail prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default retail prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/retail-data</td>
+        <td>This endpoint is used to retrieve all the retail predictions from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/retail/:id</td>
+        <td>This endpoint is used to retrieve a specific retail prediction according to it's id from the database.</td>
+        <td>-</td>
+
+    </tr>
+    <tr>
+        <td>PUT/PATCH</td>
+        <td>/from/db/retail/:id</td>
+        <td>This endpoint is used to update a retail prediction's details according to it's id from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/to/db/retail-data</td>
+        <td>This endpoint is used to manually add a retail prediction to the database.</td>
+        <td>This is not recommended as it could result in false predictions.</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/from/db/retail/:id</td>
+        <td>This endpoint is used to remove a retail prediction according to it's id in the database.</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<br>
+<br>
+<hr>
+<br>
+
+<h3>Technology</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/technology</td>
+        <td>This endpoint when used retrieves the default technology prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default technology prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/technology-data</td>
+        <td>This endpoint is used to retrieve all the technology predictions from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/technology/:id</td>
+        <td>This endpoint is used to retrieve a specific technology prediction according to it's id from the database.</td>
+        <td>-</td>
+
+    </tr>
+    <tr>
+        <td>PUT/PATCH</td>
+        <td>/from/db/technology/:id</td>
+        <td>This endpoint is used to update a technology prediction's details according to it's id from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/to/db/prediction-data</td>
+        <td>This endpoint is used to manually add a technology prediction to the database.</td>
+        <td>This is not recommended as it could result in false predictions.</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/from/db/technology/:id</td>
+        <td>This endpoint is used to remove a technology prediction according to it's id in the database.</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<br>
+<br>
+<hr>
+<br>
+
+<h3>Food And Beverages</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/food-and-beverages</td>
+        <td>This endpoint when used retrieves the default food and beverage prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default food and beverage prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/food-and-beverages-data</td>
+        <td>This endpoint is used to retrieve all the food and beverages predictions from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/food-and-beverages/:id</td>
+        <td>This endpoint is used to retrieve a specific food and beverage prediction according to it's id from the database.</td>
+        <td>-</td>
+
+    </tr>
+    <tr>
+        <td>PUT/PATCH</td>
+        <td>/from/db/food-and-beverages/:id</td>
+        <td>This endpoint is used to update a food and beverage prediction's details according to it's id from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/to/db/food-and-beverages-data</td>
+        <td>This endpoint is used to manually add a food and beverage prediction to the database.</td>
+        <td>This is not recommended as it could result in false predictions.</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/from/db/food-and-beverages/:id</td>
+        <td>This endpoint is used to remove a food and beverage prediction according to it's id in the database.</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<br>
+<br>
+<hr>
+<br>
+
+<h3>Healthcare</h3>
+
+<table>
+    <tr>
+        <th>HTTP Methods</th>
+        <th>Path</th>
+        <th>Description</th>
+        <th>Remark</th>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/healthcare</td>
+        <td>This endpoint when used retrieves the default healthcare prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default healthcare prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/healthcare-data</td>
+        <td>This endpoint is used to retrieve all the healthcare predictions from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/healthcare/:id</td>
+        <td>This endpoint is used to retrieve a specific healthcare prediction according to it's id from the database.</td>
+        <td>-</td>
+
+    </tr>
+    <tr>
+        <td>PUT/PATCH</td>
+        <td>/from/db/healthcare/:id</td>
+        <td>This endpoint is used to update a healthcare prediction's details according to it's id from the database.</td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/to/db/healthcare-data</td>
+        <td>This endpoint is used to manually add a healthcare prediction to the database.</td>
+        <td>This is not recommended as it could result in false predictions.</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/from/db/healthcare/:id</td>
+        <td>This endpoint is used to remove a healthcare prediction according to it's id in the database.</td>
+        <td>-</td>
+    </tr>
+</table>
+
+<div class="footer-container">
+    <div class="row">
+      <p class="lead">&copy;Copyright | FortuneTrack</p>
+      <span id="current-year"></span>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("current-year").innerHTML = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
