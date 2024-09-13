@@ -11,88 +11,88 @@
         <div class="chart-container">
           <MainLineChart :chartData="prepareChartData(data)" />
         </div>
-        <MainSideWindow :data="data" :sector="sector.name" @predict="handlePredict(data)" />
+        <MainSideWindow :data="data" :sector="sector.name" />
       </div>
     </div>
   </div>
 </template>
   
-  <script>
-  import { defineComponent, computed, onMounted } from 'vue';
-  import { useStore } from 'vuex';
-  import MainLineChart from '@/components/MainLineChart.vue';
-  import MainSideWindow from '@/components/MainSideWindow.vue';
-  
-  export default defineComponent({
-    name: 'PredictView',
-    components: {
-      MainLineChart,
-      MainSideWindow
-    },
-    methods: {
+<script>
+import { defineComponent, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import MainLineChart from '@/components/MainLineChart.vue';
+import MainSideWindow from '@/components/MainSideWindow.vue';
+
+export default defineComponent({
+  name: 'PredictView',
+  components: {
+    MainLineChart,
+    MainSideWindow
+  },
+  methods: {
     redirectToAccount() {
       this.$router.push({ name: 'user-dashboard' });
     },
   },
-    setup() {
-      const store = useStore();
-  
-      const isLoading = computed(() => store.state.isLoading)
-      const error = computed(() => store.state.error)
-  
-      const sectors = computed(() => [
-        { name: 'Retail', data: store.state.retail },
-        { name: 'Technology', data: store.state.technology },
-        { name: 'Food and Beverages', data: store.state.foodAndBeverages },
-        { name: 'Healthcare', data: store.state.healthcare }
-      ])
-  
-      const prepareChartData = (data) => {
-        return {
-          labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
-          datasets: [
-            {
-              label: data.Symbol,
-              data: [
-                parseFloat(data.QuarterlyEarningsGrowthYOY) * 100, 
-                parseFloat(data.RevenueTTM) / 1e9, 
-                parseFloat(data.AnalystTargetPrice),
-                parseFloat(data.Week52High)
-              ],
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.7)', 
-                'rgba(54, 162, 235, 0.7)', 
-                'rgba(255, 206, 86, 0.7)', 
-                'rgba(75, 192, 192, 0.7)'  
-              ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-              ],
-              borderWidth: 1
-            }
-          ]
-        }
-      }
-  
-      onMounted(() => {
-        store.dispatch('fetchRetail')
-        store.dispatch('fetchTechnology')
-        store.dispatch('fetchFoodAndBeverages')
-        store.dispatch('fetchHealthcare')
-      })
-      
+  setup() {
+    const store = useStore();
+
+    const isLoading = computed(() => store.state.isLoading)
+    const error = computed(() => store.state.error)
+
+    const sectors = computed(() => [
+      { name: 'Retail', data: store.state.retail },
+      { name: 'Technology', data: store.state.technology },
+      { name: 'Food and Beverages', data: store.state.foodAndBeverages },
+      { name: 'Healthcare', data: store.state.healthcare }
+    ])
+
+    const prepareChartData = (data) => {
       return {
-        isLoading,
-        error,
-        sectors,
-        prepareChartData,
+        labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
+        datasets: [
+          {
+            label: data.Symbol,
+            data: [
+              parseFloat(data.QuarterlyEarningsGrowthYOY) * 100, 
+              parseFloat(data.RevenueTTM) / 1e9, 
+              parseFloat(data.AnalystTargetPrice),
+              parseFloat(data.Week52High)
+            ],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)', 
+              'rgba(54, 162, 235, 0.7)', 
+              'rgba(255, 206, 86, 0.7)', 
+              'rgba(75, 192, 192, 0.7)'  
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }
+        ]
       }
     }
-  })
-  </script>
+
+    onMounted(() => {
+      store.dispatch('fetchRetail')
+      store.dispatch('fetchTechnology')
+      store.dispatch('fetchFoodAndBeverages')
+      store.dispatch('fetchHealthcare')
+    })
+    
+    return {
+      isLoading,
+      error,
+      sectors,
+      prepareChartData,
+    }
+  }
+})
+</script>
   
   <style scoped>
   .predict-view {

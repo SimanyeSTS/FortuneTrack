@@ -1,29 +1,21 @@
-import { createStore } from 'vuex'
-import axios from 'axios'
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
+import { createStore } from 'vuex';
+import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
-const hostedData = "http://localhost:3001/"
+const hostedData = "http://localhost:3001/";
 
 const handleError = (commit, error) => {
-  const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred'
-  commit('SET_ERROR', errorMessage)
+  const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred';
+  commit('SET_ERROR', errorMessage);
   toast.error(errorMessage, {
     position: toast.POSITION.TOP_RIGHT,
     autoClose: 3000
-  })
-}
+  });
+};
 
 export default createStore({
   state: {
-    growthMetricsData: null,
-    financialPerformanceData: null,
-    profitabilityMetricsData: null,
-    efficiencyMetricsData: null,
-    valuationMetricsData: null,
-    analystExpectationsData: null,
-    stockPerformanceData: null,
-    analystTargetPriceData: null,
     users: [],
     user: null,
     error: null,
@@ -37,7 +29,7 @@ export default createStore({
     healthcare: [],
     healthcarePrediction: null,
     allSectorsData: [],
-    symbolData: null
+    singlePrediction: null, // Store the data for an individual prediction
   },
   getters: {
     allUsers: (state) => state.users,
@@ -51,141 +43,120 @@ export default createStore({
     allHealthcare: (state) => state.healthcare,
     singleHealthcarePrediction: (state) => state.healthcarePrediction,
     allSectorsData: (state) => state.allSectorsData,
-    getSymbolData: (state) => state.symbolData,
+    singlePrediction: (state) => state.singlePrediction,
+    getBySymbol: (state) => (symbol) => {
+    return state.allSectorsData.find(item => item.symbol === symbol);
+  },
   },
   mutations: {
-    SET_GROWTH_METRICS_DATA(state, data) {
-      state.growthMetricsData = data;
-    },
-    SET_FINANCIAL_PERFORMANCE_DATA(state, data) {
-      state.financialPerformanceData = data;
-    },
-    SET_PROFITABILITY_METRICS_DATA(state, data) {
-      state.profitabilityMetricsData = data;
-    },
-    SET_EFFICIENCY_METRICS_DATA(state, data) {
-      state.efficiencyMetricsData = data;
-    },
-    SET_VALUATION_METRICS_DATA(state, data) {
-      state.valuationMetricsData = data;
-    },
-    SET_ANALYST_EXPECTATIONS_DATA(state, data) {
-      state.analystExpectationsData = data;
-    },
-    SET_STOCK_PERFORMANCE_DATA(state, data) {
-      state.stockPerformanceData = data;
-    },
-    SET_ANALYST_TARGET_PRICE_DATA(state, data) {
-      state.analystTargetPriceData = data;
-    },
     SET_USERS(state, users) {
-      state.users = users
+      state.users = users;
     },
     SET_USER(state, user) {
-      state.user = user
+      state.user = user;
     },
     SET_RETAIL(state, retail) {
-      state.retail = retail
+      state.retail = retail;
     },
     SET_RETAIL_PREDICTION(state, retailPrediction) {
-      state.retailPrediction = retailPrediction
+      state.retailPrediction = retailPrediction;
     },
     SET_TECHNOLOGY(state, technology) {
-      state.technology = technology
+      state.technology = technology;
     },
     SET_TECHNOLOGY_PREDICTION(state, technologyPrediction) {
-      state.technologyPrediction = technologyPrediction
+      state.technologyPrediction = technologyPrediction;
     },
     SET_FOOD_AND_BEVERAGES(state, foodAndBeverages) {
-      state.foodAndBeverages = foodAndBeverages
+      state.foodAndBeverages = foodAndBeverages;
     },
     SET_FOOD_AND_BEVERAGES_PREDICTION(state, foodAndBeveragesPrediction) {
-      state.foodAndBeveragesPrediction = foodAndBeveragesPrediction
+      state.foodAndBeveragesPrediction = foodAndBeveragesPrediction;
     },
     SET_HEALTHCARE(state, healthcare) {
-      state.healthcare = healthcare
+      state.healthcare = healthcare;
     },
     SET_HEALTHCARE_PREDICTION(state, healthcarePrediction) {
-      state.healthcarePrediction = healthcarePrediction
+      state.healthcarePrediction = healthcarePrediction;
     },
     SET_ALL_SECTORS_DATA(state, allSectorsData) {
-      state.allSectorsData = allSectorsData
-    },
-    SET_SYMBOL_DATA(state, data) {
-      state.symbolData = data;
+      state.allSectorsData = allSectorsData;
     },
     SET_LOADING(state, isLoading) {
-      state.isLoading = isLoading
+      state.isLoading = isLoading;
     },
     SET_ERROR(state, error) {
-      state.error = error
+      state.error = error;
     },
-    ADD_USER: (state, newUser) => {
-      state.users.push(newUser)
+    ADD_USER(state, newUser) {
+      state.users.push(newUser);
     },
-    UPDATE_USER: (state, updatedUser) => {
-      const index = state.users.findIndex(user => user.id === updatedUser.id)
+    UPDATE_USER(state, updatedUser) {
+      const index = state.users.findIndex(user => user.id === updatedUser.id);
       if (index !== -1) {
-        state.users.splice(index, 1, updatedUser)
+        state.users.splice(index, 1, updatedUser);
       }
     },
-    REMOVE_USER: (state, id) => {
-      state.users = state.users.filter(user => user.id !== id)
+    REMOVE_USER(state, id) {
+      state.users = state.users.filter(user => user.id !== id);
     },
-    ADD_RETAIL: (state, newRetail) => {
-      state.retail.push(newRetail)
+    ADD_RETAIL(state, newRetail) {
+      state.retail.push(newRetail);
     },
-    UPDATE_RETAIL: (state, updatedRetail) => {
-      const index = state.retail.findIndex(retail => retail.id === updatedRetail.id)
+    UPDATE_RETAIL(state, updatedRetail) {
+      const index = state.retail.findIndex(retail => retail.id === updatedRetail.id);
       if (index !== -1) {
-        state.retail.splice(index, 1, updatedRetail)
+        state.retail.splice(index, 1, updatedRetail);
       }
     },
-    REMOVE_RETAIL: (state, id) => {
-      state.retail = state.retail.filter(retail => retail.id !== id)
+    REMOVE_RETAIL(state, id) {
+      state.retail = state.retail.filter(retail => retail.id !== id);
     },
-    ADD_TECHNOLOGY: (state, newTechnology) => {
-      state.technology.push(newTechnology)
+    ADD_TECHNOLOGY(state, newTechnology) {
+      state.technology.push(newTechnology);
     },
-    UPDATE_TECHNOLOGY: (state, updatedTechnology) => {
-      const index = state.technology.findIndex(tech => tech.id === updatedTechnology.id)
+    UPDATE_TECHNOLOGY(state, updatedTechnology) {
+      const index = state.technology.findIndex(tech => tech.id === updatedTechnology.id);
       if (index !== -1) {
-        state.technology.splice(index, 1, updatedTechnology)
+        state.technology.splice(index, 1, updatedTechnology);
       }
     },
-    REMOVE_TECHNOLOGY: (state, id) => {
-      state.technology = state.technology.filter(tech => tech.id !== id)
+    REMOVE_TECHNOLOGY(state, id) {
+      state.technology = state.technology.filter(tech => tech.id !== id);
     },
-    ADD_FOOD_AND_BEVERAGES: (state, newFoodAndBeverages) => {
-      state.foodAndBeverages.push(newFoodAndBeverages)
+    ADD_FOOD_AND_BEVERAGES(state, newFoodAndBeverages) {
+      state.foodAndBeverages.push(newFoodAndBeverages);
     },
-    UPDATE_FOOD_AND_BEVERAGES: (state, updatedFoodAndBeverages) => {
-      const index = state.foodAndBeverages.findIndex(food => food.id === updatedFoodAndBeverages.id)
+    UPDATE_FOOD_AND_BEVERAGES(state, updatedFoodAndBeverages) {
+      const index = state.foodAndBeverages.findIndex(food => food.id === updatedFoodAndBeverages.id);
       if (index !== -1) {
-        state.foodAndBeverages.splice(index, 1, updatedFoodAndBeverages)
+        state.foodAndBeverages.splice(index, 1, updatedFoodAndBeverages);
       }
     },
-    REMOVE_FOOD_AND_BEVERAGES: (state, id) => {
-      state.foodAndBeverages = state.foodAndBeverages.filter(food => food.id !== id)
+    REMOVE_FOOD_AND_BEVERAGES(state, id) {
+      state.foodAndBeverages = state.foodAndBeverages.filter(food => food.id !== id);
     },
-    ADD_HEALTHCARE: (state, newHealthcare) => {
-      state.healthcare.push(newHealthcare)
+    ADD_HEALTHCARE(state, newHealthcare) {
+      state.healthcare.push(newHealthcare);
     },
-    UPDATE_HEALTHCARE: (state, updatedHealthcare) => {
-      const index = state.healthcare.findIndex(healthcare => healthcare.id === updatedHealthcare.id)
+    UPDATE_HEALTHCARE(state, updatedHealthcare) {
+      const index = state.healthcare.findIndex(healthcare => healthcare.id === updatedHealthcare.id);
       if (index !== -1) {
-        state.healthcare.splice(index, 1, updatedHealthcare)
+        state.healthcare.splice(index, 1, updatedHealthcare);
       }
     },
-    REMOVE_HEALTHCARE: (state, id) => {
-      state.healthcare = state.healthcare.filter(healthcare => healthcare.id !== id)
+    REMOVE_HEALTHCARE(state, id) {
+      state.healthcare = state.healthcare.filter(healthcare => healthcare.id !== id);
     },
-    LOGIN_USER: (state, user) => {
-      state.user = user
+    LOGIN_USER(state, user) {
+      state.user = user;
     },
-    LOGOUT_USER: (state) => {
-      state.user = null
-    }
+    LOGOUT_USER(state) {
+      state.user = null;
+    },
+    SET_SINGLE_PREDICTION(state, prediction) {
+      state.singlePrediction = prediction;
+    },
   },
   actions: {
     async fetchUsers({ commit }) {
@@ -731,37 +702,16 @@ export default createStore({
       }
     },
 
-    async fetchSymbolData({ commit }, { symbol, sector }) {
+    async fetchPredictionBySymbol({ commit }, symbol) {
       commit('SET_LOADING', true);
+      commit('SET_ERROR', null);
       try {
-        const response = await axios.get(`${hostedData}from/db/${sector.toLowerCase().replace(/ /g, '-')}/${symbol}`);
-        const data = response.data?.result || response.data;
-        if (response.status === 200 && data) {
-          commit('SET_SYMBOL_DATA', data);
-        } else {
-          throw new Error(`Failed to fetch symbol data: ${response.statusText || response.status}`);
-        }
+        const response = await axios.get(`${hostedData}from/db/all-predictions/${symbol}`);
+        commit('SET_SINGLE_PREDICTION', response.data.result);
       } catch (error) {
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
-      }
-    },
-
-    async fetchPredictionData({ commit }, { symbol, sector }) {
-      commit('SET_LOADING', true)
-      try {
-        const response = await axios.get(`${hostedData}from/db/${sector.toLowerCase().replace(/ /g, '-')}/${symbol}`)
-        const data = response.data?.result || response.data
-        if (response.status === 200 && data) {
-          commit('SET_SYMBOL_DATA', data)
-        } else {
-          throw new Error(`Failed to fetch prediction data: ${response.statusText || response.status}`)
-        }
-      } catch (error) {
-        handleError(commit, error)
-      } finally {
-        commit('SET_LOADING', false)
       }
     },
   },

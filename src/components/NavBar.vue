@@ -18,17 +18,17 @@
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="../about" @click="closeNavbar" active-class="active">
+                        <router-link class="nav-link" to="/about" @click="closeNavbar" active-class="active">
                                 About
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="../predict" @click="closeNavbar" active-class="active">
+                        <router-link class="nav-link" to="/predict" @click="closeNavbar" active-class="active">
                                 Predict
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="../contact" @click="closeNavbar" active-class="active">
+                        <router-link class="nav-link" to="/contact" @click="closeNavbar" active-class="active">
                                 Reach Me
                         </router-link>
                     </li>

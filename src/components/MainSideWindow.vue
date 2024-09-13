@@ -14,8 +14,15 @@ import { useRouter } from 'vue-router';
 export default {
   name: 'MainSideWindow',
   props: {
-    data: Object,
-    sector: String
+    data: {
+      type: Object,
+      required: true,
+      validator: value => value && value.Symbol && value.RevenueTTM // Add more validations if needed
+    },
+    sector: {
+      type: String,
+      required: true
+    }
   },
   setup(props) {
     const router = useRouter();
@@ -24,14 +31,14 @@ export default {
       router.push({ 
         name: 'prediction-data',
         params: { symbol: props.data.Symbol, sector: props.sector }
-      });
-    };
+      })
+    }
 
     return {
       navigateToPrediction
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped>
