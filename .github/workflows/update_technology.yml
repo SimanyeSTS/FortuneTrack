@@ -6,7 +6,7 @@ on:
     - cron: '0 */2 * * *'
 
 jobs:
-  update_retail:
+  update_technology:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
