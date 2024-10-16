@@ -100,7 +100,7 @@ class FoodAndBeverages {
       const response = await axios.get(url)
       const data = response.data
 
-      await Retail.patchFoodAndBeveragesData(1, data)
+      await FoodAndBeverages.patchFoodAndBeveragesData(1, data)
     } catch (error) {
       throw new Error(`Failed to update Food/Beverage data: ${error.message}`)
     }
