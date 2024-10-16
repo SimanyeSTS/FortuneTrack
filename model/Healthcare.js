@@ -100,7 +100,7 @@ class Healthcare {
 
       await Healthcare.patchHealthcareData(1, data)
     } catch (error) {
-      throw new Error(`Failed to update healthcarecdata: ${error.message}`)
+      throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
   }
 

@@ -19,7 +19,7 @@ dotenv.config();
         console.error(`API Error: ${err.response.status} - ${err.response.statusText}`)
         console.error(`Details: ${err.response.data}`)
     } else if (err.request) {
-        console.error(`Network Error: No response receiced from API`)
+        console.error(`Network Error: No response received from API`)
     } else {
         console.error(`Unknown error occured: ${err.message}`)
     }
