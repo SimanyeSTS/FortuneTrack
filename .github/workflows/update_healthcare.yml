@@ -1,0 +1,33 @@
+name: Update Healthcare Data
+
+on:
+  schedule:
+    # This cron job will run every 2 hours
+    - cron: '0 */2 * * *'
+
+jobs:
+  update_retail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.0' # Specify the Node.js version you want to use
+
+      - name: Install dependencies
+        run: |
+          npm install
+          # If you have any additional setup commands, add them here
+
+      - name: Run updateHealthcare.js
+        run: node updateHealthcare.js
+        env:
+          HOST_DB: ${{ secrets.HOST_DB }}
+          USER_DB: ${{ secrets.USER_DB }}
+          PW_DB: ${{ secrets.PW_DB }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          PORT: ${{ secrets.PORT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
