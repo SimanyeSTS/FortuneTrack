@@ -2,10 +2,10 @@ import { createPool } from "mysql2/promise"
 import 'dotenv/config.js'
 
 const connection = createPool({
-  host: process.env.hostDb,
-  user: process.env.userDb,
-  password: process.env.pwDb,
-  database: process.env.dbName,
+  host: process.env.HOST_DB,
+  user: process.env.USER_DB,
+  password: process.env.PW_DB,
+  database: process.env.DB_NAME,
   multipleStatements: true,
   connectionLimit: 5,
   namedPlaceholders: true
