@@ -14,6 +14,8 @@ dotenv.config();
     const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2)
     console.log(`✅ Healthcare Data updated successfully in ${timeTaken} seconds.`)
 
+    process.exit(0)
+
   } catch (err) {
     console.error('❌ An error occured during the Healthcare Data Update Process.')
 

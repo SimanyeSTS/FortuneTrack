@@ -17,6 +17,8 @@ dotenv.config(); // Load environment variables if needed
     const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2); // Time in seconds
     console.log(`✅ Retail Data updated successfully in ${timeTaken} seconds.`);
 
+    process.exit(0)
+
   } catch (err) {
     // Enhanced error handling
     console.error('❌ An error occurred during the Retail Data Update Process.');
