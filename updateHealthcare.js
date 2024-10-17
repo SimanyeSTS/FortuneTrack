@@ -15,13 +15,17 @@ dotenv.config();
     console.log(`✅ Healthcare Data updated successfully in ${timeTaken} seconds.`)
 
   } catch (err) {
+    console.error('❌ An error occured during the Healthcare Data Update Process.')
+
     if (err.response) {
         console.error(`API Error: ${err.response.status} - ${err.response.statusText}`)
-        console.error(`Details: ${err.response.data}`)
+        console.error(`Details: ${JSON.stringify(err.response.data)}`)
     } else if (err.request) {
         console.error(`Network Error: No response received from API`)
+        console.error(err.request)
     } else {
         console.error(`Unknown error occured: ${err.message}`)
+        console.error(err.stack)
     }
 
     process.exit(1)
