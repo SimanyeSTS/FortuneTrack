@@ -20,11 +20,6 @@ jobs:
         run: |
           npm install
 
-      - name: Test Database Connection
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y netcat
-          nc -zv $HOST_DB $PORT
         env:
           HOST_DB: ${{ secrets.HOST_DB }}
           PORT: ${{ secrets.PORT }}
