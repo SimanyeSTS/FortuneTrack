@@ -82,236 +82,193 @@ export default {
 }
 </script>
 
-  <style scoped>
-  .home {
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-  }
+<style scoped>
+.home {
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
 
-  .landing {
-    display: flex;
-    height: 60vh;
-    
-  }
-  .image{
-    background-image: url('https://i.postimg.cc/wvGrsQYB/Header.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-  .landing-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px;
-    margin-top: 5%;
-    font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      color: white;
-      font-size: 20px;
-  }
-
-  .landing-image {
-    flex: 1;
-    overflow: hidden;
-  }
-
-  .landing-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .button-container {
-    display: flex;
-    gap: 20px;
-  }
-
-  .cta-button {
-    background-color: white;
-    color: #4169E1;
-    border: 2px solid #4169E1;
-    padding: 10px 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 40%;
-    transition: background-color 0.3s;
-  }
-
-  .cta-button:hover {
-    background-color: #4169E1;
-    color: black;
-    border: solid black;
-  }
-
-  .cta-button.secondary {
-    background-color: white;
-    border: 2px solid #4169E1;
-  }
-
-  .cta-button.secondary:hover {
-    background-color: #4169E1;
-    border: solid black;
-  }
-
-  .specializations {
-    background-color: #000080;
-    padding: 40px 20px;
-    text-align: center;
-  }
-
-  .specializations h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  .specializations ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  .specializations li {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-  }
-
-  #welcoming{
-    font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      color: white;
-      font-size: 50px;
-  }
-
-  h1{
-    margin-top: 1%;
-    margin: 1%;
-    font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      color: white;
-      font-size: 30px;
-  }
-
-  p, #sp{
-    font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      color: white;
-      font-size: 30px;
-  }
-
-  @media (max-width: 768px) {
-    .landing {
-      flex-direction: column;
-      height: auto;
-    }
-
-    .landing-content {
-      padding: 40px 20px;
-    }
-
-    .landing h1 {
-      font-size: 2em;
-    }
-
-    .landing p {
-      font-size: 1em;
-    }
-
-    .button-container {
-      flex-direction: column;
-    }
-  }
-
-  .modal {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+.landing {
   display: flex;
+  height: 60vh;
+}
+
+.image {
+  background-image: url('https://i.postimg.cc/wvGrsQYB/Header.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.landing-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  margin-top: 5%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 20px;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 500px;
-  position: relative;
-  border-radius: 5px;
+.landing-image {
+  flex: 1;
+  overflow: hidden;
 }
 
-.close-button {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  position: absolute;
-  right: 10px;
-  top: 5px;
+.button-container {
+  display: flex;
+  gap: 20px;
 }
 
-.close-button:hover,
-.close-button:focus {
-  color: black;
-  text-decoration: none;
+.cta-button {
+  background-color: white;
+  color: #4169E1;
+  border: 2px solid #4169E1;
+  padding: 10px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1em;
   cursor: pointer;
+  border-radius: 40%;
+  transition: background-color 0.3s;
 }
 
-.form-group {
+.specializations {
+  background-color: #000080;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.specializations h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.specializations ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.specializations li {
+  font-size: 1.1em;
   margin-bottom: 15px;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.login-button,
-.forgot-password,
-.register-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.login-button {
-  background-color: #4169E1;
+#welcoming {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
   color: white;
+  font-size: 50px;
 }
 
-.forgot-password,
-.register-button {
-  background-color: #f0f0f0;
-  color: #333;
+h1 {
+  margin-top: 1%;
+  margin: 1%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 30px;
 }
 
-/* Add these to your existing media query */
+p, #sp {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 30px;
+}
+
+/* Media Queries for Responsiveness */
 @media (max-width: 768px) {
+  .landing {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .landing-content {
+    padding: 40px 20px;
+  }
+
+  .landing h1 {
+    font-size: 2em;
+  }
+
+  .landing p {
+    font-size: 1em;
+  }
+
+  .button-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  #welcoming {
+    font-size: 36px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  p, #sp {
+    font-size: 24px;
+  }
+
+  .cta-button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+
+  .button-container {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .landing-content {
+    padding: 20px;
+    font-size: 14px;
+  }
+
+  #welcoming {
+    font-size: 28px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  p, #sp {
+    font-size: 18px;
+  }
+
+  .cta-button {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+
+  .button-container {
+    gap: 5px;
+  }
+}
+
+@media (max-width: 300px) {
+  .landing {
+    flex-direction: column;
+    height: auto;
+  }
+
   .modal-content {
     width: 95%;
+    padding: 15px;
+  }
+
+  .form-group input {
+    padding: 6px;
   }
 
   .button-group {
@@ -319,7 +276,7 @@ export default {
   }
 
   .button-group button {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 }
 </style>

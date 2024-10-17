@@ -1,4 +1,4 @@
-<template>
+  <template>
   <h1 class="heading">Prediction Data</h1>
   <div class="prediction-data-view">
     <SpinnerComp v-if="isLoading" />    <div v-else-if="error" class="error">{{ error }}</div>
