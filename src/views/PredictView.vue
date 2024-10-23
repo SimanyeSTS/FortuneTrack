@@ -62,7 +62,7 @@ export default defineComponent({
               parseFloat(data.QuarterlyEarningsGrowthYOY) * 100, 
               parseFloat(data.RevenueTTM) / 1e9, 
               parseFloat(data.AnalystTargetPrice),
-              parseFloat(data.Week52High)
+              parseFloat(data['52WeekHigh'])
             ],
             backgroundColor: [
               'rgba(255, 99, 132, 0.7)', 
@@ -102,6 +102,9 @@ export default defineComponent({
 <style scoped>
 .predict-view {
   padding: 20px;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -109,6 +112,7 @@ h1 {
   font-weight: 900;
   color: white;
   font-size: 30px;
+  margin-bottom: 2rem;
 }
 
 h2 {
@@ -117,37 +121,39 @@ h2 {
   color: white;
   font-size: 25px;
   text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.sector-charts {
+  margin-bottom: 3rem;
 }
 
 .chart-container-wrapper {
   display: flex;
   align-items: stretch;
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
+  width: 100%;
+  min-height: 400px;
   gap: 0;
 }
 
 .chart-container {
   flex: 1;
   height: 400px;
-  padding-left: 6%;
-}
-
-MainSideWindow {
-  flex: 0 0 300px;
-  padding: 20px;
-}
-
-.card {
-  margin-right: 17rem;
+  margin-right: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .button-container {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  right: 20px;
-  top: 6rem !important;
   position: fixed;
+  right: 20px;
+  top: 6rem;
+  z-index: 100;
 }
 
 button {
@@ -169,5 +175,26 @@ button:hover {
   background-color: #3668ff;
   color: white;
   border: solid black;
+}
+
+@media (max-width: 1024px) {
+  .chart-container-wrapper {
+    flex-direction: column;
+    align-items: center;
+    min-height: auto;
+  }
+
+  .chart-container {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .button-container {
+    position: static;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 </style>
