@@ -89,6 +89,9 @@ export default defineComponent({
     GaugeChart,
     SpinnerComp
   },
+  mounted() {
+    window.scrollTo(0, 0)
+  },
   setup() {
     const store = useStore();
     const route = useRoute();

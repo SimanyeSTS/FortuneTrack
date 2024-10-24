@@ -27,12 +27,16 @@ import MainLineChart from '@/components/MainLineChart.vue'
 import MainSideWindow from '@/components/MainSideWindow.vue'
 import SpinnerComp from '@/components/SpinnerComp.vue'
 
-export default defineComponent({
+export default 
+defineComponent({
   name: 'PredictView',
   components: {
     MainLineChart,
     MainSideWindow,
     SpinnerComp
+  },
+  mounted() {
+    window.scrollTo(0, 0)
   },
   methods: {
     redirectToAccount() {

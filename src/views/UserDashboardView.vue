@@ -1,9 +1,7 @@
 <template>
   <div class="account-management">
     <h1>Account Management</h1>
-    <br>
     <p>Feel free to make adjustments.</p>
-    <br>
     <form @submit.prevent="saveAccount">
       <div class="form-group">
         <input placeholder="First Name" type="text" v-model="firstName" id="firstName" required />
@@ -31,11 +29,14 @@
       <div class="form-group">
         <input placeholder="Profile Pic URL (Leave to use default)" type="url" v-model="profilePicUrl" id="profilePicUrl" />
       </div>
-      <button class="delete" type="button" @click="deleteAccount">Delete Account</button>
-      <button class="save" type="submit">Save</button>
+      <div class="button-group">
+        <button class="delete" type="button" @click="deleteAccount">Delete Account</button>
+        <button class="save" type="submit">Save</button>
+      </div>
     </form>
   </div>
 </template>
+
 <script>
 export default {
   data() {
@@ -49,9 +50,11 @@ export default {
       profilePicUrl: '',
     }
   },
+  mounted() {
+    window.scrollTo(0, 0)
+  },
   methods: {
     saveAccount() {
-      // Logic to save account
       console.log('Account saved:', {
         firstName: this.firstName,
         lastName: this.lastName,
@@ -63,65 +66,103 @@ export default {
       });
     },
     deleteAccount() {
-      // Logic to delete account
       console.log('Account deleted');
     },
   },
 }
 </script>
+
 <style scoped>
 .account-management {
   color: white;
   padding: 20px;
   border-radius: 5px;
 }
+
 .form-group {
   margin-bottom: 15px;
-  margin-left: 20% !important;
 }
-label {
-  display: block;
-  margin-bottom: 5px;
-}
+
 input, select {
-    width: 80% !important;
-  padding: 10px;
   width: 100%;
-  right: 20% !important;
+  padding: 10px;
   font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    color: black;
-    font-size: 20px;
+  font-weight: 900;
+  color: black;
+  font-size: 20px;
 }
 
-h1{
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    color: white;
-    font-size: 30px;
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 30px;
 }
 
-p{
-    text-align: center;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    color: white;
-    font-size: 50px;
+p {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 50px;
 }
 
-.save{
-    background-color: white;
-    color: black;
-    border: 2px solid #3668ff;
-    padding: 8px !important;
-    width: 6rem !important;
-    margin-bottom: 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 20%;
-    transition: background-color 0.3s;
-    margin-left: 70% !important;
+.save, .delete {
+  background-color: white;
+  color: black;
+  border: 2px solid #3668ff;
+  padding: 6px 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .account-management {
+    padding: 15px;
+  }
+
+  .form-group {
+    margin-left: 0;
+  }
+
+  input, select {
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: row;
+    gap: 5px; /* Reduce space between buttons */
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 25px;
+  }
+
+  p {
+    font-size: 18px;
+  }
+
+  .save, .delete {
+    width: auto;
+    padding: 5px 10px; /* Lower height and adjust padding */
+  }
+
+  .button-group {
+    justify-content: space-between;
+  }
 }
 </style>
