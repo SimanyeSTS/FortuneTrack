@@ -13,6 +13,7 @@
         </div>
       </div>
     </div>
+  </div>
 
     <section class="specializations">
       <h2 id="welcoming">Our Specializations:</h2>
@@ -24,68 +25,156 @@
       </ul>
     </section>
 
-    <!-- Login Modal -->
-    <div v-if="showLoginModal" class="modal">
-      <div class="modal-content">
-        <h2>Login</h2>
-        <form @submit.prevent="handleLogin">
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="email" required>
+<!-- Login Modal -->
+<div v-if="showLoginModal" class="modal">
+    <div class="modal-content">
+      <h1>Wonderful To Have You Back</h1>
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="emailAdd">Email:</label>
+          <input 
+            type="email" 
+            id="emailAdd" 
+            v-model="emailAdd" 
+            required
+            :disabled="isLoading"
+          >
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input 
+            type="password" 
+            id="userPass" 
+            v-model="userPass" 
+            required
+            :disabled="isLoading"
+          >
+        </div>
+        <div class="button-group">
+          <button 
+            type="submit" 
+            class="login-button"
+            :disabled="isLoading"
+          >
+            {{ isLoading ? 'Signing in...' : 'Sign In' }}
+          </button>
+          <div class="links">
+            <button 
+              type="button" 
+              class="forgot-password" 
+              @click="handleForgotPassword"
+              :disabled="isLoading"
+            >
+              Forgot Password?
+            </button>
+            <br>
+            <button 
+              type="button" 
+              class="register-button" 
+              @click="goToRegistration"
+              :disabled="isLoading"
+            >
+              Create Account
+            </button>
           </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="password" required>
-          </div>
-          <div class="button-group">
-            <button type="submit" class="login-button">Login</button>
-            <button type="button" class="forgot-password" @click="handleForgotPassword">Forgot Password</button>
-            <button type="button" class="register-button" @click="goToRegistration">Register</button>
-          </div>
-        </form>
-        <button class="close-button" @click="showLoginModal = false">&times;</button>
-      </div>
+        </div>
+      </form>
+      <button 
+        class="close-button" 
+        @click="closeModal"
+        :disabled="isLoading"
+      >
+        &times;
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   mounted() {
     window.scrollTo(0, 0)
   },
   data() {
-    return {
-      showLoginModal: false,
-      email: '',
-      password: ''
-    }
+  return {
+    showLoginModal: false,
+    emailAdd: '',
+    userPass: '',
+    errorMessage: ''
+  }
+},
+  computed: {
+    ...mapState({
+      isLoading: state => state.isLoading,
+      currentUser: state => state.user
+    })
   },
   methods: {
+    ...mapActions(['loginUser']),
+    
     goToReachMe() {
       this.$router.push({ name: 'about-me' })
     },
+    
     goToRegistration() {
       this.$router.push({ name: 'sign-up' })
-      this.showLoginModal = false
+      this.closeModal()
     },
-    handleLogin() {
-      // Implement login logic here
-      console.log('Login attempted with:', this.email, this.password)
-      // Reset form and close modal after login attempt
-      this.email = ''
-      this.password = ''
-      this.showLoginModal = false
-    },
+    
+    async handleLogin() {
+  try {
+    await this.loginUser({
+      emailAdd: this.emailAdd,  // Changed from email
+      userPass: this.userPass   // Changed from password
+    })
+    
+    // If login is successful, redirect
+    this.$router.push({ name: 'predictions' })
+    this.closeModal()
+  } catch (error) {
+    console.error('Login failed:', error)
+  }
+},
+    
     handleForgotPassword() {
-      // Implement forgot password logic here
-      console.log('Forgot password clicked')
+      this.$router.push({ name: 'reach-me' })
+    },
+    
+    closeModal() {
+      if (!this.isLoading) {
+        this.showLoginModal = false
+        this.email = ''
+        this.password = ''
+      }
+    }
+  },
+  watch: {
+    currentUser(newUser) {
+      if (newUser) {
+        // If user becomes logged in, close the modal
+        this.closeModal()
+      }
     }
   }
 }
 </script>
 
+
 <style scoped>
+.login-button:disabled,
+.forgot-password:disabled,
+.register-button:disabled,
+.close-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-group input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
 .home {
   color: #ffffff;
   font-family: Arial, sans-serif;
@@ -184,6 +273,84 @@ p, #sp {
   font-size: 30px;
 }
 
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #4169E1;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-group {
+  margin-top: 20px;
+}
+
+.login-button {
+  background-color: white;
+  color: #4169E1;
+  border: 2px solid #002080;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #1249ef;
+  color: black;
+  border: solid black;
+}
+
+.links {
+  margin-top: 10px;
+}
+
+.forgot-password, .register-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 24px;
+  cursor: pointer;
+}
+
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
   .landing {
@@ -280,6 +447,10 @@ p, #sp {
 
   .button-group button {
     margin-bottom: 5px;
+  }
+
+  .close-button {
+    font-size: 20px;
   }
 }
 </style>

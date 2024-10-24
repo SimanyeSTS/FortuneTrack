@@ -82,8 +82,8 @@ export default createStore({
     SET_ALL_SECTORS_DATA(state, allSectorsData) {
       state.allSectorsData = allSectorsData;
     },
-    SET_LOADING(state, isLoading) {
-      state.isLoading = isLoading;
+    SET_LOADING(state, Loading) {
+      state.isLoading = Loading;
     },
     SET_ERROR(state, error) {
       state.error = error;
@@ -659,21 +659,32 @@ export default createStore({
     async loginUser({ commit }, loginData) {
       commit('SET_LOADING', true)
       try {
-        const response = await axios.post(`${hostedData}user/login`, loginData)
-        const data = response.data
-        if (response.status === 200 && data.user) {
-          commit('SET_USER', data.user)
-          localStorage.setItem('token', data.token)
-          localStorage.setItem('user', JSON.stringify(data.user))
+        const response = await axios.post(`${hostedData}user/login`, {
+          emailAdd: loginData.emailAdd,
+          userPass: loginData.userPass
+        })
+        
+        const { results, status } = response.data
+        
+        if (status === 200 && results.user) {
+          commit('SET_USER', results.user)
+          localStorage.setItem('token', results.token)
+          localStorage.setItem('user', JSON.stringify(results.user))
           toast.success('Logged in successfully', {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000
           })
+          return true
         } else {
-          throw new Error(`Failed to login: ${response.statusText || response.status}`)
+          throw new Error('Login failed')
         }
       } catch (error) {
-        handleError(commit, error)
+        const errorMessage = error.response?.data?.message || 'Login failed. Please try again.'
+        toast.error(errorMessage, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000
+        })
+        throw error
       } finally {
         commit('SET_LOADING', false)
       }
