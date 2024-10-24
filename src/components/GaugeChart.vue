@@ -5,10 +5,8 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref, watch, onUnmounted } from 'vue';
 import Chart from 'chart.js/auto';
-import 'chartjs-gauge';  // Ensure the chartjs-gauge plugin is imported
-import ChartDataLabels from 'chartjs-plugin-datalabels';  // Import datalabels plugin
 
 export default defineComponent({
   name: 'GaugeChart',
@@ -16,10 +14,6 @@ export default defineComponent({
     chartData: {
       type: Object,
       required: true
-    },
-    options: {
-      type: Object,
-      default: () => ({})
     }
   },
   setup(props) {
@@ -28,38 +22,96 @@ export default defineComponent({
 
     const createChart = () => {
       const ctx = chartCanvas.value.getContext('2d');
-      // Registering plugins
-      Chart.register(ChartDataLabels);
       
-      chart = new Chart(ctx, {
-        type: 'gauge', 
-        data: props.chartData,
-        options: {
-          ...props.options,
-          plugins: {
-            datalabels: {
-              display: true,
-              formatter: function (value, context) {
-                return context.chart.data.labels[context.dataIndex];  // Label for each section
-              },
-              color: 'rgba(0, 0, 0, 1.0)',
-              font: {
-                size: 20,
-                weight: 'bold'
-              }
+      // Get the data values
+      const lowPrice = parseFloat(props.chartData.datasets[0].data[0]);
+      const highPrice = parseFloat(props.chartData.datasets[0].data[1]);
+      const currentPrice = parseFloat(props.chartData.datasets[0].data[2]); // median
+      
+      // Calculate the percentage for the gauge
+      const percentage = ((currentPrice - lowPrice) / (highPrice - lowPrice)) * 100;
+
+      const defaultOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '75%',
+        plugins: {
+          tooltip: {
+  enabled: true,
+  callbacks: {
+    label: function(tooltipItem) {
+      const datasetIndex = tooltipItem.dataIndex; // Get the index of the dataset being hovered
+      const lowPrice = parseFloat(props.chartData.datasets[0].data[0]);
+      const highPrice = parseFloat(props.chartData.datasets[0].data[1]);
+      const currentPrice = parseFloat(props.chartData.datasets[0].data[2]);
+
+      if (datasetIndex === 0) {
+        return `Current Price: $${currentPrice.toFixed(2)}`; // Show current price for the first segment
+      } else {
+        return `Remaining Percentage: ${((100 - ((currentPrice - lowPrice) / (highPrice - lowPrice)) * 100)).toFixed(1)}%`; // Show remaining percentage for the second segment
+      }
+    }
+  }
+},
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Price Range',
+            color: 'black',
+            font: {
+              size: 16,
+              weight: 'bold'
             }
           }
         }
+      };
+
+      chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [percentage, 100 - percentage],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.8)',  // Vibrant blue for the percentage
+              'rgba(200, 200, 200, 0.5)'  // Light grey for the remaining part
+            ],
+            circumference: 180,
+            rotation: 270,
+          }]
+        },
+        options: defaultOptions
       });
     };
 
+    const resizeObserver = new ResizeObserver(() => {
+      if (chart) {
+        chart.resize();
+      }
+    });
+
     onMounted(() => {
       createChart();
+      resizeObserver.observe(chartCanvas.value);
+    });
+
+    onUnmounted(() => {
+      if (chart) {
+        chart.destroy();
+      }
+      resizeObserver.disconnect();
     });
 
     watch(() => props.chartData, (newVal) => {
       if (chart) {
-        chart.data = newVal;
+        const lowPrice = parseFloat(newVal.datasets[0].data[0]);
+        const highPrice = parseFloat(newVal.datasets[0].data[1]);
+        const currentPrice = parseFloat(newVal.datasets[0].data[2]);
+
+        const newPercentage = ((currentPrice - lowPrice) / (highPrice - lowPrice)) * 100;
+
+        chart.data.datasets[0].data = [newPercentage, 100 - newPercentage];
         chart.update();
       }
     }, { deep: true });
@@ -71,13 +123,9 @@ export default defineComponent({
 
 <style scoped>
 .chart-container {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    cursor: pointer;
-  }
-
-  canvas{
-    background-color: white;
-  }
+  position: relative;
+  width: 100%;
+  height: 400px; /* Adjust height as needed */
+  background-color: white;
+}
 </style>

@@ -54,12 +54,12 @@
         <BarChart :chartData="prepareAnalystExpectationsData()" />
       </div>
 
-      <div class="chart-section" v-if="predictionData.StockPerformance1Year !== undefined && predictionData.StockPerformance3Year !== undefined && predictionData.StockPerformance5Year !== undefined">
-        <h2>Stock Performance</h2>
-        <ScatterChart :chartData="prepareStockPerformanceData()" />
+      <div class="chart-section" v-if="predictionData && predictionData.TrailingPE && predictionData.ForwardPE">
+        <h2>PE Ratio Analysis</h2>
+        <ScatterChart :chartData="preparePerformanceData()" />
       </div>
 
-      <div class="chart-section" v-if="predictionData.AnalystTargetPriceLow !== undefined && predictionData.AnalystTargetPriceHigh !== undefined">
+      <div class="chart-section" v-if="predictionData && predictionData.AnalystTargetPrice">
         <h2>Analyst Target Price</h2>
         <GaugeChart :chartData="prepareAnalystTargetPriceData()" />
       </div>
@@ -238,73 +238,62 @@ export default defineComponent({
       }]
     });
 
-    const prepareStockPerformanceData = () => ({
-      labels: ['1 Year', '3 Year', '5 Year'],
-      datasets: [{
-        label: 'Stock Performance',
-        data: [
-          parseFloat(predictionData.value.StockPerformance1Year),
-          parseFloat(predictionData.value.StockPerformance3Year),
-          parseFloat(predictionData.value.StockPerformance5Year)
-        ],
-        backgroundColor: [
-          'rgba(52, 58, 64, 0.2)',
-          'rgba(255, 193, 7, 0.2)',
-          'rgba(0, 123, 255, 0.2)'
-        ],
-        borderColor: [
-          'rgba(52, 58, 64, 0.8)',
-          'rgba(255, 193, 7, 0.8)',
-          'rgba(0, 123, 255, 0.8)'
-        ],
-        pointBackgroundColor: [
-          'rgba(52, 58, 64, 0.8)',
-          'rgba(255, 193, 7, 0.8)',
-          'rgba(0, 123, 255, 0.8)'
-        ],
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: [
-          'rgba(52, 58, 64, 0.8)',
-          'rgba(255, 193, 7, 0.8)',
-          'rgba(0, 123, 255, 0.8)'
-        ]
-      }]
-    });
+    const preparePerformanceData = () => {
+  if (!predictionData.value) return null;
 
-    const prepareAnalystTargetPriceData = () => ({
-      labels: ['Low', 'High', 'Median'],
-      datasets: [{
-        label: 'Analyst Target Price',
-        data: [
-          parseFloat(predictionData.value.AnalystTargetPriceLow),
-          parseFloat(predictionData.value.AnalystTargetPriceHigh),
-          parseFloat(predictionData.value.AnalystTargetPriceMedian)
-        ],
-        backgroundColor: [
-          'rgba(0, 123, 255, 0.2)',
-          'rgba(255, 82, 82, 0.2)',
-          'rgba(23, 162, 184, 0.2)'
-        ],
-        borderColor: [
-          'rgba(0, 123, 255, 0.8)',
-          'rgba(255, 82, 82, 0.8)',
-          'rgba(23, 162, 184, 0.8)'
-        ],
-        pointBackgroundColor: [
-          'rgba(0, 123, 255, 0.8)',
-          'rgba(255, 82, 82, 0.8)',
-          'rgba(23, 162, 184, 0.8)'
-        ],
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: [
-          'rgba(0, 123, 255, 0.8)',
-          'rgba(255, 82, 82, 0.8)',
-          'rgba(23, 162, 184, 0.8)'
-        ]
-      }]
-    });
+  return {
+    labels: ['Trailing PE', 'Forward PE'],
+    datasets: [{
+      label: 'PE Ratio Analysis',
+      data: [
+        {x: 1, y: parseFloat(predictionData.value.TrailingPE || 0)},
+        {x: 2, y: parseFloat(predictionData.value.ForwardPE || 0)}
+      ],
+      backgroundColor: [
+        'rgba(75, 192, 192, 0.5)', // Trailing PE color
+        'rgba(255, 159, 64, 0.5)'  // Forward PE color
+      ],
+      borderColor: [
+        'rgba(75, 192, 192, 1)',  // Trailing PE border color
+        'rgba(255, 159, 64, 1)'   // Forward PE border color
+      ],
+      pointBackgroundColor: [
+        'rgba(75, 192, 192, 1)',  // Trailing PE point color
+        'rgba(255, 159, 64, 1)'   // Forward PE point color
+      ],
+      pointBorderColor: [
+        '#fff',   // Trailing PE point border color
+        '#fff'    // Forward PE point border color
+      ],
+      pointRadius: 8
+    }]
+  };
+};
+
+const prepareAnalystTargetPriceData = () => {
+  if (!predictionData.value) return null;
+
+  const currentPrice = parseFloat(predictionData.value['52WeekLow'] || 0);
+  const targetPrice = parseFloat(predictionData.value.AnalystTargetPrice || 0);
+  const highPrice = parseFloat(predictionData.value['52WeekHigh'] || 0);
+
+  return {
+    datasets: [{
+      data: [currentPrice, highPrice, targetPrice],
+      backgroundColor: [
+        'rgba(54, 162, 235, 0.8)',  // Current Price color (blue)
+        'rgba(75, 192, 192, 0.8)',  // 52-Week High color (teal)
+        'rgba(153, 102, 255, 0.8)'  // Target Price color (purple)
+      ],
+      borderColor: [
+        'rgba(54, 162, 235, 1)',  // Current Price border color
+        'rgba(75, 192, 192, 1)',  // 52-Week High border color
+        'rgba(153, 102, 255, 1)'  // Target Price border color
+      ]
+    }]
+  };
+};
+
 
     onMounted(() => {
       if (symbol.value) {
@@ -327,7 +316,7 @@ export default defineComponent({
       prepareEfficiencyMetricsData,
       prepareValuationMetricsData,
       prepareAnalystExpectationsData,
-      prepareStockPerformanceData,
+      preparePerformanceData,
       prepareAnalystTargetPriceData
     };
   }
