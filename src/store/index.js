@@ -9,7 +9,7 @@ const handleError = (commit, error) => {
   const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred';
   commit('SET_ERROR', errorMessage);
   toast.error(errorMessage, {
-    position: toast.POSITION.TOP_RIGHT,
+    position: toast.POSITION.TOP_CENTER,
     autoClose: 3000
   });
 };
@@ -354,7 +354,7 @@ export default createStore({
         if (response.status === 201 && data) {
           commit('SET_USER', data)
           toast.success('User registered successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -375,7 +375,7 @@ export default createStore({
         if (response.status === 200 && data) {
           commit('SET_USER', data)
           toast.success('User updated successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -395,7 +395,7 @@ export default createStore({
         if (response.status === 200) {
           commit('SET_USER', null)
           toast.success('User deleted successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -416,7 +416,7 @@ export default createStore({
         if (response.status === 201 && data) {
           commit('SET_RETAIL', data)
           toast.success('Retail data created successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -437,7 +437,7 @@ export default createStore({
         if (response.status === 200 && data) {
           commit('SET_RETAIL', data)
           toast.success('Retail data updated successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -457,7 +457,7 @@ export default createStore({
         if (response.status === 200) {
           commit('SET_RETAIL', null)
           toast.success('Retail data deleted successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -478,7 +478,7 @@ export default createStore({
         if (response.status === 201 && data) {
           commit('SET_TECHNOLOGY', data)
           toast.success('Technology data created successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -499,7 +499,7 @@ export default createStore({
         if (response.status === 200 && data) {
           commit('SET_TECHNOLOGY', data)
           toast.success('Technology data updated successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -519,7 +519,7 @@ export default createStore({
         if (response.status === 200) {
           commit('SET_TECHNOLOGY', null)
           toast.success('Technology data deleted successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -540,7 +540,7 @@ export default createStore({
         if (response.status === 201 && data) {
           commit('SET_FOOD_AND_BEVERAGES', data)
           toast.success('Food and beverages data created successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -561,7 +561,7 @@ export default createStore({
         if (response.status === 200 && data) {
           commit('SET_FOOD_AND_BEVERAGES', data)
           toast.success('Food and beverages data updated successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -581,7 +581,7 @@ export default createStore({
         if (response.status === 200) {
           commit('SET_FOOD_AND_BEVERAGES', null)
           toast.success('Food and beverages data deleted successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -602,7 +602,7 @@ export default createStore({
         if (response.status === 201 && data) {
           commit('SET_HEALTHCARE', data)
           toast.success('Healthcare data created successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -623,7 +623,7 @@ export default createStore({
         if (response.status === 200 && data) {
           commit('SET_HEALTHCARE', data)
           toast.success('Healthcare data updated successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -643,7 +643,7 @@ export default createStore({
         if (response.status === 200) {
           commit('SET_HEALTHCARE', null)
           toast.success('Healthcare data deleted successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
         } else {
@@ -671,7 +671,7 @@ export default createStore({
           localStorage.setItem('token', results.token)
           localStorage.setItem('user', JSON.stringify(results.user))
           toast.success('Logged in successfully', {
-            position: toast.POSITION.TOP_RIGHT,
+            position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           })
           return true
@@ -681,7 +681,7 @@ export default createStore({
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'Login failed. Please try again.'
         toast.error(errorMessage, {
-          position: toast.POSITION.TOP_RIGHT,
+          position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
         })
         throw error
@@ -699,13 +699,13 @@ export default createStore({
         commit('SET_USER', null)
         delete axios.defaults.headers.common['Authorization']
         toast.success('Logged out successfully', {
-          position: toast.POSITION.TOP_RIGHT,
+          position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
         })
       } catch (error) {
         console.error(error)
         toast.error('Failed to logout', {
-          position: toast.POSITION.TOP_RIGHT,
+          position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
         })
       } finally {

@@ -30,13 +30,17 @@
         <input placeholder="Profile Pic URL (Leave to use default)" type="url" v-model="profilePicUrl" id="profilePicUrl" />
       </div>
       <div class="button-group">
-        <button class="register" type="submit">Register</button>
+        <button class="register" type="submit" :disabled="isLoading">
+          {{ isLoading ? 'Registering...' : 'Register' }}
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
@@ -46,23 +50,44 @@ export default {
       gender: '',
       email: '',
       password: '',
-      profilePicUrl: '',
+      userProfile: '',
     }
+  },
+  computed: {
+    ...mapState(['isLoading'])
   },
   mounted() {
     window.scrollTo(0, 0)
   },
   methods: {
-    registerAccount() {
-      console.log('Account registered:', {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        age: this.age,
-        gender: this.gender,
-        email: this.email,
-        password: this.password,
-        profilePicUrl: this.profilePicUrl || 'default-url',
-      });
+    async registerAccount() {
+      try {
+        const userData = {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          age: parseInt(this.age),
+          gender: this.gender,
+          emailAdd: this.email, // matches the backend expectation
+          userPass: this.password, // matches the backend expectation
+          userProfile: this.userProfile || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+        };
+
+        await this.$store.dispatch('registerUser', userData);
+        
+        // Clear the form
+        this.firstName = '';
+        this.lastName = '';
+        this.age = null;
+        this.gender = '';
+        this.email = '';
+        this.password = '';
+        this.userProfile = '';
+
+        // Redirect to login or dashboard
+        this.$router.push({ name: 'home' })      } catch (error) {
+        console.error('Registration error:', error);
+        // Toast notification is handled in the Vuex action
+      }
     }
   },
 }
