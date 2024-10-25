@@ -42,13 +42,13 @@
         />
       </div>
       <div class="form-group">
-        <select v-model="formData.gender" id="gender" required>
-          <option value="" disabled>Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+  <select v-model="formData.gender" id="gender" required>
+    <option value="" disabled>Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
       <div class="form-group">
         <input 
           placeholder="Email Address" 
@@ -115,20 +115,21 @@ export default {
   name: 'UserDashboardView',
   
   data() {
-    return {
-      loading: false,
-      error: null,
-      formData: {
-        firstName: '',
-        lastName: '',
-        userAge: null,
-        gender: '',
-        emailAdd: '',
-        userPass: '',
-        userProfile: '',
-      }
+  return {
+    loading: false,
+    error: null,
+    defaultProfilePic: 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+    formData: {
+      firstName: '',
+      lastName: '',
+      userAge: null,
+      gender: '',
+      emailAdd: '',
+      userPass: '',
+      userProfile: '',
     }
-  },
+  }
+},
 
   computed: {
     ...mapState({
@@ -137,6 +138,13 @@ export default {
   },
 
   created() {
+    if (this.currentUser) {
+    console.log('Current user data:', this.currentUser); // Add this line
+    this.initializeForm();
+  } else {
+    this.$router.push('/login');
+  }
+
     if (this.currentUser) {
       this.initializeForm();
     } else {
@@ -148,17 +156,16 @@ export default {
     ...mapActions(['updateUserProfile']),
 
     initializeForm() {
-      // Initialize form with current user data
-      this.formData = {
-        firstName: this.currentUser.firstName || '',
-        lastName: this.currentUser.lastName || '',
-        userAge: this.currentUser.userAge || null,
-        gender: this.currentUser.gender || '',
-        emailAdd: this.currentUser.emailAdd || '',
-        userPass: '', // Don't populate password
-        userProfile: this.currentUser.userProfile || '',
-      };
-    },
+  this.formData = {
+    firstName: this.currentUser.firstName || '',
+    lastName: this.currentUser.lastName || '',
+    userAge: this.currentUser.userAge !== undefined ? this.currentUser.userAge : null,
+    gender: this.currentUser.gender || '',
+    emailAdd: this.currentUser.emailAdd || '',
+    userPass: '',
+    userProfile: this.currentUser.userProfile || this.defaultProfilePic,
+  };
+},
 
     async saveAccount() {
       try {
