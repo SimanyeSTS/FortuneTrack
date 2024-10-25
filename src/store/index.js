@@ -157,6 +157,9 @@ export default createStore({
     SET_SINGLE_PREDICTION(state, prediction) {
       state.singlePrediction = prediction;
     },
+    SET_TOKEN(state, token) {
+      state.token = token
+    }
   },
   actions: {
     async fetchUsers({ commit }) {
@@ -350,18 +353,36 @@ export default createStore({
       commit('SET_LOADING', true)
       try {
         const response = await axios.post(`${hostedData}user/register`, userData)
-        const data = response.data?.result || response.data
-        if (response.status === 201 && data) {
-          commit('SET_USER', data)
-          toast.success('User registered successfully', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000
-          })
-        } else {
-          throw new Error(`Failed to register user: ${response.statusText || response.status}`)
+        
+        // Check both status and the nested status in the response
+        if (response.data?.status === 201 || response.status === 201) {
+          const token = response.data?.results?.token
+          if (token) {
+            // Store the token in localStorage
+            localStorage.setItem('token', token)
+            
+            // Set the token in axios headers for subsequent requests
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+            
+            // Update the store
+            commit('SET_TOKEN', token)
+            
+            toast.success('Registration successful! Please log in.', {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000
+            })
+            
+            return true
+          }
         }
+        throw new Error(response.data?.message || 'Registration failed')
       } catch (error) {
-        handleError(commit, error)
+        const errorMessage = error.response?.data?.message || error.message || 'Registration failed'
+        toast.error(errorMessage, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 5000
+        })
+        throw error
       } finally {
         commit('SET_LOADING', false)
       }

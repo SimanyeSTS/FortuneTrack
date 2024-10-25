@@ -50,46 +50,67 @@ export default {
       gender: '',
       email: '',
       password: '',
-      userProfile: '',
+      profilePicUrl: '',
+      formErrors: []
     }
   },
   computed: {
-    ...mapState(['isLoading'])
+    ...mapState(['isLoading']),
+    isFormValid() {
+      return this.firstName?.length >= 2 &&
+             this.lastName?.length >= 2 &&
+             this.age >= 13 &&
+             this.age <= 120 &&
+             this.gender &&
+             this.isEmailValid &&
+             this.password?.length >= 6;
+    },
+    isEmailValid() {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(this.email);
+    }
   },
   mounted() {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
   },
   methods: {
     async registerAccount() {
+      if (!this.isFormValid) {
+        return;
+      }
+
       try {
         const userData = {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          age: parseInt(this.age),
+          firstName: this.firstName.trim(),
+          lastName: this.lastName.trim(),
+          userAge: parseInt(this.age),
           gender: this.gender,
-          emailAdd: this.email, // matches the backend expectation
-          userPass: this.password, // matches the backend expectation
-          userProfile: this.userProfile || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+          emailAdd: this.email.toLowerCase().trim(),
+          userPass: this.password,
+          userProfile: this.profilePicUrl.trim() || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
         };
 
         await this.$store.dispatch('registerUser', userData);
         
-        // Clear the form
-        this.firstName = '';
-        this.lastName = '';
-        this.age = null;
-        this.gender = '';
-        this.email = '';
-        this.password = '';
-        this.userProfile = '';
+        // Reset form
+        this.resetForm();
 
-        // Redirect to login or dashboard
-        this.$router.push({ name: 'home' })      } catch (error) {
+        // Redirect to home
+        this.$router.push({ name: 'home' });
+      } catch (error) {
         console.error('Registration error:', error);
-        // Toast notification is handled in the Vuex action
       }
+    },
+    resetForm() {
+      this.firstName = '';
+      this.lastName = '';
+      this.age = null;
+      this.gender = '';
+      this.email = '';
+      this.password = '';
+      this.profilePicUrl = '';
     }
-  },
+  }
 }
 </script>
 
