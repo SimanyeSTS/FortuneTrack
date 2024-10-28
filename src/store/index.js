@@ -415,21 +415,30 @@ export default createStore({
       }
     },
 
-    async deleteUser ({ commit }, id) {
+    async deleteUser({ commit }, id) {  // Removed space after deleteUser
       commit('SET_LOADING', true);
       try {
         const response = await axios.delete(`${hostedData}user/${id}`);
-        if (response.status === 200) {
+        if (response.status === 200 || response.data.status === 200) {
           commit('SET_USER', null);
-          toast.success('User  deleted successfully', {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          delete axios.defaults.headers.common['Authorization'];
+          toast.success('Account deleted successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           });
+          return true;
         } else {
-          throw new Error(`Failed to delete user: ${response.statusText || response.status}`);
+          throw new Error(response.data?.message || 'Failed to delete account');
         }
       } catch (error) {
-        handleError(commit, error);
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to delete account';
+        toast.error(errorMessage, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000
+        });
+        throw error;
       } finally {
         commit('SET_LOADING', false);
       }

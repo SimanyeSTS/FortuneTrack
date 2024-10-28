@@ -1,19 +1,17 @@
 <template>
   <div class="account-management">
     <h1>Account Management</h1>
-    <p v-if="currentUser">Welcome, {{ currentUser.firstName }}! <br> Feel free to make adjustments.</p>
+    <p v-if="current">Welcome, {{ current.firstName }}! <br> Feel free to make adjustments.</p>
     
-    <!-- Show loading state -->
     <div v-if="loading" class="text-center">
       Loading profile data...
     </div>
     
-    <!-- Show error message if any -->
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
 
-    <form v-if="!loading && currentUser" @submit.prevent="saveAccount">
+    <form v-if="!loading && current" @submit.prevent="saveAccount">
       <div class="form-group">
         <input 
           placeholder="First Name" 
@@ -42,13 +40,13 @@
         />
       </div>
       <div class="form-group">
-  <select v-model="formData.gender" id="gender" required>
-    <option value="" disabled>Select Gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Other">Other</option>
-  </select>
-</div>
+        <select v-model="formData.gender" id="gender" required>
+          <option value="" disabled>Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
       <div class="form-group">
         <input 
           placeholder="Email Address" 
@@ -75,7 +73,6 @@
         />
       </div>
       
-      <!-- Preview current profile picture -->
       <div class="profile-preview" v-if="formData.userProfile">
         <img :src="formData.userProfile" alt="Profile Preview" 
           class="profile-image"
@@ -102,7 +99,7 @@
       </div>
     </form>
 
-    <div v-if="!currentUser" class="text-center">
+    <div v-if="!current" class="text-center">
       Please log in to view your profile.
     </div>
   </div>
@@ -110,36 +107,36 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 export default {
-  name: 'UserDashboardView',
+  name: 'User  DashboardView',
   
   data() {
-  return {
-    loading: false,
-    error: null,
-    defaultProfilePic: 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
-    formData: {
-      firstName: '',
-      lastName: '',
-      userAge: null,
-      gender: '',
-      emailAdd: '',
-      userPass: '',
-      userProfile: '',
+    return {
+      loading: false,
+      error: null,
+      defaultProfilePic: 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+      formData: {
+        firstName: '',
+        lastName: '',
+        userAge: null,
+        gender: '',
+        emailAdd: '',
+        userPass: '',
+        userProfile: '',
+      }
     }
-  }
-},
+  },
 
   computed: {
     ...mapState({
-      currentUser: state => state.user
+      current: state => state.user
     })
   },
 
   created() {
-
-    if (this.currentUser) {
+    if (this.current) {
       this.initializeForm();
     } else {
       this.$router.push('/user');
@@ -150,34 +147,32 @@ export default {
     ...mapActions(['updateUserProfile']),
 
     initializeForm() {
-  this.formData = {
-    firstName: this.currentUser .firstName || '',
-    lastName: this.currentUser .lastName || '',
-    userAge: this.currentUser .userAge !== undefined ? this.currentUser .userAge : null,
-    gender: this.currentUser .gender || '',
-    emailAdd: this.currentUser .emailAdd || '',
-    userPass: '',
-    userProfile: this.currentUser .userProfile || this.defaultProfilePic,
-  };
-},
+      this.formData = {
+        firstName: this.current.firstName || '',
+        lastName: this.current.lastName || '',
+        userAge: this.current.userAge !== undefined ? this.current.userAge : null,
+        gender: this.current.gender || '',
+        emailAdd: this.current.emailAdd || '',
+        userPass: '',
+        userProfile: this.current.userProfile || this.defaultProfilePic,
+      };
+    },
 
     async saveAccount() {
       try {
         this.loading = true;
         this.error = null;
 
-        // Remove empty password from payload if not changed
         const payload = { ...this.formData };
         if (!payload.userPass) {
           delete payload.userPass;
         }
 
         await this.updateUserProfile({
-          userId: this.currentUser.UserID,
+          userId: this.current.UserID,
           userData: payload
         });
 
-        // Re-initialize form with updated data
         this.initializeForm();
       } catch (error) {
         this.error = error.response?.data?.message || 'Failed to update profile';
@@ -187,18 +182,29 @@ export default {
     },
 
     async deleteAccount() {
-      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        try {
-          this.loading = true;
-          await this.$store.dispatch('deleteUser', this.currentUser.UserID);
-          this.$router.push('/logout');
-        } catch (error) {
-          this.error = 'Failed to delete account. Please try again.';
-        } finally {
-          this.loading = false;
-        }
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will not be able to recover this account!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'No, cancel!',
+    reverseButtons: true
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        this.loading = true;
+        await this.$store.dispatch('deleteUser', this.current.UserID); // Removed space after deleteUser
+        this.$router.push('/');
+      } catch (error) {
+        this.error = 'Failed to delete account. Please try again.';
+        console.error('Delete account error:', error);
+      } finally {
+        this.loading = false;
       }
-    },
+    }
+  });
+},
 
     handleImageError(e) {
       e.target.src = 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg';
@@ -206,6 +212,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 .error-message {
