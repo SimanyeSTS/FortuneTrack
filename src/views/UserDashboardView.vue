@@ -1,7 +1,7 @@
 <template>
   <div class="account-management">
     <h1>Account Management</h1>
-    <p v-if="currentUser">Welcome, {{ currentUser.firstName }}!</p>
+    <p v-if="currentUser">Welcome, {{ currentUser.firstName }}! <br> Feel free to make adjustments.</p>
     
     <!-- Show loading state -->
     <div v-if="loading" class="text-center">
@@ -138,17 +138,11 @@ export default {
   },
 
   created() {
-    if (this.currentUser) {
-    console.log('Current user data:', this.currentUser); // Add this line
-    this.initializeForm();
-  } else {
-    this.$router.push('/login');
-  }
 
     if (this.currentUser) {
       this.initializeForm();
     } else {
-      this.$router.push('/login');
+      this.$router.push('/user');
     }
   },
 
@@ -157,13 +151,13 @@ export default {
 
     initializeForm() {
   this.formData = {
-    firstName: this.currentUser.firstName || '',
-    lastName: this.currentUser.lastName || '',
-    userAge: this.currentUser.userAge !== undefined ? this.currentUser.userAge : null,
-    gender: this.currentUser.gender || '',
-    emailAdd: this.currentUser.emailAdd || '',
+    firstName: this.currentUser .firstName || '',
+    lastName: this.currentUser .lastName || '',
+    userAge: this.currentUser .userAge !== undefined ? this.currentUser .userAge : null,
+    gender: this.currentUser .gender || '',
+    emailAdd: this.currentUser .emailAdd || '',
     userPass: '',
-    userProfile: this.currentUser.userProfile || this.defaultProfilePic,
+    userProfile: this.currentUser .userProfile || this.defaultProfilePic,
   };
 },
 

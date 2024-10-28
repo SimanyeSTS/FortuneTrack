@@ -683,7 +683,7 @@ export default createStore({
       }
     },
 
-    async loginUser({ commit }, loginData) {
+    async loginUser ({ commit }, loginData) {
       commit('SET_LOADING', true);
       try {
         const response = await axios.post(`${hostedData}user/login`, {
