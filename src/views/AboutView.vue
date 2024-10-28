@@ -6,7 +6,7 @@
         I, Simanye Somdaka, the developer and brains behind FortuneTrack, welcome you to this cutting-edge predictive analytics platform, designed to empower businesses with actionable insights across key industry sectors. This web application leverages the power of Node.js, Vue.js, and MySQL to deliver a robust and user-friendly tool for monitoring and forecasting trends in Retail, Technology, Food & Beverages, and Healthcare.
       </p>
       <p>
-        <span>My Mission:</span> I aim to provide businesses with timely and accurate data-driven predictions to optimize their strategies and maximize their potential. By integrating real-time data from Google Trends and X (formerly Twitter), this platform offers a comprehensive view of market dynamics and customer behavior.
+        <span>My Mission:</span> I aim to provide businesses with timely and accurate data-driven predictions to optimize their strategies and maximize their potential. By integrating real-time data from Apha Vantage, this platform offers a comprehensive view of market dynamics and customer behavior.
       </p>
     </section>
     <br>

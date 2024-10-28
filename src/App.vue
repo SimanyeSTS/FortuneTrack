@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-  <NavBar />
+    <NavBar />
     <router-view />
     <FooterComp />
   </div>
@@ -9,23 +9,35 @@
 <script>
 import NavBar from './components/NavBar.vue'
 import FooterComp from './components/FooterComp.vue'
-  export default {
-    components: {
-      NavBar,
-      FooterComp
-    }
+
+export default {
+  components: {
+    NavBar,
+    FooterComp
+  }
 }
 </script>
 
 <style>
-.wrapper{
-  background-color: #000080;
+html, body {
+  height: 100%; /* Ensure full height for body */
+  margin: 0; /* Remove default margins */
 }
 
-body{
-  background-color: #000080;
+.wrapper {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  min-height: 100vh; /* Full height of the viewport */
+  background-color: #000080; /* Background color for the wrapper */
 }
 
+body {
+  background-color: #000080; /* Background color for the body */
+}
+
+footer {
+  margin-top: auto; /* Push footer to the bottom */
+}
 </style>
 
 <style src="@/assets/css/style.css"></style>

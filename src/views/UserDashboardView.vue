@@ -234,6 +234,12 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button:hover {
+  background-color: #3668ff;
+  color: white;
+  border: solid black;
+}
+
 .account-management {
   color: white;
   padding: 20px;

@@ -19,7 +19,7 @@
       <h2 id="welcoming">Our Specializations:</h2>
       <ul id="sp">
         <li>Leveraging the latest data trends to drive actionable business insights.</li>
-        <li>Utilizing real-time data from Google Trends and X (Twitter) for accurate forecasts.</li>
+        <li>Utilizing real-time data from Alpha Vantage for accurate forecasts.</li>
         <li>Transforming raw data into meaningful visualizations for strategic decision-making.</li>
         <li>Providing businesses with timely predictions to optimize product sales and market strategies.</li>
       </ul>
@@ -227,6 +227,12 @@ export default {
   cursor: pointer;
   border-radius: 40%;
   transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1249ef;
+  color: black;
+  border: solid black;
 }
 
 .specializations {
