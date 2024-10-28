@@ -96,42 +96,44 @@ class Users {
     }
   }
 
-  async loginUser(data) {
+  async loginUser (data) {
     try {
-      const { emailAdd, userPass } = data
+      const { emailAdd, userPass } = data;
       const strQry = `
-      SELECT UserID, firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile, createdAt, updatedAt
+      SELECT UserID, firstName, lastName, userAge, gender, userRole, emailAdd, userPass, userProfile
       FROM Users
       WHERE emailAdd = ?;
-      `
-      const [result] = await db.execute(strQry, [emailAdd])
-      
+      `;
+      const [result] = await db.execute(strQry, [emailAdd]);
+  
       if (!result.length) {
-        throw { status: 401, msg: "Invalid email or password." }
+        throw { status: 401, msg: "Invalid email or password." };
       }
-      
-      const ValidPass = await bcrypt.compare(userPass, result[0].userPass)
+  
+      const ValidPass = await bcrypt.compare(userPass, result[0].userPass);
       if (!ValidPass) {
-        throw { status: 401, msg: "Invalid email or password." }
+        throw { status: 401, msg: "Invalid email or password." };
       }
-      
+  
       const token = createToken({
         emailAdd: result[0].emailAdd,
         userPass: result[0].userPass
-      })
-      
+      });
+  
       return {
         token,
         user: {
           UserID: result[0].UserID,
           firstName: result[0].firstName,
           lastName: result[0].lastName,
+          userAge: result[0].userAge, // Include userAge
+          gender: result[0].gender, // Include gender
           userRole: result[0].userRole,
           emailAdd: result[0].emailAdd
         }
-      }
+      };
     } catch (err) {
-      throw err
+      throw err;
     }
   }
 }
