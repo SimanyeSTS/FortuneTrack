@@ -128,6 +128,7 @@ class Users {
           lastName: result[0].lastName,
           userAge: result[0].userAge, // Include userAge
           gender: result[0].gender, // Include gender
+          userProfile: result[0].userProfile,
           userRole: result[0].userRole,
           emailAdd: result[0].emailAdd
         }
