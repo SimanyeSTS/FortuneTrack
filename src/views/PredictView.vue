@@ -5,7 +5,9 @@
       <h1>Predict</h1>
       <div class="button-container">
         <button class="acc" @click="redirectToAccount">Account</button>
-        <button class="logout">Logout</button>
+        <button class="logout" @click="handleLogoutOrLogin">
+          {{ currentUser ? 'Logout' : 'Login' }}
+        </button>
       </div>
       <div v-for="(sector, sectorIndex) in sectors" :key="sectorIndex" class="sector-charts">
         <h2>{{ sector.name }}</h2>
@@ -21,8 +23,72 @@
     <!-- Login Modal -->
     <div v-if="showLoginModal" class="modal">
       <div class="modal-content">
-        <h1>Wonderful To Have You Back!</h1>
-        <form @submit.prevent="handleLogin">
+        <h1>You are not logged in, please login to continue!</h1>
+        <form @submit.prevent="() => handleLogin('login')">
+          <div class="form-group">
+            <label for="emailAdd">Email:</label>
+            <input 
+              type="email" 
+              id="emailAdd" 
+              v-model="emailAdd" 
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input 
+              type="password" 
+              id="userPass" 
+              v-model="userPass" 
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="button-group">
+            <button 
+              type="submit" 
+              class="login-button"
+              :disabled="isLoading"
+            >
+              {{ isLoading ? 'Signing in...' : 'Sign In' }}
+            </button>
+            <div class="links">
+              <button 
+                type="button" 
+                class="forgot-password" 
+                @click="handleForgotPassword"
+                :disabled="isLoading"
+              >
+                Forgot Password?
+              </button>
+              <br>
+              <button 
+                type="button" 
+                class="register-button" 
+                @click="goToRegistration"
+                :disabled="isLoading"
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+        </form>
+        <button 
+          class="close-button" 
+          @click="closeModal"
+          :disabled="isLoading"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div v-if="showWelcomeModal" class="modal">
+      <div class="modal-content">
+        <h1>Wonderful to have you here!</h1>
+        <form @submit.prevent="() => handleLogin('welcome')">
           <div class="form-group">
             <label for="emailAdd">Email:</label>
             <input 
@@ -90,6 +156,7 @@ import { useStore } from 'vuex'
 import MainLineChart from '@/components/MainLineChart.vue'
 import MainSideWindow from '@/components/MainSideWindow.vue'
 import SpinnerComp from '@/components/SpinnerComp.vue'
+import Swal from 'sweetalert2'
 
 export default defineComponent({
   name: 'PredictView',
@@ -101,8 +168,14 @@ export default defineComponent({
   data() {
     return {
       showLoginModal: false,
+      showWelcomeModal: false,
       emailAdd: '',
       userPass: ''
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user;
     }
   },
   mounted() {
@@ -110,43 +183,128 @@ export default defineComponent({
   },
   methods: {
     redirectToAccount() {
-      const currentUser   = this.$store.state.user;
-
-      if (!currentUser  ) {
+      if (!this.currentUser) {
         this.showLoginModal = true;
         return;
       }
 
-      if (currentUser .userRole.toLowerCase() === 'admin') {
+      if (this.currentUser.userRole.toLowerCase() === 'admin') {
         this.$router.push({ name: 'admin-dashboard' });
       } else {
         this.$router.push({ name: 'user-dashboard' });
       }
     },
-    async handleLogin() {
+
+    handleLogoutOrLogin() {
+      if (!this.currentUser) {
+        this.showWelcomeModal = true;
+      } else {
+        this.confirmLogout();
+      }
+    },
+
+    async handleLogin(modalType) {
       try {
-        await this.$store.dispatch('loginUser ', {
+        // Show loading state
+        this.$store.commit('SET_LOADING', true);
+        
+        // Attempt login
+        await this.$store.dispatch('loginUser', {
           emailAdd: this.emailAdd,
           userPass: this.userPass
         });
 
-        this.showLoginModal = false;
-        this.emailAdd = '';
-        this.userPass = '';
+        // Show success message
+        await Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully logged in.',
+          icon: 'success',
+          timer: 1500
+        });
 
-        if (this.$store.state.user.userRole.toLowerCase() === 'admin') {
-          this.$router.push({ name: 'admin-dashboard' });
+        // Close modals
+        this.closeModal();
+
+        // Handle redirects based on modal type
+        if (modalType === 'welcome') {
+          // Stay on predictions page if logged in through Welcome Modal
+          return;
         } else {
-          this.$router.push({ name: 'user-dashboard' });
+          // Redirect to appropriate dashboard if logged in through Login Modal
+          if (this.currentUser.userRole.toLowerCase() === 'admin') {
+            this.$router.push({ name: 'admin-dashboard' });
+          } else {
+            this.$router.push({ name: 'user-dashboard' });
+          }
         }
       } catch (error) {
+        // Handle login error
         console.error('Login failed:', error);
+        await Swal.fire({
+          title: 'Error',
+          text: error.message || 'Failed to log in. Please try again.',
+          icon: 'error'
+        });
+      } finally {
+        // Reset loading state
+        this.$store.commit('SET_LOADING', false);
       }
     },
+
+    async confirmLogout() {
+      try {
+        const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: "You will be logged out of your account",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, logout',
+          cancelButtonText: 'Cancel'
+        });
+
+        if (result.isConfirmed) {
+          await this.logoutUser();
+          await Swal.fire(
+            'Logged Out!',
+            'You have been successfully logged out.',
+            'success'
+          );
+        }
+      } catch (error) {
+        console.error('Logout confirmation error:', error);
+        await Swal.fire(
+          'Error',
+          'There was a problem logging out. Please try again.',
+          'error'
+        );
+      }
+    },
+
+    async logoutUser() {
+      try {
+        await this.$store.dispatch('logoutUser');
+        this.$router.push({ name: 'home' });
+      } catch (error) {
+        console.error('Logout failed:', error);
+        throw error;
+      }
+    },
+
     closeModal() {
       this.showLoginModal = false;
-      this .emailAdd = '';
+      this.showWelcomeModal = false;
+      this.emailAdd = '';
       this.userPass = '';
+    },
+
+    handleForgotPassword() {
+      this.$router.push({ name: 'forgot-password' });
+    },
+
+    goToRegistration() {
+      this.$router.push({ name: 'register' });
     }
   },
   setup() {
@@ -211,80 +369,86 @@ export default defineComponent({
 
 <style scoped>
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  position: fixed!important;
+  top: 0!important;
+  left: 0!important;
+  right: 0!important;
+  bottom: 0!important;
+  background: rgba(0, 0, 0, 0.7)!important;
+  display: flex!important;
+  justify-content: center!important;
+  align-items: center!important;
+  z-index: 1000!important;
 }
 
 .modal-content {
-  background: #4169E1;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  text-align: center;
+  background: #4169E1!important;
+  padding: 20px!important;
+  border-radius: 8px!important;
+  width: 400px!important;
+  text-align: center!important;
+}
+
+button:hover {
+  background-color: #1249ef!important;
+  color: black!important;;
+  border: solid black!important;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 15px!important;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 5px;
+  display: block!important;
+  margin-bottom: 5px!important;
 }
 
 .form-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 100%!important;
+  padding: 10px!important;
+  border: 1px solid #ccc!important;
+  border-radius: 4px!important;
 }
 
 .button-group {
-  margin-top: 20px;
+  margin-top: 20px!important;
 }
 
 .login-button {
-  background-color: white;
-  color: #4169E1;
-  border: 2px solid #002080;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  background-color: white!important;
+  color: #4169E1!important;
+  border: 2px solid #002080!important;
+  padding: 10px 20px!important;
+  cursor: pointer!important;
+  border-radius: 4px!important;
+  transition: background-color 0.3s!important;
 }
 
 .login-button:hover {
-  background-color: #1249ef;
-  color: black;
-  border: solid black;
+  background-color: #1249ef!important;
+  color: black!important;
+  border: solid black!important;
 }
 
 .links {
-  margin-top: 10px;
+  margin-top: 10px!important;
 }
 
 .forgot-password, .register-button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  text-decoration: underline;
+  background: none!important;
+  border: none!important;
+  color: white!important;
+  cursor: pointer!important;
+  text-decoration: underline!important;
 }
 
 .close-button {
-  background: none;
-  border: none;
-  color: #000;
-  font-size: 24px;
-  cursor: pointer;
+  background: none!important;
+  border: none!important;
+  color: #000!important;
+  font-size: 24px!important;
+  cursor: pointer!important;
 }
 
 .predict-view {
@@ -343,7 +507,7 @@ h2 {
   z-index: 100;
 }
 
-button {
+.acc, .logout {
   background-color: white;
   color: black;
   border: 2px solid #3668ff;
@@ -358,7 +522,13 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+.logout:hover {
+  background-color: #3668ff;
+  color: white;
+  border: solid black;
+}
+
+.acc:hover {
   background-color: #3668ff;
   color: white;
   border: solid black;
@@ -387,13 +557,13 @@ button:hover {
 
 @media (max-width: 768px) {
   .modal-content {
-    width: 90%; /* Full width on smaller screens */
+    width: 90%!important; /* Full width on smaller screens */
   }
 }
 
 @media (max-width: 400px) {
   .modal-content {
-    padding: 15px; /* Less padding on smaller screens */
+    padding: 15px!important; /* Less padding on smaller screens */
   }
 }
 </style>

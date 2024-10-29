@@ -28,7 +28,7 @@
 <!-- Login Modal -->
 <div v-if="showLoginModal" class="modal">
     <div class="modal-content">
-      <h1>Wonderful To Have You Back!</h1>
+      <h1>Wonderful to have you here!</h1>
       <form @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="emailAdd">Email:</label>
