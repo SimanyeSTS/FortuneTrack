@@ -4,7 +4,11 @@
     <div v-else>
       <h1>Predict</h1>
       <div class="button-container">
-        <button class="acc" @click="redirectToAccount">Account</button>
+        <button class="acc" @click="redirectToAccount">
+          <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
+          <span v-if="currentUser">{{ currentUser.firstName }}</span>
+          <span v-else>Account</span>
+        </button>
         <button class="logout" @click="handleLogoutOrLogin">
           {{ currentUser ? 'Logout' : 'Login' }}
         </button>
@@ -368,6 +372,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.profile-picture {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
 .modal {
   position: fixed!important;
   top: 0!important;
@@ -512,13 +524,13 @@ h2 {
   color: black;
   border: 2px solid #3668ff;
   padding: 8px !important;
-  width: 6rem !important;
+  width: 8rem !important;
   margin-bottom: 10px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   font-size: 1em;
   cursor: pointer;
-  border-radius: 20%;
+  border-radius: 20px;
   transition: background-color 0.3s;
 }
 

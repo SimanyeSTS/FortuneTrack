@@ -225,7 +225,7 @@ export default {
   font-weight: 900;
   font-size: 1em;
   cursor: pointer;
-  border-radius: 40%;
+  border-radius: 20px;
   transition: background-color 0.3s;
 }
 
