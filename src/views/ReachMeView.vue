@@ -3,34 +3,29 @@
     <p class="subtitle">I would love to hear from you, please do get in touch using the form below.</p>
     
     <div class="contact-section">
-      <div class="contact-info">
-        <p>
-          <a href="mailto:simanyesomdaka@gmail.com">
-            <i class="bi bi-envelope-at-fill icon"></i>
-          </a>
-          <span class="spacing">simanyesomdaka@gmail.com</span>
-        </p>
-  
-        <p>
-          <a href="https://www.linkedin.com/in/simanye-somdaka-6501712b2" target="_blank">
-            <i class="bi bi-linkedin icon"></i>
-          </a>
-          <span class="spacing">Simanye Somdaka</span>
-        </p>
-  
-        <p>
-          <i class="bi bi-telephone-fill icon"></i>
-          <span class="spacing">+27 73 063 3069</span>
-        </p>
-  
-        <p>
-            <i class="bi bi-geo-alt-fill icon"></i>
-            <span class="spacing">Weltevreden Valley North, <br> 
-                <span class="indent">Cape Town,</span> <br> 
-                <span class="indent">Western Cape</span>
-            </span>
-        </p>
-      </div>
+    <div class="contact-info">
+      <p>
+        <a href="mailto:simanyesomdaka@gmail.com" style="text-decoration: none; color: white;">
+          <i class="bi bi-envelope-at-fill icon"></i>
+          simanyesomdaka@gmail.com
+        </a>
+      </p>
+      <p>
+        <a href="https://www.linkedin.com/in/simanye-somdaka-6501712b2" target="_blank" style="text-decoration: none; color: white;">
+          <i class="bi bi-linkedin icon"></i>
+          Simanye Somdaka
+        </a>
+      </p>
+      <p><i class="bi bi-telephone-fill icon"></i>+27 73 063 3069</p>
+
+      <p>
+        <i class="bi bi-geo-alt-fill icon"></i>
+        <span class="spacing">Weltevreden Valley North, <br> 
+          <span class="indent">Cape Town,</span> <br> 
+          <span class="indent">Western Cape</span>
+        </span>
+      </p>
+    </div>
   
       <form @submit.prevent="handleSubmit" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
         <div class="form-group">

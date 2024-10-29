@@ -13,14 +13,24 @@
           {{ currentUser ? 'Logout' : 'Login' }}
         </button>
       </div>
-      <div v-for="(sector, sectorIndex) in sectors" :key="sectorIndex" class="sector-charts">
-        <h2>{{ sector.name }}</h2>
-        <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
-          <div class="chart-container">
-            <MainLineChart :chartData="prepareChartData(data)" />
+
+      <!-- Add PredictionFilters component -->
+      <PredictionFilters 
+        :sectors="sectors"
+        @filter-change="handleFilterChange"
+      />
+
+      <!-- Iterate through filtered sectors and render sector charts -->
+      <div v-for="(sector, sectorIndex) in filteredSectors" :key="sectorIndex" class="sector-charts">
+        <template v-if="sector.data.length > 0">
+          <h2>{{ sector.name }}</h2>
+          <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
+            <div class="chart-container">
+              <MainLineChart :chartData="prepareChartData(data)" />
+            </div>
+            <MainSideWindow :data="data" :sector="sector.name" />
           </div>
-          <MainSideWindow :data="data" :sector="sector.name" />
-        </div>
+        </template>
       </div>
     </div>
 
@@ -154,12 +164,14 @@
   </div>
 </template>
 
+
 <script>
-import { defineComponent, computed, onMounted } from 'vue'
+import { defineComponent, computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import MainLineChart from '@/components/MainLineChart.vue'
 import MainSideWindow from '@/components/MainSideWindow.vue'
 import SpinnerComp from '@/components/SpinnerComp.vue'
+import PredictionFilters from '@/components/PredictionFilters.vue'
 import Swal from 'sweetalert2'
 
 export default defineComponent({
@@ -167,7 +179,8 @@ export default defineComponent({
   components: {
     MainLineChart,
     MainSideWindow,
-    SpinnerComp
+    SpinnerComp,
+    PredictionFilters
   },
   data() {
     return {
@@ -175,15 +188,12 @@ export default defineComponent({
       showWelcomeModal: false,
       emailAdd: '',
       userPass: ''
-    }
+    };
   },
   computed: {
     currentUser() {
       return this.$store.state.user;
     }
-  },
-  mounted() {
-    window.scrollTo(0, 0)
   },
   methods: {
     redirectToAccount() {
@@ -209,16 +219,12 @@ export default defineComponent({
 
     async handleLogin(modalType) {
       try {
-        // Show loading state
         this.$store.commit('SET_LOADING', true);
-        
-        // Attempt login
         await this.$store.dispatch('loginUser', {
           emailAdd: this.emailAdd,
           userPass: this.userPass
         });
 
-        // Show success message
         await Swal.fire({
           title: 'Success!',
           text: 'You have successfully logged in.',
@@ -226,15 +232,11 @@ export default defineComponent({
           timer: 1500
         });
 
-        // Close modals
         this.closeModal();
 
-        // Handle redirects based on modal type
         if (modalType === 'welcome') {
-          // Stay on predictions page if logged in through Welcome Modal
           return;
         } else {
-          // Redirect to appropriate dashboard if logged in through Login Modal
           if (this.currentUser.userRole.toLowerCase() === 'admin') {
             this.$router.push({ name: 'admin-dashboard' });
           } else {
@@ -242,7 +244,6 @@ export default defineComponent({
           }
         }
       } catch (error) {
-        // Handle login error
         console.error('Login failed:', error);
         await Swal.fire({
           title: 'Error',
@@ -250,7 +251,6 @@ export default defineComponent({
           icon: 'error'
         });
       } finally {
-        // Reset loading state
         this.$store.commit('SET_LOADING', false);
       }
     },
@@ -304,19 +304,59 @@ export default defineComponent({
     },
 
     handleForgotPassword() {
-      this.$router.push({ name: 'forgot-password' });
+      this.$router.push({ name: 'reach-me' });
     },
 
     goToRegistration() {
-      this.$router.push({ name: 'register' });
+      this.$router.push({ name: 'sign-up' });
+    },
+
+    handleFilterChange({ searchQuery, selectedCategory, sortBy }) {
+      const filtered = this.sectors.map(sector => {
+        let sectorCopy = { ...sector };
+
+        if (selectedCategory && sector.name !== selectedCategory) {
+          sectorCopy.data = [];
+          return sectorCopy;
+        }
+
+        let filteredData = [...sector.data];
+
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          filteredData = filteredData.filter(item => 
+            (item.Symbol && item.Symbol.toLowerCase().includes(query)) || 
+            (item.Name && item.Name.toLowerCase().includes(query))
+          );
+        }
+
+        if (sortBy) {
+          switch(sortBy) {
+            case 'priceAsc':
+              filteredData.sort((a, b) => parseFloat(a.Price || 0) - parseFloat(b.Price || 0));
+              break;
+            case 'priceDesc':
+              filteredData.sort((a, b) => parseFloat(b.Price || 0) - parseFloat(a.Price || 0));
+              break;
+            case 'growthAsc':
+              filteredData.sort((a, b) => parseFloat(a.QuarterlyEarningsGrowthYOY || 0) - parseFloat(b.QuarterlyEarningsGrowthYOY || 0));
+              break;
+            case 'growthDesc':
+              filteredData.sort((a, b) => parseFloat(b.QuarterlyEarningsGrowthYOY || 0) - parseFloat(a.QuarterlyEarningsGrowthYOY || 0));
+              break;
+          }
+        }
+
+        sectorCopy.data = filteredData;
+        return sectorCopy;
+      });
+
+      this.filteredSectors = filtered;
     }
   },
   setup() {
     const store = useStore();
-
     const isLoading = computed(() => store.state.isLoading);
-    const error = computed(() => store.state.error);
-
     const sectors = computed(() => [
       { name: 'Retail', data: store.state.retail },
       { name: 'Technology', data: store.state.technology },
@@ -324,52 +364,51 @@ export default defineComponent({
       { name: 'Healthcare', data: store.state.healthcare }
     ]);
 
-    const prepareChartData = (data) => {
-      return {
-        labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
-        datasets: [
-          {
-            label: data.Symbol,
-            data: [
-              parseFloat(data.QuarterlyEarningsGrowthYOY) * 100, 
-              parseFloat(data.RevenueTTM) / 1e9, 
-              parseFloat(data.AnalystTargetPrice),
-              parseFloat(data['52WeekHigh'])
-            ],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.7)', 
-              'rgba(54, 162, 235, 0.7)', 
-              'rgba(255, 206, 86, 0.7)', 
-              'rgba(75, 192, 192, 0.7)'  
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1
-          }
-        ]
-      };
-    };
+    const filteredSectors = ref([]);
 
-    onMounted(() => {
-      store.dispatch('fetchRetail');
-      store.dispatch('fetchTechnology');
-      store.dispatch('fetchFoodAndBeverages');
-      store.dispatch('fetchHealthcare');
+    // Initialize filteredSectors to sectors initially
+    watch(sectors, (newSectors) => {
+      filteredSectors.value = JSON.parse(JSON.stringify(newSectors));
+    }, { immediate: true });
+
+    const prepareChartData = (data) => ({
+      labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
+      datasets: [
+        {
+          label: data.Symbol,
+          data: [
+            parseFloat(data.QuarterlyEarningsGrowthYOY) * 100,
+            parseFloat(data.RevenueTTM) / 1e9,
+            parseFloat(data.AnalystTargetPrice),
+            parseFloat(data['52WeekHigh'])
+          ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 206, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }
+      ]
     });
 
     return {
       isLoading,
-      error,
       sectors,
+      filteredSectors,
       prepareChartData
     };
   }
 });
 </script>
+
 
 <style scoped>
 .profile-picture {
@@ -432,7 +471,7 @@ button:hover {
   color: #4169E1!important;
   border: 2px solid #002080!important;
   padding: 10px 20px!important;
-  cursor: pointer!important;
+  cursor: pointer !important;
   border-radius: 4px!important;
   transition: background-color 0.3s!important;
 }

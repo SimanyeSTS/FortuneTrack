@@ -9,13 +9,16 @@
       <p><strong>Earnings Growth:</strong> {{ parseFloat(data.QuarterlyEarningsGrowthYOY) * 100 }}%</p>
     </div>
     <div class="card-footer">
-      <button @click="navigateToPrediction">Predict</button>
+      <button @click="handlePredictClick">Predict</button>
     </div>
   </div>
 </template>
 
 <script>
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'MainSideWindow',
@@ -23,7 +26,7 @@ export default {
     data: {
       type: Object,
       required: true,
-      validator: value => value && value.Symbol && value.RevenueTTM // Add more validations if needed
+      validator: value => value && value.Symbol && value.RevenueTTM
     },
     sector: {
       type: String,
@@ -32,17 +35,40 @@ export default {
   },
   setup(props) {
     const router = useRouter();
+    const store = useStore();
+
+    const currentUser = computed(() => store.getters.current);
 
     const navigateToPrediction = () => {
       router.push({ 
         name: 'prediction-data',
         params: { symbol: props.data.Symbol, sector: props.sector }
-      })
-    }
+      });
+    };
+
+    const handlePredictClick = () => {
+      if (!currentUser.value) {
+        Swal.fire({
+          title: 'Authentication Required',
+          text: 'Please login to access prediction data',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#4169E1',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.push('/predict'); // Make sure you have a login route defined
+          }
+        });
+      } else {
+        navigateToPrediction();
+      }
+    };
 
     return {
-      navigateToPrediction
-    }
+      handlePredictClick
+    };
   }
 }
 </script>

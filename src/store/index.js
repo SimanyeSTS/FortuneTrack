@@ -30,7 +30,8 @@ export default createStore({
     healthcarePrediction: null,
     allSectorsData: [],
     singlePrediction: null,
-    token: null // Add token to state
+    token: null, // Add token to state
+    filteredSectors: []
   },
   getters: {
     allUsers: (state) => state.users,
@@ -170,6 +171,9 @@ export default createStore({
     SET_SINGLE_PREDICTION(state, prediction) {
       state.singlePrediction = prediction;
     },
+    SET_FILTERED_SECTORS(state, sectors) {
+      state.filteredSectors = sectors;
+    }
   },
   actions: {
     async fetchUsers({ commit }) {
