@@ -10,6 +10,7 @@
           <span v-else>Account</span>
         </button>
         <button class="logout" @click="handleLogoutOrLogin">
+          <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
           {{ currentUser ? 'Logout' : 'Login' }}
         </button>
       </div>
@@ -191,17 +192,18 @@ export default defineComponent({
     };
   },
   computed: {
-    currentUser () {
+    currentUser() {
       return this.$store.state.user;
     }
   },
   methods: {
     redirectToAccount() {
-      if (!this.currentUser ) {
+      if (!this.currentUser) {
         this.showLoginModal = true;
         return;
       }
-      if (this.currentUser .userRole.toLowerCase() === 'admin') {
+
+      if (this.currentUser.userRole.toLowerCase() === 'admin') {
         this.$router.push({ name: 'admin-dashboard' });
       } else {
         this.$router.push({ name: 'user-dashboard' });
@@ -209,7 +211,7 @@ export default defineComponent({
     },
 
     handleLogoutOrLogin() {
-      if (!this.currentUser ) {
+      if (!this.currentUser) {
         this.showWelcomeModal = true;
       } else {
         this.confirmLogout();
@@ -219,7 +221,7 @@ export default defineComponent({
     async handleLogin(modalType) {
       try {
         this.$store.commit('SET_LOADING', true);
-        await this.$store.dispatch('loginUser ', {
+        await this.$store.dispatch('loginUser', {
           emailAdd: this.emailAdd,
           userPass: this.userPass
         });
@@ -233,8 +235,10 @@ export default defineComponent({
 
         this.closeModal();
 
-        if (modalType !== 'welcome') {
-          if (this.currentUser .userRole.toLowerCase() === 'admin') {
+        if (modalType === 'welcome') {
+          return;
+        } else {
+          if (this.currentUser.userRole.toLowerCase() === 'admin') {
             this.$router.push({ name: 'admin-dashboard' });
           } else {
             this.$router.push({ name: 'user-dashboard' });
@@ -266,18 +270,26 @@ export default defineComponent({
         });
 
         if (result.isConfirmed) {
-          await this.logoutUser ();
-          await Swal.fire('Logged Out!', 'You have been successfully logged out.', 'success');
+          await this.logoutUser();
+          await Swal.fire(
+            'Logged Out!',
+            'You have been successfully logged out.',
+            'success'
+          );
         }
       } catch (error) {
         console.error('Logout confirmation error:', error);
-        await Swal.fire('Error', 'There was a problem logging out. Please try again.', 'error');
+        await Swal.fire(
+          'Error',
+          'There was a problem logging out. Please try again.',
+          'error'
+        );
       }
     },
 
-    async logoutUser () {
+    async logoutUser() {
       try {
-        await this.$store.dispatch('logoutUser ');
+        await this.$store.dispatch('logoutUser');
         this.$router.push({ name: 'home' });
       } catch (error) {
         console.error('Logout failed:', error);
