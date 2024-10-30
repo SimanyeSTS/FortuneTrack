@@ -31,7 +31,8 @@ export default createStore({
     allSectorsData: [],
     singlePrediction: null,
     token: null, // Add token to state
-    filteredSectors: []
+    filteredSectors: [],
+    sectors: []
   },
   getters: {
     allUsers: (state) => state.users,

@@ -355,10 +355,10 @@ export default defineComponent({
         let result = 0;
         switch(sortBy) {
           case 'priceAsc':
-            result = this.safeParseFloat(a.Price) - this.safeParseFloat(b.Price);
+            result = this.safeParseFloat(a.AnalystTargetPrice) - this.safeParseFloat(b.AnalystTargetPrice);
             break;
           case 'priceDesc':
-            result = this.safeParseFloat(b.Price) - this.safeParseFloat(a.Price);
+            result = this.safeParseFloat(b.AnalystTargetPrice) - this.safeParseFloat(a.AnalystTargetPrice);
             break;
           case 'growthAsc':
             result = this.safeParseFloat(a.QuarterlyEarningsGrowthYOY) - this.safeParseFloat(b.QuarterlyEarningsGrowthYOY);
