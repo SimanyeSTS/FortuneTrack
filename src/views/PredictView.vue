@@ -166,7 +166,7 @@
 
 
 <script>
-import { defineComponent, computed, ref, watch } from 'vue'
+import { defineComponent, computed, ref, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import MainLineChart from '@/components/MainLineChart.vue'
 import MainSideWindow from '@/components/MainSideWindow.vue'
@@ -191,18 +191,17 @@ export default defineComponent({
     };
   },
   computed: {
-    currentUser() {
+    currentUser () {
       return this.$store.state.user;
     }
   },
   methods: {
     redirectToAccount() {
-      if (!this.currentUser) {
+      if (!this.currentUser ) {
         this.showLoginModal = true;
         return;
       }
-
-      if (this.currentUser.userRole.toLowerCase() === 'admin') {
+      if (this.currentUser .userRole.toLowerCase() === 'admin') {
         this.$router.push({ name: 'admin-dashboard' });
       } else {
         this.$router.push({ name: 'user-dashboard' });
@@ -210,7 +209,7 @@ export default defineComponent({
     },
 
     handleLogoutOrLogin() {
-      if (!this.currentUser) {
+      if (!this.currentUser ) {
         this.showWelcomeModal = true;
       } else {
         this.confirmLogout();
@@ -220,7 +219,7 @@ export default defineComponent({
     async handleLogin(modalType) {
       try {
         this.$store.commit('SET_LOADING', true);
-        await this.$store.dispatch('loginUser', {
+        await this.$store.dispatch('loginUser ', {
           emailAdd: this.emailAdd,
           userPass: this.userPass
         });
@@ -234,10 +233,8 @@ export default defineComponent({
 
         this.closeModal();
 
-        if (modalType === 'welcome') {
-          return;
-        } else {
-          if (this.currentUser.userRole.toLowerCase() === 'admin') {
+        if (modalType !== 'welcome') {
+          if (this.currentUser .userRole.toLowerCase() === 'admin') {
             this.$router.push({ name: 'admin-dashboard' });
           } else {
             this.$router.push({ name: 'user-dashboard' });
@@ -269,26 +266,18 @@ export default defineComponent({
         });
 
         if (result.isConfirmed) {
-          await this.logoutUser();
-          await Swal.fire(
-            'Logged Out!',
-            'You have been successfully logged out.',
-            'success'
-          );
+          await this.logoutUser ();
+          await Swal.fire('Logged Out!', 'You have been successfully logged out.', 'success');
         }
       } catch (error) {
         console.error('Logout confirmation error:', error);
-        await Swal.fire(
-          'Error',
-          'There was a problem logging out. Please try again.',
-          'error'
-        );
+        await Swal.fire('Error', 'There was a problem logging out. Please try again.', 'error');
       }
     },
 
-    async logoutUser() {
+    async logoutUser () {
       try {
-        await this.$store.dispatch('logoutUser');
+        await this.$store.dispatch('logoutUser ');
         this.$router.push({ name: 'home' });
       } catch (error) {
         console.error('Logout failed:', error);
@@ -312,46 +301,83 @@ export default defineComponent({
     },
 
     handleFilterChange({ searchQuery, selectedCategory, sortBy }) {
+      console.log('Filters received:', { searchQuery, selectedCategory, sortBy }); // Debugging line
       const filtered = this.sectors.map(sector => {
         let sectorCopy = { ...sector };
-
+        
+        // Filter by category
         if (selectedCategory && sector.name !== selectedCategory) {
           sectorCopy.data = [];
           return sectorCopy;
         }
 
-        let filteredData = [...sector.data];
+        // Deep copy of data for manipulation
+        let filteredData = JSON.parse(JSON.stringify(sector.data));
 
+        // Apply search filter
         if (searchQuery) {
           const query = searchQuery.toLowerCase();
           filteredData = filteredData.filter(item => 
-            (item.Symbol && item.Symbol.toLowerCase().includes(query)) || 
+            ( item.Symbol && item.Symbol.toLowerCase().includes(query)) || 
             (item.Name && item.Name.toLowerCase().includes(query))
           );
         }
 
+        // Apply sorting
         if (sortBy) {
-          switch(sortBy) {
-            case 'priceAsc':
-              filteredData.sort((a, b) => parseFloat(a.Price || 0) - parseFloat(b.Price || 0));
-              break;
-            case 'priceDesc':
-              filteredData.sort((a, b) => parseFloat(b.Price || 0) - parseFloat(a.Price || 0));
-              break;
-            case 'growthAsc':
-              filteredData.sort((a, b) => parseFloat(a.QuarterlyEarningsGrowthYOY || 0) - parseFloat(b.QuarterlyEarningsGrowthYOY || 0));
-              break;
-            case 'growthDesc':
-              filteredData.sort((a, b) => parseFloat(b.QuarterlyEarningsGrowthYOY || 0) - parseFloat(a.QuarterlyEarningsGrowthYOY || 0));
-              break;
-          }
+          console.log('Sorting by:', sortBy); // Debugging line
+          filteredData = this.sortData(filteredData, sortBy);
         }
 
         sectorCopy.data = filteredData;
         return sectorCopy;
       });
 
+      console.log('Filtered sectors:', filtered); // Debugging line
       this.filteredSectors = filtered;
+    },
+
+    sortData(data, sortBy) {
+      console.log('Sorting data:', data); // Debugging line
+      return [...data].sort((a, b) => {
+        let result = 0;
+        switch(sortBy) {
+          case 'priceAsc':
+            result = this.safeParseFloat(a.Price) - this.safeParseFloat(b.Price);
+            break;
+          case 'priceDesc':
+            result = this.safeParseFloat(b.Price) - this.safeParseFloat(a.Price);
+            break;
+          case 'growthAsc':
+            result = this.safeParseFloat(a.QuarterlyEarningsGrowthYOY) - this.safeParseFloat(b.QuarterlyEarningsGrowthYOY);
+            break;
+          case 'growthDesc':
+            result = this.safeParseFloat(b.QuarterlyEarningsGrowthYOY) - this.safeParseFloat(a.QuarterlyEarningsGrowthYOY);
+            break;
+          case 'revenueAsc':
+            result = this.safeParseFloat(a.RevenueTTM) - this.safeParseFloat(b.RevenueTTM);
+            break;
+          case 'revenueDesc':
+            result = this.safeParseFloat(b.RevenueTTM) - this.safeParseFloat(a.RevenueTTM);
+            break;
+          case 'alphabetical':
+            result = (a.Name || '').localeCompare(b.Name || '');
+            break;
+          case 'alphabeticalDesc':
+            result = (b.Name || '').localeCompare(a.Name || '');
+            break;
+          default:
+            console.log('No sorting applied:', sortBy); // Debugging line
+            break;
+        }
+        console.log(`Comparing ${a} and ${b}: result = ${result}`); // Debugging line
+        return result;
+      });
+    },
+
+    safeParseFloat(value) {
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
     }
   },
   setup() {
@@ -366,7 +392,13 @@ export default defineComponent({
 
     const filteredSectors = ref([]);
 
-    // Initialize filteredSectors to sectors initially
+    onMounted(() => {
+      store.dispatch('fetchRetail');
+      store.dispatch('fetchTechnology');
+      store.dispatch('fetchFoodAndBeverages');
+      store.dispatch('fetchHealthcare');
+    });
+
     watch(sectors, (newSectors) => {
       filteredSectors.value = JSON.parse(JSON.stringify(newSectors));
     }, { immediate: true });
@@ -408,6 +440,7 @@ export default defineComponent({
   }
 });
 </script>
+
 
 
 <style scoped>

@@ -1,8 +1,8 @@
 <template>
-    <h1>Reach Me</h1>
-    <p class="subtitle">I would love to hear from you, please do get in touch using the form below.</p>
-    
-    <div class="contact-section">
+  <h1>Reach Me</h1>
+  <p class="subtitle">I would love to hear from you, please do get in touch using the form below.</p>
+  
+  <div class="contact-section">
     <div class="contact-info">
       <p>
         <a href="mailto:simanyesomdaka@gmail.com" style="text-decoration: none; color: white;">
@@ -17,7 +17,6 @@
         </a>
       </p>
       <p><i class="bi bi-telephone-fill icon"></i>+27 73 063 3069</p>
-
       <p>
         <i class="bi bi-geo-alt-fill icon"></i>
         <span class="spacing">Weltevreden Valley North, <br> 
@@ -27,109 +26,110 @@
       </p>
     </div>
   
-      <form @submit.prevent="handleSubmit" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-        <div class="form-group">
-          <input placeholder="Your Name" type="text" id="name" v-model="form.name" required />
-        </div>
-  
-        <div class="form-group">
-          <input placeholder="Your Email" type="email" id="email" v-model="form.email" required />
-        </div>
-  
-        <div class="form-group">
-          <input placeholder="Subject" type="text" id="subject" v-model="form.subject" required />
-        </div>
-  
-        <div class="form-group">
-          <textarea placeholder="Your Message ;)" id="message" v-model="form.message" required></textarea>
-        </div>
-  
-        <div class="button-group">
-          <button type="submit" class="btn btn-secondary">Send</button>
-        </div>
-  
-        <p v-if="error" class="error-message">{{ error }}</p>
-      </form>
-      <SpinnerComp v-if="isSubmitting" />
-    </div>
-  </template>
-  
-  <script>
-  import SpinnerComp from '@/components/SpinnerComp.vue';
-  import Swal from 'sweetalert2';
-  export default {
-    data() {
-      return {
-        form: {
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-          SpinnerComp
-        },
-        error: '',
-        isSubmitting: false
-      }
-    },
-    mounted() {
+    <form @submit.prevent="handleSubmit" class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <div class="form-group">
+        <input placeholder="Your Name" type="text" id="name" v-model="form.name" required />
+      </div>
+
+      <div class="form-group">
+        <input placeholder="Your Email" type="email" id="email" v-model="form.email" required />
+      </div>
+
+      <div class="form-group">
+        <input placeholder="Subject" type="text" id="subject" v-model="form.subject" required />
+      </div>
+
+      <div class="form-group">
+        <textarea placeholder="Your Message ;)" id="message" v-model="form.message" required></textarea>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn btn-secondary">Send</button>
+      </div>
+
+      <p v-if="error" class="error-message">{{ error }}</p>
+    </form>
+    <SpinnerComp v-if="isSubmitting" />
+  </div>
+</template>
+
+<script>
+import SpinnerComp from '@/components/SpinnerComp.vue';
+import Swal from 'sweetalert2';
+
+export default {
+  data() {
+    return {
+      form: {
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        SpinnerComp
+      },
+      error: '',
+      isSubmitting: false
+    }
+  },
+  mounted() {
     window.scrollTo(0, 0)
   },
-    methods: {
-      handleSubmit() {
-        this.error = '';
-        if (!this.form.name || !this.form.email || !this.form.subject || !this.form.message) {
-          this.error = "Please complete all fields before submitting.";
-          return;
-        }
-        this.isSubmitting = true;
-        Swal.fire({
-          title: 'Sending...',
-          html: '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>',
-          showConfirmButton: false,
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        })
-        fetch("https://formspree.io/f/mdknjqwv", {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.form)
-        })
-        .then(response => {
-          this.isSubmitting = false;
-          if (response.ok) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Message Sent',
-              text: 'Thank you for getting in touch! I will be sure to reply at my earliest convenience.'
-            })
-            this.clearForm()
-          } else {
-            this.error = 'There was an error sending your message. Please try again later.'
-          }
-        })
-        .catch(() => {
-          this.isSubmitting = false;
-          this.error = 'There was an error sending your message. Please try again later.'
-        })
-      },
-      clearForm() {
-        this.form = {
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
-        };
-        this.error = '';
+  methods: {
+    handleSubmit() {
+      this.error = '';
+      if (!this.form.name || !this.form.email || !this.form.subject || !this.form.message) {
+        this.error = "Please complete all fields before submitting.";
+        return;
       }
+      this.isSubmitting = true;
+      Swal.fire({
+        title: 'Sending...',
+        html: '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      })
+      fetch("https://formspree.io/f/mdknjqwv", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.form)
+      })
+      .then(response => {
+        this.isSubmitting = false;
+        if (response.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Message Sent',
+            text: 'Thank you for getting in touch! I will be sure to reply at my earliest convenience.'
+          })
+          this.clearForm()
+        } else {
+          this.error = 'There was an error sending your message. Please try again later.'
+        }
+      })
+      .catch(() => {
+        this.isSubmitting = false;
+        this.error = 'There was an error sending your message. Please try again later.'
+      })
+    },
+    clearForm() {
+      this.form = {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      };
+      this.error = '';
     }
   }
-  </script>
+}
+</script>
 
 <style scoped>
- .contact-section {
+.contact-section {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -154,6 +154,14 @@
 
 .form-group {
   margin-bottom: 1rem;
+}
+
+.spacing {
+  margin-left: 2%; 
+}
+
+.indent {
+  margin-left: 8%;
 }
 
 input[type="text"],
@@ -208,14 +216,6 @@ button:hover {
   font-size: 1.3rem;
 }
 
-.spacing {
-  margin-left: 2%; 
-}
-
-.indent {
-  margin-left: 8%;
-}
-
 .bi {
   color: #688eff;
 }
@@ -245,5 +245,63 @@ input[type="text"]:hover,
 input[type="email"]:hover,
 textarea:hover {
   border: solid #688eff;
+}
+
+/* Media Query for Responsiveness */
+@media (max-width: 600px) {
+  .contact-section {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .contact-info, .contact-form {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .subtitle {
+    font-size: 30px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .error-message {
+    font-size: 1rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    font-size: 1rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .subtitle {
+    font-size: 24px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
+
+  button {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
 }
 </style>

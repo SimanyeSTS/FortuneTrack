@@ -32,83 +32,33 @@
   </template>
   
   <script>
-  export default {
-    name: 'PredictionFilters',
-    props: {
-      sectors: {
-        type: Array,
-        required: true
-      }
-    },
-    data() {
-      return {
-        searchQuery: '',
-        selectedCategory: '',
-        sortBy: '',
-        categories: ['Retail', 'Technology', 'Food and Beverages', 'Healthcare']
-      }
-    },
-    methods: {
-      handleFilters() {
-        // Emit the filter values to parent component
-        this.$emit('filter-change', {
-          searchQuery: this.searchQuery,
-          selectedCategory: this.selectedCategory,
-          sortBy: this.sortBy
-        });
-      },
-      filterData(data) {
-        let filteredData = [...data];
-  
-        // Apply search filter
-        if (this.searchQuery) {
-          const query = this.searchQuery.toLowerCase();
-          filteredData = filteredData.filter(item => 
-            item.Symbol.toLowerCase().includes(query) || 
-            item.Name.toLowerCase().includes(query)
-          );
-        }
-  
-        // Apply category filter
-        if (this.selectedCategory) {
-          filteredData = filteredData.filter(item => item.Sector === this.selectedCategory);
-        }
-  
-        // Apply sorting
-        if (this.sortBy) {
-          switch(this.sortBy) {
-            case 'priceAsc':
-              filteredData.sort((a, b) => parseFloat(a.Price) - parseFloat(b.Price));
-              break;
-            case 'priceDesc':
-              filteredData.sort((a, b) => parseFloat(b.Price) - parseFloat(a.Price));
-              break;
-            case 'growthAsc':
-              filteredData.sort((a, b) => parseFloat(a.QuarterlyEarningsGrowthYOY) - parseFloat(b.QuarterlyEarningsGrowthYOY));
-              break;
-            case 'growthDesc':
-              filteredData.sort((a, b) => parseFloat(b.QuarterlyEarningsGrowthYOY) - parseFloat(a.QuarterlyEarningsGrowthYOY));
-              break;
-            case 'revenueAsc':
-              filteredData.sort((a, b) => parseFloat(a.RevenueTTM) - parseFloat(b.RevenueTTM));
-              break;
-            case 'revenueDesc':
-              filteredData.sort((a, b) => parseFloat(b.RevenueTTM) - parseFloat(a.RevenueTTM));
-              break;
-            case 'alphabetical':
-              filteredData.sort((a, b) => a.Name.localeCompare(b.Name));
-              break;
-            case 'alphabeticalDesc':
-              filteredData.sort((a, b) => b.Name.localeCompare(a.Name));
-              break;
-          }
-        }
-  
-        return filteredData;
-      }
+export default {
+  name: 'PredictionFilters',
+  props: {
+    sectors: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      searchQuery: '',
+      selectedCategory: '',
+      sortBy: '',
+      categories: ['Retail', 'Technology', 'Food and Beverages', 'Healthcare']
+    }
+  },
+  methods: {
+    handleFilters() {
+      this.$emit('filter-change', {
+        searchQuery: this.searchQuery,
+        selectedCategory: this.selectedCategory,
+        sortBy: this.sortBy
+      });
     }
   }
-  </script>
+}
+</script>
   
   <style scoped>
   .filters-container {

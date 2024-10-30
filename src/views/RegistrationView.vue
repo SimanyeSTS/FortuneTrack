@@ -168,6 +168,16 @@ p {
   gap: 10px;
 }
 
+button {
+  border-radius: 20px;
+}
+
+button:hover {
+  background-color: #4169E1;
+  color: black;
+  border: solid black;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .account-management {
