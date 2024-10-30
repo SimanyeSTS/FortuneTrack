@@ -358,7 +358,7 @@ export default defineComponent({
             result = this.safeParseFloat(a.AnalystTargetPrice) - this.safeParseFloat(b.AnalystTargetPrice);
             break;
           case 'priceDesc':
-            result = this.safeParseFloat(b.AnalystTargetPrice) - this.safeParseFloat(a.AnalystTargetPrice);
+            result = this.safeParseFloat(b.AnalystTargetPrice) - this.safeParseFloat(a.Price);
             break;
           case 'growthAsc':
             result = this.safeParseFloat(a.QuarterlyEarningsGrowthYOY) - this.safeParseFloat(b.QuarterlyEarningsGrowthYOY);
