@@ -271,16 +271,6 @@ textarea:hover {
   .error-message {
     font-size: 1rem;
   }
-
-  input[type="text"],
-  input[type="email"],
-  textarea {
-    font-size: 1rem;
-  }
-
-  button {
-    font-size: 0.9rem;
-  }
 }
 
 @media (max-width: 300px) {

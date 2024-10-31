@@ -72,6 +72,8 @@ export default {
   }
   
   .search-input {
+    font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
     width: 100%;
     padding: 10px;
     border: 2px solid #3668ff;
@@ -82,11 +84,15 @@ export default {
   }
   
   .filter-section {
+    font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
     display: flex;
     gap: 15px;
   }
   
   .filter-select {
+    font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
     flex: 1;
     padding: 10px;
     border: 2px solid #3668ff;

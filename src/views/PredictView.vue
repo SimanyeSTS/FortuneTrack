@@ -21,17 +21,21 @@
         @filter-change="handleFilterChange"
       />
 
-      <!-- Iterate through filtered sectors and render sector charts -->
-      <div v-for="(sector, sectorIndex) in filteredSectors" :key="sectorIndex" class="sector-charts">
-        <template v-if="sector.data.length > 0">
-          <h2>{{ sector.name }}</h2>
-          <div v-for="(data, dataIndex) in sector.data" :key="dataIndex" class="chart-container-wrapper">
-            <div class="chart-container">
-              <MainLineChart :chartData="prepareChartData(data)" />
+      <div class="all-charts">
+        <template v-if="sortedAndFilteredData.length > 0">
+          <div v-for="(group, index) in groupedData" :key="index" class="sector-group">
+            <h2 v-if="group.items.length > 0">{{ group.sector }}</h2>
+            <div v-for="data in group.items" :key="data.Symbol" class="chart-container-wrapper">
+              <div class="chart-container">
+                <MainLineChart :chartData="prepareChartData(data)" />
+              </div>
+              <MainSideWindow :data="data" :sector="group.sector" />
             </div>
-            <MainSideWindow :data="data" :sector="sector.name" />
           </div>
         </template>
+        <div v-else class="no-results">
+          No results found for your search criteria
+        </div>
       </div>
     </div>
 
@@ -311,86 +315,6 @@ export default defineComponent({
     goToRegistration() {
       this.$router.push({ name: 'sign-up' });
     },
-
-    handleFilterChange({ searchQuery, selectedCategory, sortBy }) {
-      console.log('Filters received:', { searchQuery, selectedCategory, sortBy }); // Debugging line
-      const filtered = this.sectors.map(sector => {
-        let sectorCopy = { ...sector };
-        
-        // Filter by category
-        if (selectedCategory && sector.name !== selectedCategory) {
-          sectorCopy.data = [];
-          return sectorCopy;
-        }
-
-        // Deep copy of data for manipulation
-        let filteredData = JSON.parse(JSON.stringify(sector.data));
-
-        // Apply search filter
-        if (searchQuery) {
-          const query = searchQuery.toLowerCase();
-          filteredData = filteredData.filter(item => 
-            ( item.Symbol && item.Symbol.toLowerCase().includes(query)) || 
-            (item.Name && item.Name.toLowerCase().includes(query))
-          );
-        }
-
-        // Apply sorting
-        if (sortBy) {
-          console.log('Sorting by:', sortBy); // Debugging line
-          filteredData = this.sortData(filteredData, sortBy);
-        }
-
-        sectorCopy.data = filteredData;
-        return sectorCopy;
-      });
-
-      console.log('Filtered sectors:', filtered); // Debugging line
-      this.filteredSectors = filtered;
-    },
-
-    sortData(data, sortBy) {
-      console.log('Sorting data:', data); // Debugging line
-      return [...data].sort((a, b) => {
-        let result = 0;
-        switch(sortBy) {
-          case 'priceAsc':
-            result = this.safeParseFloat(a.AnalystTargetPrice) - this.safeParseFloat(b.AnalystTargetPrice);
-            break;
-          case 'priceDesc':
-            result = this.safeParseFloat(b.AnalystTargetPrice) - this.safeParseFloat(a.Price);
-            break;
-          case 'growthAsc':
-            result = this.safeParseFloat(a.QuarterlyEarningsGrowthYOY) - this.safeParseFloat(b.QuarterlyEarningsGrowthYOY);
-            break;
-          case 'growthDesc':
-            result = this.safeParseFloat(b.QuarterlyEarningsGrowthYOY) - this.safeParseFloat(a.QuarterlyEarningsGrowthYOY);
-            break;
-          case 'revenueAsc':
-            result = this.safeParseFloat(a.RevenueTTM) - this.safeParseFloat(b.RevenueTTM);
-            break;
-          case 'revenueDesc':
-            result = this.safeParseFloat(b.RevenueTTM) - this.safeParseFloat(a.RevenueTTM);
-            break;
-          case 'alphabetical':
-            result = (a.Name || '').localeCompare(b.Name || '');
-            break;
-          case 'alphabeticalDesc':
-            result = (b.Name || '').localeCompare(a.Name || '');
-            break;
-          default:
-            console.log('No sorting applied:', sortBy); // Debugging line
-            break;
-        }
-        console.log(`Comparing ${a} and ${b}: result = ${result}`); // Debugging line
-        return result;
-      });
-    },
-
-    safeParseFloat(value) {
-      const parsed = parseFloat(value);
-      return isNaN(parsed) ? 0 : parsed;
-    }
   },
   setup() {
     const store = useStore();
@@ -402,7 +326,105 @@ export default defineComponent({
       { name: 'Healthcare', data: store.state.healthcare }
     ]);
 
-    const filteredSectors = ref([]);
+    const sortedAndFilteredData = ref([]);
+    const currentFilters = ref({
+      searchQuery: '',
+      selectedCategory: '',
+      sortBy: ''
+    });
+
+    const groupedData = computed(() => {
+      const groups = [];
+      const sectorNames = new Set(sortedAndFilteredData.value.map(item => item.sector));
+      
+      sectorNames.forEach(sectorName => {
+        groups.push({
+          sector: sectorName,
+          items: sortedAndFilteredData.value.filter(item => item.sector === sectorName)
+        });
+      });
+      
+      return groups;
+    });
+
+    const handleFilterChange = ({ searchQuery, selectedCategory, sortBy }) => {
+      currentFilters.value = { searchQuery, selectedCategory, sortBy };
+      applyFiltersAndSort();
+    };
+
+    const applyFiltersAndSort = () => {
+      let allData = [];
+      sectors.value.forEach(sector => {
+        sector.data.forEach(item => {
+          allData.push({
+            ...item,
+            sector: sector.name
+          });
+        });
+      });
+
+      if (currentFilters.value.searchQuery) {
+        const query = currentFilters.value.searchQuery.toLowerCase();
+        allData = allData.filter(item => 
+          (item.Symbol && item.Symbol.toLowerCase().includes(query)) || 
+          (item.Name && item.Name.toLowerCase().includes(query))
+        );
+      }
+
+      if (currentFilters.value.selectedCategory) {
+        allData = allData.filter(item => 
+          item.sector === currentFilters.value.selectedCategory
+        );
+      }
+
+      if (currentFilters.value.sortBy) {
+        allData = sortData(allData, currentFilters.value.sortBy);
+      }
+
+      sortedAndFilteredData.value = allData;
+    };
+
+    const sortData = (data, sortBy) => {
+      return [...data].sort((a, b) => {
+        let result = 0;
+        switch(sortBy) {
+          case 'priceAsc':
+            result = safeParseFloat(a.AnalystTargetPrice) - safeParseFloat(b.AnalystTargetPrice);
+            break;
+          case 'priceDesc':
+            result = safeParseFloat(b.AnalystTargetPrice) - safeParseFloat(a.AnalystTargetPrice);
+            break;
+          case 'growthAsc':
+            result = safeParseFloat(a.QuarterlyEarningsGrowthYOY) - safeParseFloat(b.QuarterlyEarningsGrowthYOY);
+            break;
+          case 'growthDesc':
+            result = safeParseFloat(b.QuarterlyEarningsGrowthYOY) - safeParseFloat(a.QuarterlyEarningsGrowthYOY);
+            break;
+          case 'revenueAsc':
+            result = safeParseFloat(a.RevenueTTM) - safeParseFloat(b.RevenueTTM);
+            break;
+          case 'revenueDesc':
+            result = safeParseFloat(b.RevenueTTM) - safeParseFloat(a.RevenueTTM);
+            break;
+          case 'alphabetical':
+            result = (a.Name || '').localeCompare(b.Name || '');
+            break;
+          case 'alphabeticalDesc':
+            result = (b.Name || '').localeCompare(a.Name || '');
+            break;
+        }
+        return result;
+      });
+    };
+
+    const safeParseFloat = (value) => {
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
+    };
+
+    watch(sectors, () => {
+      applyFiltersAndSort();
+    }, { immediate: true });
 
     onMounted(() => {
       store.dispatch('fetchRetail');
@@ -410,10 +432,6 @@ export default defineComponent({
       store.dispatch('fetchFoodAndBeverages');
       store.dispatch('fetchHealthcare');
     });
-
-    watch(sectors, (newSectors) => {
-      filteredSectors.value = JSON.parse(JSON.stringify(newSectors));
-    }, { immediate: true });
 
     const prepareChartData = (data) => ({
       labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
@@ -446,7 +464,9 @@ export default defineComponent({
     return {
       isLoading,
       sectors,
-      filteredSectors,
+      sortedAndFilteredData,
+      groupedData,
+      handleFilterChange,
       prepareChartData
     };
   }
@@ -456,6 +476,19 @@ export default defineComponent({
 
 
 <style scoped>
+.no-results {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.sector-group {
+  margin-bottom: 3rem;
+}
+
 .profile-picture {
   width: 25px;
   height: 25px;

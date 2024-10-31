@@ -21,7 +21,7 @@
         <li>•Leveraging the latest data trends to drive actionable business insights.</li>
         <li>•Utilizing real-time data from Alpha Vantage for accurate forecasts.</li>
         <li>•Transforming raw data into meaningful visualizations for strategic decision-making.</li>
-        <li>•Providing businesses with timely predictions to optimize product sales and market strategies.</li>
+        <li>•Providing businesses and individuals with timely predictions to optimize product sales and market strategies.</li>
       </ul>
     </section>
 
