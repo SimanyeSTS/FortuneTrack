@@ -17,200 +17,294 @@
         <h2>Users Management</h2>
         <button @click="showAddModal('user')" class="add-btn">Add New User</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Age</th>
-            <th>Gender</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.UserID">
-            <td>{{ user.UserID }}</td>
-            <td>{{ user.firstName }} {{ user.lastName }}</td>
-            <td>{{ user.emailAdd }}</td>
-            <td>{{ user.userAge }}</td>
-            <td>{{ user.gender }}</td>
-            <td>{{ user.userRole }}</td>
-            <td>
-              <button @click="showEditModal('user', user)" class="edit-btn">Update</button>
-              <button @click="confirmDelete('user', user.UserID)" class="delete-btn">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Retail Table Section -->
-    <div class="table-section">
-      <div class="section-header">
-        <h2>Retail Management</h2>
-        <button @click="showAddModal('retail')" class="add-btn">Add New Retail</button>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Profile</th>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Role</th>
+              <th>Email</th>
+              <th>Created At</th>
+              <th>Updated At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in users" :key="user.UserID">
+              <td><img :src="user.userProfile" alt="Profile" class="profile-img"></td>
+              <td>{{ user.UserID }}</td>
+              <td>{{ user.firstName }}</td>
+              <td>{{ user.lastName }}</td>
+              <td>{{ user.userAge }}</td>
+              <td>{{ user.gender }}</td>
+              <td>{{ user.userRole }}</td>
+              <td>{{ user.emailAdd }}</td>
+              <td>{{ formatDate(user.createdAt) }}</td>
+              <td>{{ formatDate(user.updatedAt) }}</td>
+              <td>
+                <button @click="showEditModal('user', user)" class="edit-btn">Update</button>
+                <button @click="confirmDelete('user', user.UserID)" class="delete-btn">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Market Cap</th>
-            <th>Sector</th>
-            <th>Industry</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in retail" :key="item.id">
-            <td>{{ item.Symbol }}</td>
-            <td>{{ item.Name }}</td>
-            <td>{{ formatCurrency(item.MarketCapitalization) }}</td>
-            <td>{{ item.Sector }}</td>
-            <td>{{ item.Industry }}</td>
-            <td>
-              <button @click="showEditModal('retail', item)" class="edit-btn">Update</button>
-              <button @click="confirmDelete('retail', item.id)" class="delete-btn">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
-    <!-- Technology Table Section -->
-    <div class="table-section">
-      <div class="section-header">
-        <h2>Technology Management</h2>
-        <button @click="showAddModal('technology')" class="add-btn">Add New Technology</button>
+    <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
+    <template v-for="type in stockTypes" :key="type.name">
+      <div class="table-section">
+        <div class="section-header">
+          <h2>{{ type.title }} Management</h2>
+          <button @click="showAddModal(type.name)" class="add-btn">Add New {{ type.title }}</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Symbol</th>
+      <th>Asset Type</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>CIK</th>
+      <th>Exchange</th>
+      <th>Currency</th>
+      <th>Country</th>
+      <th>Sector</th>
+      <th>Industry</th>
+      <th>Address</th>
+      <th>Official Site</th>
+      <th>Fiscal Year End</th>
+      <th>Latest Quarter</th>
+      <th>Market Capitalization</th>
+      <th>EBITDA</th>
+      <th>PE Ratio</th>
+      <th>PEG Ratio</th>
+      <th>Book Value</th>
+      <th>Dividend Per Share</th>
+      <th>Dividend Yield</th>
+      <th>EPS</th>
+      <th>Revenue Per Share TTM</th>
+      <th>Profit Margin</th>
+      <th>Operating Margin TTM</th>
+      <th>Return on Assets TTM</th>
+      <th>Return on Equity TTM</th>
+      <th>Revenue TTM</th>
+      <th>Gross Profit TTM</th>
+      <th>Diluted EPS TTM</th>
+      <th>Quarterly Earnings Growth YOY</th>
+      <th>Quarterly Revenue Growth YOY</th>
+      <th>Analyst Target Price</th>
+      <th>Analyst Rating Strong Buy</th>
+      <th>Analyst Rating Buy</th>
+      <th>Analyst Rating Hold</th>
+      <th>Analyst Rating Sell</th>
+      <th>Analyst Rating Strong Sell</th>
+      <th>Trailing PE</th>
+      <th>Forward PE</th>
+      <th>Price to Sales Ratio TTM</th>
+      <th>Price to Book Ratio</th>
+      <th>EV to Revenue</th>
+      <th>EV to EBITDA</th>
+      <th>Beta</th>
+      <th>52W High</th>
+      <th>52W Low</th>
+      <th>50-Day Moving Average</th>
+      <th>200-Day Moving Average</th>
+      <th>Shares Outstanding</th>
+      <th>Dividend Date</th>
+      <th>Ex-Dividend Date</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="item in getStockData(type.name)" :key="item.id">
+      <td>{{ item.id }}</td>
+      <td>{{ item.Symbol }}</td>
+      <td>{{ item.AssetType }}</td>
+      <td>{{ item.Name }}</td>
+      <td class="description-cell">{{ item.Description }}</td>
+      <td>{{ item.CIK }}</td>
+      <td>{{ item.Exchange }}</td>
+      <td>{{ item.Currency }}</td>
+      <td>{{ item.Country }}</td>
+      <td>{{ item.Sector }}</td>
+      <td>{{ item.Industry }}</td>
+      <td>{{ item.Address }}</td>
+      <td><a :href="item.OfficialSite" target="_blank">{{ item.OfficialSite }}</a></td>
+      <td>{{ item.FiscalYearEnd }}</td>
+      <td>{{ item.LatestQuarter }}</td>
+      <td>{{ formatCurrency(item.MarketCapitalization) }}</td>
+      <td>{{ formatCurrency(item.EBITDA) }}</td>
+      <td>{{ item.PERatio }}</td>
+      <td>{{ item.PEGRatio }}</td>
+      <td>{{ item.BookValue }}</td>
+      <td>{{ item.DividendPerShare }}</td>
+      <td>{{ item.DividendYield }}%</td>
+      <td>{{ item.EPS }}</td>
+      <td>{{ item.RevenuePerShareTTM }}</td>
+      <td>{{ item.ProfitMargin }}%</td>
+      <td>{{ item.OperatingMarginTTM }}%</td>
+      <td>{{ item.ReturnOnAssetsTTM }}%</td>
+      <td>{{ item.ReturnOnEquityTTM }}%</td>
+      <td>{{ formatCurrency(item.RevenueTTM) }}</td>
+      <td>{{ formatCurrency(item.GrossProfitTTM) }}</td>
+      <td>{{ item.DilutedEPSTTM }}</td>
+      <td>{{ item.QuarterlyEarningsGrowthYOY }}%</td>
+      <td>{{ item.QuarterlyRevenueGrowthYOY }}%</td>
+      <td>{{ item.AnalystTargetPrice }}</td>
+      <td>{{ item.AnalystRatingStrongBuy }}</td>
+      <td>{{ item.AnalystRatingBuy }}</td>
+      <td>{{ item.AnalystRatingHold }}</td>
+      <td>{{ item.AnalystRatingSell }}</td>
+      <td>{{ item.AnalystRatingStrongSell }}</td>
+      <td>{{ item.TrailingPE }}</td>
+      <td>{{ item.ForwardPE }}</td>
+      <td>{{ item.PriceToSalesRatioTTM }}</td>
+      <td>{{ item.PriceToBookRatio }}</td>
+      <td>{{ item.EVToRevenue }}</td>
+      <td>{{ item.EVToEBITDA }}</td>
+      <td>{{ item.Beta }}</td>
+      <td>{{ formatCurrency(item.Week52High) }}</td>
+      <td>{{ formatCurrency(item.Week52Low) }}</td>
+      <td>{{ item.Day50MovingAverage }}</td>
+      <td>{{ item.Day200MovingAverage }}</td>
+      <td>{{ item.SharesOutstanding }}</td>
+      <td>{{ item.DividendDate }}</td>
+      <td>{{ item.ExDividendDate }}</td>
+      <td>{{ item.CreatedAt }}</td>
+      <td>
+        <button @click="showEditModal(type.name, item)" class="edit-btn">Update</button>
+        <button @click="confirmDelete(type.name, item.id)" class="delete-btn">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+        </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Market Cap</th>
-            <th>Sector</th>
-            <th>Industry</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in technology" :key="item.id">
-            <td>{{ item.Symbol }}</td>
-            <td>{{ item.Name }}</td>
-            <td>{{ formatCurrency(item.MarketCapitalization) }}</td>
-            <td>{{ item.Sector }}</td>
-            <td>{{ item.Industry }}</td>
-            <td>
-              <button @click="showEditModal('technology', item)" class="edit-btn">Update</button>
-              <button @click="confirmDelete('technology', item.id)" class="delete-btn">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    </template>
 
-    <!-- Food and Beverages Table Section -->
-    <div class="table-section">
-      <div class="section-header">
-        <h2>Food & Beverages Management</h2>
-        <button @click="showAddModal('foodAndBeverages')" class="add-btn">Add New F&B</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Market Cap</th>
-            <th>Sector</th>
-            <th>Industry</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in foodAndBeverages" :key="item.id">
-            <td>{{ item.Symbol }}</td>
-            <td>{{ item.Name }}</td>
-            <td>{{ formatCurrency(item.MarketCapitalization) }}</td>
-            <td>{{ item.Sector }}</td>
-            <td>{{ item.Industry }}</td>
-            <td>
-              <button @click="showEditModal('foodAndBeverages', item)" class="edit-btn">Update</button>
-              <button @click="confirmDelete('foodAndBeverages', item.id)" class="delete-btn">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Healthcare Table Section -->
-    <div class="table-section">
-      <div class="section-header">
-        <h2>Healthcare Management</h2>
-        <button @click="showAddModal('healthcare')" class="add-btn">Add New Healthcare</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Market Cap</th>
-            <th>Sector</th>
-            <th>Industry</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in healthcare" :key="item.id">
-            <td>{{ item.Symbol }}</td>
-            <td>{{ item.Name }}</td>
-            <td>{{ formatCurrency(item.MarketCapitalization) }}</td>
-            <td>{{ item.Sector }}</td>
-            <td>{{ item.Industry }}</td>
-            <td>
-              <button @click="showEditModal('healthcare', item)" class="edit-btn">Update</button>
-              <button @click="confirmDelete('healthcare', item.id)" class="delete-btn">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Edit Modal -->
+    <!-- Modal -->
     <div v-if="showModal" class="modal">
+      <div class="modal-overlay" @click="closeModal"></div>
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
         <h2>{{ modalTitle }}</h2>
-        <form @submit.prevent="handleSubmit">
-          <!-- Dynamic form fields based on selectedType -->
-          <div v-if="selectedType === 'user'">
-            <input v-model="formData.firstName" placeholder="First Name" required>
-            <input v-model="formData.lastName" placeholder="Last Name" required>
-            <input v-model="formData.emailAdd" type="email" placeholder="Email" required>
-            <input v-model="formData.userAge" type="number" placeholder="Age" required>
-            <select v-model="formData.gender" required>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-            <select v-model="formData.userRole" required>
-              <option value="User">User</option>
-              <option value="Admin">Admin</option>
-            </select>
+        <form @submit.prevent="handleSubmit" class="modal-form">
+          <!-- User Form Fields -->
+          <div v-if="selectedType === 'user'" class="form-grid">
+            <div class="form-group">
+              <label>First Name</label>
+              <input v-model="formData.firstName" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input v-model="formData.lastName" required>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input v-model="formData.emailAdd" type="email" required>
+            </div>
+            <div class="form-group">
+              <label>Age</label>
+              <input v-model="formData.userAge" type="number" required>
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select v-model="formData.gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select v-model="formData.userRole" required>
+                <option value="User">User</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Profile Image URL</label>
+              <input v-model="formData.userProfile">
+            </div>
+            <div class="form-group" v-if="!isEditing">
+              <label>Password</label>
+              <input v-model="formData.userPass" type="password" required>
+            </div>
           </div>
-          <div v-else>
-            <input v-model="formData.Symbol" placeholder="Symbol" required>
-            <input v-model="formData.Name" placeholder="Name" required>
-            <input v-model="formData.MarketCapitalization" type="number" placeholder="Market Cap" required>
-            <input v-model="formData.Sector" placeholder="Sector" required>
-            <input v-model="formData.Industry" placeholder="Industry" required>
-            <input v-model="formData.Description" placeholder="Description">
-            <input v-model="formData.Exchange" placeholder="Exchange">
-            <input v-model="formData.Currency" placeholder="Currency">
+
+          <!-- Stock Form Fields -->
+          <div v-else class="form-grid">
+            <div class="form-group">
+              <label>Symbol</label>
+              <input v-model="formData.Symbol" required>
+            </div>
+            <div class="form-group">
+              <label>Name</label>
+              <input v-model="formData.Name" required>
+            </div>
+            <div class="form-group">
+              <label>Asset Type</label>
+              <input v-model="formData.AssetType" required>
+            </div>
+            <div class="form-group">
+              <label>Exchange</label>
+              <input v-model="formData.Exchange" required>
+            </div>
+            <div class="form-group">
+              <label>Currency</label>
+              <input v-model="formData.Currency" required>
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <input v-model="formData.Country">
+            </div>
+            <div class="form-group">
+              <label>Sector</label>
+              <input v-model="formData.Sector" required>
+            </div>
+            <div class="form-group">
+              <label>Industry</label>
+              <input v-model="formData.Industry" required>
+            </div>
+            <div class="form-group">
+              <label>Market Capitalization</label>
+              <input v-model="formData.MarketCapitalization" type="number" required>
+            </div>
+            <div class="form-group">
+              <label>PE Ratio</label>
+              <input v-model="formData.PERatio" type="number">
+            </div>
+            <div class="form-group">
+              <label>Dividend Yield</label>
+              <input v-model="formData.DividendYield" type="number">
+            </div>
+            <div class="form-group">
+              <label>Beta</label>
+              <input v-model="formData.Beta" type="number">
+            </div>
+            <div class="form-group">
+              <label>52 Week High</label>
+              <input v-model="formData.Week52High" type="number">
+            </div>
+            <div class="form-group">
+              <label>52 Week Low</label>
+              <input v-model="formData.Week52Low" type="number">
+            </div>
           </div>
-          <button type="submit" class="submit-btn">{{ isEditing ? 'Update' : 'Add' }}</button>
+          
+          <div class="form-actions">
+            <button type="submit" class="submit-btn">{{ isEditing ? 'Update' : 'Add' }}</button>
+            <button type="button" class="cancel-btn" @click="closeModal">Cancel</button>
+          </div>
         </form>
       </div>
     </div>
@@ -230,7 +324,13 @@ export default {
       selectedType: '',
       selectedId: null,
       formData: {},
-      modalTitle: ''
+      modalTitle: '',
+      stockTypes: [
+        { name: 'retail', title: 'Retail' },
+        { name: 'technology', title: 'Technology' },
+        { name: 'foodAndBeverages', title: 'Food & Beverages' },
+        { name: 'healthcare', title: 'Healthcare' }
+      ]
     };
   },
   computed: {
@@ -244,6 +344,9 @@ export default {
       loading: state => state.isLoading,
       error: state => state.error
     })
+  },
+  mounted() {
+    window.scrollTo(0, 0)
   },
   methods: {
     ...mapActions([
@@ -267,10 +370,20 @@ export default {
     ]),
     
     formatCurrency(value) {
+      if (!value) return '$0';
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
       }).format(value);
+    },
+
+    formatDate(date) {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString();
+    },
+
+    getStockData(type) {
+      return this[type] || [];
     },
 
     showAddModal(type) {
@@ -310,23 +423,12 @@ export default {
 
       if (result.isConfirmed) {
         try {
-          switch (type) {
-            case 'retail':
-              await this.deleteRetail(id);
-              break;
-            case 'technology':
-              await this.deleteTechnology(id);
-              break;
-            case 'foodAndBeverages':
-              await this.deleteFoodAndBeverages(id);
-              break;
-            case 'healthcare':
-              await this.deleteHealthcare(id);
-              break;
-          }
-          SweetAlert.fire('Deleted!', 'The record has been deleted.', 'success');
+          const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
+          await this[methodName](id);
+          await SweetAlert.fire('Deleted!', 'The record has been deleted.', 'success');
+          await this.fetchData();
         } catch (error) {
-          SweetAlert.fire('Error!', 'Failed to delete the record.', 'error');
+          await SweetAlert.fire('Error!', 'Failed to delete the record.', 'error');
         }
       }
     },
@@ -338,14 +440,16 @@ export default {
         const methodName = `${action}${capitalizedType}`;
         
         if (this.isEditing) {
-          await this[methodName]({ id: this.selectedId, [`${this.selectedType}Data`]: this.formData });
+          await this[methodName]({ id: this.selectedId, ...this.formData });
         } else {
           await this[methodName](this.formData);
         }
         
+        await SweetAlert.fire('Success!', 'Record has been saved.', 'success');
         this.closeModal();
         await this.fetchData();
       } catch (error) {
+        await SweetAlert.fire('Error!', 'Failed to save the record.', 'error');
         console.error('Error submitting form:', error);
       }
     },
@@ -371,6 +475,20 @@ export default {
 </script>
 
 <style scoped>
+.description-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+img {
+  width: 40px!important;
+  height: 40px!important;
+  border-radius: 50%!important;
+  object-fit: cover!important;
+  margin-right: 10px!important;
+}
+
 .error-message {
   color: #ff4444;
   background-color: rgba(255, 68, 68, 0.1);
@@ -417,20 +535,32 @@ p {
   border-radius: 8px;
 }
 
-table {
+/* Improved Responsive Table Styling */
+.table-wrapper {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-family: 'Montserrat', sans-serif!important;
-  font-weight: 900!important;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
 }
 
+table {
+  min-width: 300px; /* Ensure minimum width for small screens */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Add vertical lines between columns */
 th, td {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  padding: 12px;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th:last-child, td:last-child {
+  border-right: none; /* Remove right border from last column */
 }
 
 th {
@@ -507,5 +637,77 @@ th {
     display: block;
     overflow-x: auto;
   }
+}
+
+/* Ultra-small device responsiveness */
+@media (max-width: 300px) {
+  .admin-management {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  p {
+    font-size: 30px;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 10px;
+  }
+
+  .edit-btn, .delete-btn, .add-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+/* Small device responsiveness */
+@media (min-width: 301px) and (max-width: 576px) {
+  .admin-management {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  p {
+    font-size: 40px;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+/* Horizontal scrollbar styling */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 </style>

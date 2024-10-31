@@ -200,6 +200,9 @@ export default defineComponent({
       return this.$store.state.user;
     }
   },
+  mounted() {
+    window.scrollTo(0, 0)
+  },
   methods: {
     redirectToAccount() {
       if (!this.currentUser) {
@@ -490,11 +493,11 @@ export default defineComponent({
 }
 
 .profile-picture {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
+  width: 25px!important;
+  height: 25px!important;
+  border-radius: 50%!important;
+  object-fit: cover!important;
+  margin-right: 10px!important;
 }
 
 .modal {
