@@ -279,7 +279,7 @@ textarea:hover {
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   input[type="text"],

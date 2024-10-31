@@ -221,6 +221,8 @@ export default {
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
   text-align: center;
 }
 
