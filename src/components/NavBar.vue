@@ -66,12 +66,12 @@ nav {
 }
 
 .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 7h22M4 13h22M4 19h22'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 30px;
-    width: 30px;
-    border: 1px solid black;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 7h22M4 13h22M4 19h22'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-top: 4px;
+  height: 30px;
+  width: 30px;
 }
 </style>
 
