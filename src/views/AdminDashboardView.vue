@@ -520,7 +520,7 @@ export default {
   justify-content: space-between;
   position: relative;  
   padding: 10px 20px; 
-  background: rgba(0, 0, 0, 0.5); /* Change to a darker background for better visibility */
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 0 0 8px 8px; 
   margin-top: -8px; 
 }
@@ -528,8 +528,8 @@ export default {
 .left-arrow, .right-arrow {
   cursor: pointer;
   font-size: 24px;
-  padding: 10px; /* Increase padding for better clickability */
-  background: rgba(255, 255, 255, 0.2); /* Light background for contrast */
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 4px; 
   display: flex; 
   align-items: center; 
@@ -538,12 +538,12 @@ export default {
 }
 
 .left-arrow:hover, .right-arrow:hover {
-  background: rgba(255, 255, 255, 0.4); /* Lighter background on hover */
+  background: rgba(255, 255, 255, 0.4);
   transform: scale(1.1); 
 }
 
 .left-arrow i, .right-arrow i {
-  color: white; /* Ensure icons are white for visibility */
+  color: white;
 }
 
 .description-cell {
@@ -552,6 +552,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 img {
   width: 40px!important;
   height: 40px!important;
@@ -606,7 +607,6 @@ p {
   border-radius: 8px;
 }
 
-/* Improved Responsive Table Styling */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -615,15 +615,16 @@ p {
 }
 
 table {
-  min-width: 300px; /* Ensure minimum width for small screens */
+  min-width: 300px;
   width: 100%;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Add vertical lines between columns */
 th, td {
   border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 12px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
@@ -631,7 +632,7 @@ th, td {
 }
 
 th:last-child, td:last-child {
-  border-right: none; /* Remove right border from last column */
+  border-right: none;
 }
 
 th {

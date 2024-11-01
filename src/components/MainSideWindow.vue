@@ -52,13 +52,13 @@ export default {
           title: 'Authentication Required',
           text: 'Please login to access prediction data',
           icon: 'warning',
-          showCancelButton: true,
+          showCancelButton: false,
           confirmButtonColor: '#4169E1',
           cancelButtonColor: '#d33',
           cancelButtonText: 'Cancel'
         }).then((result) => {
           if (result.isConfirmed) {
-            router.push('/predict'); // Make sure you have a login route defined
+            router.push('/predict');
           }
         });
       } else {
