@@ -7,7 +7,7 @@
           <h1 id="welcoming">Welcome to FortuneTrack,</h1>
           <p>Predict trends in Retail, Technology, Food & Beverages, and Healthcare</p>
           <div class="button-container">
-            <button class="cta-button" @click="showLoginModal = true">Get Started</button>
+            <button class="cta-button" @click="handleGetStarted">Get Started</button>
             <button class="cta-button secondary" @click="goToReachMe">Learn More</button>
           </div>
         </div>
@@ -15,18 +15,18 @@
     </div>
   </div>
 
-    <section class="specializations">
-      <h2 id="welcoming">Our Specializations:</h2>
-      <ul id="sp">
-        <li>•Leveraging the latest data trends to drive actionable business insights.</li>
-        <li>•Utilizing real-time data from Alpha Vantage for accurate forecasts.</li>
-        <li>•Transforming raw data into meaningful visualizations for strategic decision-making.</li>
-        <li>•Providing businesses and individuals with timely predictions to optimize product sales and market strategies.</li>
-      </ul>
-    </section>
+  <section class="specializations">
+    <h2 id="welcoming">Our Specializations:</h2>
+    <ul id="sp">
+      <li>• Leveraging the latest data trends to drive actionable business insights.</li>
+      <li>• Utilizing real-time data from Alpha Vantage for accurate forecasts.</li>
+      <li>• Transforming raw data into meaningful visualizations for strategic decision-making.</li>
+      <li>• Providing businesses and individuals with timely predictions to optimize product sales and market strategies.</li>
+    </ul>
+  </section>
 
-<!-- Login Modal -->
-<div v-if="showLoginModal" class="modal">
+  <!-- Login Modal -->
+  <div v-if="showLoginModal" class="modal">
     <div class="modal-content">
       <h1>Wonderful to have you here!</h1>
       <form @submit.prevent="handleLogin">
@@ -98,13 +98,13 @@ export default {
     window.scrollTo(0, 0)
   },
   data() {
-  return {
-    showLoginModal: false,
-    emailAdd: '',
-    userPass: '',
-    errorMessage: ''
-  }
-},
+    return {
+      showLoginModal: false,
+      emailAdd: '',
+      userPass: '',
+      errorMessage: ''
+    }
+  },
   computed: {
     ...mapState({
       isLoading: state => state.isLoading,
@@ -124,19 +124,17 @@ export default {
     },
     
     async handleLogin() {
-  try {
-    await this.loginUser({
-      emailAdd: this.emailAdd,  // Changed from email
-      userPass: this.userPass   // Changed from password
-    })
-    
-    // If login is successful, redirect
-    this.$router.push({ name: 'predictions' })
-    this.closeModal()
-  } catch (error) {
-    console.error('Login failed:', error)
-  }
-},
+      try {
+        await this.loginUser({
+          emailAdd: this.emailAdd,
+          userPass: this.userPass
+        })
+        this.$router.push({ name: 'predictions' })
+        this.closeModal()
+      } catch (error) {
+        console.error('Login failed:', error)
+      }
+    },
     
     handleForgotPassword() {
       this.$router.push({ name: 'reach-me' })
@@ -145,16 +143,16 @@ export default {
     closeModal() {
       if (!this.isLoading) {
         this.showLoginModal = false
-        this.email = ''
-        this.password = ''
+        this.emailAdd = ''
+        this.userPass = ''
       }
-    }
-  },
-  watch: {
-    currentUser(newUser) {
-      if (newUser) {
-        // If user becomes logged in, close the modal
-        this.closeModal()
+    },
+
+    handleGetStarted() {
+      if (this.currentUser) {
+        this.$router.push({ name: 'predictions' })
+      } else {
+        this.showLoginModal = true
       }
     }
   }
