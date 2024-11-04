@@ -62,6 +62,7 @@ nav {
 }
 
 .navbar-toggler{
+    margin-right: 2%;
     border-color: black;
 }
 

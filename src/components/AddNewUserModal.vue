@@ -1,0 +1,358 @@
+<template>
+  <div class="admin-modal">
+    <div class="admin-modal-content">
+      <h1>I wonder who has had the privilege to be registered by the admin!</h1>
+      <div class="modal-scroll-container">
+        <form @submit.prevent="registerAccount">
+          <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input 
+              type="text" 
+              id="firstName" 
+              v-model="firstName" 
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input 
+              type="text" 
+              id="lastName" 
+              v-model="lastName" 
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="userAge">Age:</label>
+            <input 
+              type="number"
+              id="userAge"
+              v-model="userAge"
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select v-model="gender" id="gender" required :disabled="isLoading">
+              <option value="" disabled>Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="emailAdd">Email Address:</label>
+            <input 
+              type="email"
+              id="emailAdd"
+              v-model="emailAdd"
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="userPass">Password:</label>
+            <input 
+              type="password"
+              id="userPass"
+              v-model="userPass"
+              required
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="userProfile">Profile Picture:</label>
+            <input 
+              placeholder="Leave to use default"
+              type="url"
+              id="userProfile"
+              v-model="userProfile"
+              :disabled="isLoading"
+            >
+          </div>
+          <div class="form-group">
+            <label for="userRole">Role:</label>
+            <select v-model="userRole" id="userRole" required :disabled="isLoading">
+              <option value="" disabled>Select Role</option>
+              <option value="Admin">Admin</option>
+              <option value="User">User</option>
+            </select>
+          </div>
+          <div class="button-group">
+            <button 
+              type="submit" 
+              class="save-button"
+              :disabled="isLoading"
+            >
+              {{ isLoading ? 'Registering...' : 'Register' }}
+            </button>
+          </div>
+        </form>
+      </div>
+      <button 
+        class="close-button" 
+        @click="$emit('close')"
+        :disabled="isLoading"
+      >
+        &times;
+      </button>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import { mapState } from 'vuex';
+
+export default {
+props: {
+  showAddNewUserModal: Boolean,
+  isLoading: Boolean
+},
+data() {
+  return {
+    firstName: '',
+    lastName: '',
+    userAge: null,
+    gender: '',
+    emailAdd: '',
+    userPass: '',
+    userProfile: '',
+    userRole: ''
+  }
+},
+computed: {
+  ...mapState(['isLoading']),
+  isFormValid() {
+    return this.firstName?.length >= 2 &&
+           this.lastName?.length >= 2 &&
+           this.userAge >= 13 &&
+           this.userAge <= 120 &&
+           this.gender &&
+           this.isEmailValid &&
+           this.userPass?.length >= 6 &&
+           this.userRole;
+  },
+  isEmailValid() {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(this.emailAdd);
+  }
+},
+methods: {
+  async registerAccount() {
+    if (!this.isFormValid) {
+      return;
+    }
+
+    try {
+      const userData = {
+        firstName: this.firstName.trim(),
+        lastName: this.lastName.trim(),
+        userAge: parseInt(this.userAge),
+        gender: this.gender,
+        emailAdd: this.emailAdd.toLowerCase().trim(),
+        userPass: this.userPass,
+        userProfile: this.userProfile.trim() || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+        userRole: this.userRole
+      };
+
+      await this.$store.dispatch('registerUser', userData);
+      
+      // Reset form
+      this.resetForm();
+
+      this.$router.push({ name: 'admin-dashboard' });
+    } catch (error) {
+      console.error('Registration error:', error);
+    }
+  },
+  resetForm() {
+    this.firstName = '';
+    this.lastName = '';
+    this.userAge = null;
+    this.gender = '';
+    this.emailAdd = '';
+    this.userPass = '';
+    this.userProfile = '';
+    this.userRole = '';
+  }
+}
+}
+</script>
+  
+<style scoped>
+.admin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.admin-modal-content {
+  background: #4169E1;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50vw; 
+  height: 50vh;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.modal-scroll-container {
+  overflow-y: auto;
+  margin-right: -10px;
+  padding-right: 10px;
+  flex-grow: 1;
+}
+
+.modal-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-scroll-container::-webkit-scrollbar-track {
+  background: #2d5bd7;
+  border-radius: 4px;
+}
+
+.modal-scroll-container::-webkit-scrollbar-thumb {
+  background: #1a3c9e;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: rgb(45, 43, 43);
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.button-group {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.save-button {
+  background-color: white;
+  color: #4169E1;
+  border: 2px solid #002080;
+  padding: 10px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #1249ef;
+  color: black;
+  border: solid black;
+}
+
+.save-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: color 0.3s;
+}
+
+.close-button:hover {
+  color: black;
+  background: #0f3dc6;
+  border: solid black;
+}
+
+.close-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+h1 {
+  margin: 0 0 20px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 24px;
+}
+
+/* Media Queries */
+@media (max-width: 450px) {
+  .admin-modal-content {
+    width: 90vw; 
+    height: auto;
+    padding: 15px;
+    max-height: 85vh;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 8px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 300px) {
+  .admin-modal-content {
+    padding: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  .save-button {
+    padding: 8px 16px;
+  }
+
+  .close-button {
+    font-size: 20px;
+  }
+}
+</style>

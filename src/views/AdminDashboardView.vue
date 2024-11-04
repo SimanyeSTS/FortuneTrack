@@ -15,7 +15,7 @@
     <div class="table-section">
       <div class="section-header">
         <h2>Users Management</h2>
-        <button @click="showAddModal('user')" class="add-btn">Add New User</button>
+        <button @click="showAddNewUserModal" class="add-btn">Add New User</button>
       </div>
       <div class="table-wrapper" id="table-users">
         <table>
@@ -64,6 +64,13 @@
       </div>
     </div>
 
+     <!-- Updated AddNewUserModal component usage -->
+  <AddNewUserModal 
+    v-if="isAddUserModalVisible"
+    :isLoading="loading"
+    @close="closeAddUserModal"
+  />
+
     <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
     <template v-for="type in stockTypes" :key="type.name">
       <div class="table-section">
@@ -93,7 +100,7 @@
                 <th>Market Capitalization</th>
                 <th>EBITDA</th>
                 <th>PE Ratio</th>
-                <th>PEG Ratio</th>
+                <th>PEG Ratio </th>
                 <th>Book Value</th>
                 <th>Dividend Per Share</th>
                 <th>Dividend Yield</th>
@@ -190,7 +197,7 @@
                 <td>{{ item.CreatedAt }}</td>
                 <td>
                   <button @click="showEditModal(type.name, item)" class="edit-btn"><i class="bi bi-pencil"></i></button>
-                  <button @click=" confirmDelete(type.name, item.id)" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
+                  <button @click="confirmDelete(type.name, item.id)" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -206,124 +213,6 @@
         </div>
       </div>
     </template>
-
-    <!-- Modal -->
-    <div v-if="showModal" class="modal">
-      <div class="modal-overlay" @click="closeModal"></div>
-      <div class="modal-content">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>{{ modalTitle }}</h2>
-        <form @submit.prevent="handleSubmit" class="modal-form">
-          <!-- User Form Fields -->
-          <div v-if="selectedType === 'user'" class="form-grid">
-            <div class="form-group">
-              <label>First Name</label>
-              <input v-model="formData.firstName" required>
-            </div>
-            <div class="form-group">
-              <label>Last Name</label>
-              <input v-model="formData.lastName" required>
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input v-model="formData.emailAdd" type="email" required>
-            </div>
-            <div class="form-group">
-              <label>Age</label>
-              <input v-model="formData.userAge" type="number" required>
-            </div>
-            <div class="form-group">
-              <label>Gender</label>
-              <select v-model="formData.gender" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Role</label>
-              <select v-model="formData.userRole" required>
-                <option value="User   ">User   </option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Profile Image URL</label>
-              <input v-model="formData.userProfile">
-            </div>
-            <div class="form-group" v-if="!isEditing">
-              <label>Password</label>
-              <input v-model="formData.userPass" type="password" required>
-            </div>
-          </div>
-
-          <!-- Stock Form Fields -->
-          <div v-else class="form-grid">
-            <div class="form-group">
-              <label>Symbol</label>
-              <input v-model="formData.Symbol" required>
-            </div>
-            <div class="form-group">
-              <label>Name</label>
-              <input v-model="formData.Name" required>
-            </div>
-            <div class="form-group">
-              <label>Asset Type</label>
-              <input v-model="formData.AssetType" required>
-            </div>
-            <div class="form-group">
-              <label>Exchange</label>
-              <input v-model="formData.Exchange" required>
-            </div>
-            <div class="form-group">
-              <label>Currency</label>
-              <input v-model="formData.Currency" required>
-            </div>
-            <div class="form-group">
-              <label>Country</label>
-              <input v-model="formData.Country">
-            </div>
-            <div class="form-group">
-              <label>Sector</label>
-              <input v-model="formData.Sector" required>
-            </div>
-            <div class="form-group">
-              <label>Industry</label>
-              <input v-model="formData.Industry" required>
-            </div>
-            <div class="form-group">
-              <label>Market Capitalization</label>
-              <input v-model="formData.MarketCapitalization" type="number" required>
-            </div>
-            <div class="form-group">
-              <label>PE Ratio</label>
-              <input v-model="formData.PERatio" type="number">
-            </div>
-            <div class="form-group">
-              <label>Dividend Yield</label>
-              <input v-model="formData.DividendYield " type="number">
-            </div>
-            <div class="form-group">
-              <label>Beta</label>
-              <input v-model="formData.Beta" type="number">
-            </div>
-            <div class="form-group">
-              <label>52 Week High</label>
-              <input v-model="formData.Week52High" type=" number">
-            </div>
-            <div class="form-group">
-              <label>52 Week Low</label >
-              <input v-model="formData.Week52Low" type="number">
-            </div>
-          </div>
-          
-          <div class="form-actions">
-            <button type="submit" class="submit-btn">{{ isEditing ? 'Update' : 'Add' }}</button>
-            <button type="button" class="cancel-btn" @click="closeModal">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -333,16 +222,19 @@ import SweetAlert from 'sweetalert2';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AddNewUserModal from '@/components/AddNewUserModal.vue';
 
 library.add(faArrowLeft, faArrowRight);
 
 export default {
   components: {
-    FontAwesomeIcon
+    FontAwesomeIcon,
+    AddNewUserModal
   },
   name: 'AdminDashboardView',
   data() {
     return {
+      isAddUserModalVisible: false, // Changed from showAddNewUserModal
       showModal: false,
       isEditing: false,
       selectedType: '',
@@ -409,29 +301,13 @@ export default {
     getStockData(type) {
       return this[type] || [];
     },
-
-    showAddModal(type) {
-      this.selectedType = type;
-      this.isEditing = false;
-      this.formData = {};
-      this.modalTitle = `Add New ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-      this.showModal = true;
+    // Update the modal methods
+    showAddNewUserModal() {
+      this.isAddUserModalVisible = true;
     },
-
-    showEditModal(type, item) {
-      this.selectedType = type;
-      this.isEditing = true;
-      this.selectedId = item.id || item.UserID;
-      this.formData = { ...item };
-      this.modalTitle = `Edit ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-      this.showModal = true;
-    },
-
-    closeModal() {
-      this.showModal = false;
-      this. formData = {};
-      this.selectedType = '';
-      this.selectedId = null;
+    
+    closeAddUserModal() {
+      this.isAddUserModalVisible = false;
     },
 
     async confirmDelete(type, id) {
@@ -440,7 +316,7 @@ export default {
         text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '# 3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
       });
@@ -466,7 +342,7 @@ export default {
         if (this.isEditing) {
           await this[methodName]({ id: this.selectedId, ...this.formData });
         } else {
-          await this[methodName ](this.formData);
+          await this[methodName](this.formData);
         }
         
         await SweetAlert.fire('Success!', 'Record has been saved.', 'success');
@@ -571,7 +447,7 @@ img {
 }
 
 .admin-management {
-  color: white;
+ color: white;
   padding: 20px;
   border-radius: 5px;
   font-family: 'Montserrat', sans-serif;
@@ -594,7 +470,7 @@ h2 {
 
 p {
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', sans -serif;
   font-weight: 900;
   color: white;
   font-size: 50px;
