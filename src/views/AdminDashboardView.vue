@@ -325,10 +325,10 @@ export default {
         try {
           const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
           await this[methodName](id);
-          await SweetAlert.fire('Deleted!', 'The record has been deleted.', 'success');
+          await SweetAlert.fire('Deleted!', 'The account has been deleted.', 'success');
           await this.fetchData();
         } catch (error) {
-          await SweetAlert.fire('Error!', 'Failed to delete the record.', 'error ');
+          await SweetAlert.fire('Error!', 'Failed to delete the account.', 'error ');
         }
       }
     },
