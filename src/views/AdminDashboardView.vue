@@ -72,12 +72,16 @@
   />
 
     <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
-    <template v-for="type in stockTypes" :key="type.name">
-      <div class="table-section">
-        <div class="section-header">
-          <h2>{{ type.title }} Management</h2>
-          <button @click="showAddNewRetailModal" class="add-btn">Add New Retail</button>
-        </div>
+    <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
+  <template v-for="type in stockTypes" :key="type.name">
+    <div class="table-section">
+      <div class="section-header">
+        <h2>{{ type.title }} Management</h2>
+        <button 
+          @click="showAddModal(type.name)" 
+          class="add-btn"
+        >Add New {{ type.title }}</button>
+      </div>
         <div class="table-wrapper" :id="`table-${type.name}`">
           <table>
             <thead>
@@ -212,13 +216,28 @@
           </div>
         </div>
       </div>
-      <AddNewRetailModal 
+    </template>
+  </div>
+  <AddNewRetailModal 
   v-if="isAddRetailModalVisible"
   :isLoading="loading"
   @close="closeAddRetailModal"
 />
-    </template>
-  </div>
+<AddNewTechnologyModal 
+  v-if="isAddTechnologyModalVisible"
+  :isLoading="loading"
+  @close="closeAddTechnologyModal"
+/>
+<AddNewFoodAndBeveragesModal 
+  v-if="isAddFoodAndBeveragesModalVisible"
+  :isLoading="loading"
+  @close="closeAddFoodAndBeveragesModal"
+/>
+<AddNewHealthcareModal 
+  v-if="isAddHealthcareModalVisible"
+  :isLoading="loading"
+  @close="closeAddHealthcareModal"
+/>
 </template>
 
 <script>
@@ -229,6 +248,9 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import AddNewUserModal from '@/components/AddNewUserModal.vue';
 import AddNewRetailModal from '@/components/AddNewRetailModal.vue';
+import AddNewTechnologyModal from '@/components/AddNewTechnologyModal.vue'
+import AddNewFoodAndBeveragesModal from '@/components/AddNewFoodAndBeveragesModal.vue'
+import AddNewHealthcareModal from '@/components/AddNewHealthcareModal.vue'
 
 library.add(faArrowLeft, faArrowRight);
 
@@ -236,13 +258,19 @@ export default {
   components: {
     FontAwesomeIcon,
     AddNewUserModal,
-    AddNewRetailModal
+    AddNewRetailModal,
+    AddNewTechnologyModal,
+    AddNewFoodAndBeveragesModal,
+    AddNewHealthcareModal
   },
   name: 'AdminDashboardView',
   data() {
     return {
       isAddUserModalVisible: false,
       isAddRetailModalVisible: false,
+      isAddTechnologyModalVisible: false,
+      isAddFoodAndBeveragesModalVisible: false,
+      isAddHealthcareModalVisible: false,
       showModal: false,
       isEditing: false,
       selectedType: '',
@@ -317,10 +345,34 @@ export default {
     closeAddUserModal() {
       this.isAddUserModalVisible = false;
     },
-    showAddNewRetailModal() {
-    this.isAddRetailModalVisible = true; // Show the retail modal
+    showAddModal(type) {
+      switch(type) {
+        case 'retail':
+          this.isAddRetailModalVisible = true;
+          break;
+        case 'technology':
+          this.isAddTechnologyModalVisible = true;
+          break;
+        case 'foodAndBeverages':
+          this.isAddFoodAndBeveragesModalVisible = true;
+          break;
+        case 'healthcare':
+          this.isAddHealthcareModalVisible = true;
+          break;
+      }
+    },
+  showAddNewTechnologyModal() {
+    this.isAddTechnologyModalVisible = true;
   },
-  
+  closeAddTechnologyModal() {
+    this.isAddTechnologyModalVisible = false;
+  },
+  closeAddFoodAndBeveragesModal() {
+      this.isAddFoodAndBeveragesModalVisible = false;
+    },
+    closeAddHealthcareModal() {
+      this.isAddHealthcareModalVisible = false;
+    },
   closeAddRetailModal() {
     this.isAddRetailModalVisible = false; // Close the retail modal
   },
