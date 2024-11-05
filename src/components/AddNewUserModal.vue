@@ -164,7 +164,7 @@ methods: {
       // Reset form
       this.resetForm();
 
-      this.$router.push({ name: 'admin-dashboard' });
+      this.$emit('close'); // Close the modal after submission
     } catch (error) {
       console.error('Registration error:', error);
     }
