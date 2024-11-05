@@ -95,14 +95,21 @@ class Technology {
 
   static async updateTechnologyData() {
     try {
-      const symbol = 'INTC'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
-      const response = await axios.get(url)
-      const data = response.data
-
-      await Technology.patchTechnologyData(1, data)
+      const symbol = 'INTC';
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`;
+      const response = await axios.get(url);
+      const data = response.data;
+  
+      // Convert 'None' strings to actual null values
+      for (const key in data) {
+        if (data[key] === 'None') {
+          data[key] = null; // or delete data[key] if you want to omit it entirely
+        }
+      }
+  
+      await Technology.patchTechnologyData(1, data);
     } catch (error) {
-      throw new Error(`Failed to update technology data: ${error.message}`)
+      throw new Error(`Failed to update technology data: ${error.message}`);
     }
   }
 
