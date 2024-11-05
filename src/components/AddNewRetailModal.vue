@@ -756,11 +756,15 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.1)!important;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+h1 {
+  text-align: center;
 }
 
 .admin-retail-modal-content {
@@ -768,18 +772,13 @@ export default {
   padding: 20px;
   border-radius: 8px;
   width: 50%;
-  height: 80%;
+  height: 50%;
   position: relative;
   display: flex;
   flex-direction: column;
   max-width: 800px;
   max-height: 600px;
-  overflow-y: auto;
-}
-
-h1 {
-  text-align: center;
-  color: white;
+  min-height: 400px;
 }
 
 .modal-scroll-container {
@@ -787,6 +786,20 @@ h1 {
   margin-right: -10px;
   padding-right: 10px;
   flex-grow: 1;
+}
+
+.modal-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-scroll-container::-webkit-scrollbar-track {
+  background: #2d5bd7;
+  border-radius: 4px;
+}
+
+.modal-scroll-container::-webkit-scrollbar-thumb {
+  background: #1a3c9e;
+  border-radius: 4px;
 }
 
 .form-group {
@@ -797,13 +810,13 @@ h1 {
   display: block;
   margin-bottom: 5px;
   color: rgb(45, 43, 43);
-  text-align: left;
+  text-align: center;
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
 }
 
 .form-group input,
-.form-group textarea {
+.form-group select, .form-group textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -811,10 +824,17 @@ h1 {
   background-color: white;
 }
 
+.form-group input:disabled,
+.form-group select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
 .button-group {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .save-button {
@@ -832,6 +852,12 @@ h1 {
 .save-button:hover {
   background-color: #1249ef;
   color: black;
+  border: solid black;
+}
+
+.save-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .close-button {
@@ -847,5 +873,56 @@ h1 {
 .close-button:hover {
   color: black;
   background: #0f3dc6;
+  border: solid black;
+}
+
+.close-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+h1 {
+  margin: 0 0 20px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 24px;
+}
+
+/* Media Queries */
+@media (max-width: 450px) {
+  .admin-modal-content {
+    width: 90vw; 
+    height: auto;
+    padding: 15px;
+    max-height: 85vh;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 8px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 300px) {
+  .admin-modal-content {
+    padding: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
+
+  .save-button {
+    padding: 8px 16px;
+  }
+
+  .close-button {
+    font-size: 20px;
+  }
 }
 </style>

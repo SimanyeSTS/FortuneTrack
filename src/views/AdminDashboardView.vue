@@ -76,7 +76,7 @@
       <div class="table-section">
         <div class="section-header">
           <h2>{{ type.title }} Management</h2>
-          <button @click="showAddModal(type.name)" class="add-btn">Add New {{ type.title }}</button>
+          <button @click="showAddNewRetailModal" class="add-btn">Add New Retail</button>
         </div>
         <div class="table-wrapper" :id="`table-${type.name}`">
           <table>
@@ -212,6 +212,11 @@
           </div>
         </div>
       </div>
+      <AddNewRetailModal 
+  v-if="isAddRetailModalVisible"
+  :isLoading="loading"
+  @close="closeAddRetailModal"
+/>
     </template>
   </div>
 </template>
@@ -223,18 +228,21 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import AddNewUserModal from '@/components/AddNewUserModal.vue';
+import AddNewRetailModal from '@/components/AddNewRetailModal.vue';
 
 library.add(faArrowLeft, faArrowRight);
 
 export default {
   components: {
     FontAwesomeIcon,
-    AddNewUserModal
+    AddNewUserModal,
+    AddNewRetailModal
   },
   name: 'AdminDashboardView',
   data() {
     return {
-      isAddUserModalVisible: false, // Changed from showAddNewUserModal
+      isAddUserModalVisible: false,
+      isAddRetailModalVisible: false,
       showModal: false,
       isEditing: false,
       selectedType: '',
@@ -309,6 +317,13 @@ export default {
     closeAddUserModal() {
       this.isAddUserModalVisible = false;
     },
+    showAddNewRetailModal() {
+    this.isAddRetailModalVisible = true; // Show the retail modal
+  },
+  
+  closeAddRetailModal() {
+    this.isAddRetailModalVisible = false; // Close the retail modal
+  },
 
     async confirmDelete(type, id) {
       const result = await SweetAlert.fire({
