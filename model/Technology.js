@@ -100,21 +100,21 @@ class Technology {
       const response = await axios.get(url);
       const data = response.data;
   
-      // Convert 'None' strings to actual null values
-    for (const key in data) {
-      if (data[key] === 'None') {
-        data[key] = null; // or delete data[key] if you want to omit it entirely
-      } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-        // Convert string numbers to actual numbers
-        data[key] = parseFloat(data[key]);
+      // Convert 'None' strings and '-' to actual null values
+      for (const key in data) {
+        if (data[key] === 'None' || data[key] === '-') {
+          data[key] = null; // Set to null for invalid decimal values
+        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
+          // Convert string numbers to actual numbers
+          data[key] = parseFloat(data[key]);
+        }
       }
-    }
   
-    await Technology.patchTechnologyData(1, data);
-  } catch (error) {
-    throw new Error(`Failed to update technology data: ${error.message}`);
+      await Technology.patchTechnologyData(1, data);
+    } catch (error) {
+      throw new Error(`Failed to update technology data: ${error.message}`);
+    }
   }
-}
 
   static async addTechnologyData(data) {
     try {
