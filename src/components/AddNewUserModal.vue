@@ -188,8 +188,8 @@ methods: {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
@@ -197,20 +197,22 @@ methods: {
   z-index: 1000;
 }
 
+h1 {
+  text-align: center;
+}
+
 .admin-modal-content {
   background: #4169E1;
   padding: 20px;
   border-radius: 8px;
-  width: 50vw; 
-  height: 50vh;
-  max-height: 80vh;
+  width: 50%;
+  height: 50%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%; 
-  transform: translate(-50%, -50%);
-  text-align: center;
+  max-width: 800px;
+  max-height: 600px;
+  min-height: 400px;
 }
 
 .modal-scroll-container {
@@ -263,6 +265,8 @@ methods: {
 }
 
 .button-group {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
   margin-bottom: 10px;
 }
