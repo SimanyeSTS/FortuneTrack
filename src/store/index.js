@@ -395,7 +395,7 @@ export default createStore({
       }
     },
 
-    async updateUserProfile({ commit }, { userId, userData }) { // Corrected this line
+    async updateUserProfile({ commit }, { userId, userData }) {
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}user/${userId}`, userData);

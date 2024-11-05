@@ -70,6 +70,12 @@
     :isLoading="loading"
     @close="closeAddUserModal"
   />
+  <EditUserModal 
+      v-if="isEditUserModalVisible"
+      :user="selectedUser "
+      :isLoading="loading"
+      @close="closeEditUserModal"
+    />
 
     <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
     <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
@@ -251,6 +257,7 @@ import AddNewRetailModal from '@/components/AddNewRetailModal.vue';
 import AddNewTechnologyModal from '@/components/AddNewTechnologyModal.vue'
 import AddNewFoodAndBeveragesModal from '@/components/AddNewFoodAndBeveragesModal.vue'
 import AddNewHealthcareModal from '@/components/AddNewHealthcareModal.vue'
+import EditUserModal from '@/components/EditUserModal.vue'
 
 library.add(faArrowLeft, faArrowRight);
 
@@ -261,7 +268,8 @@ export default {
     AddNewRetailModal,
     AddNewTechnologyModal,
     AddNewFoodAndBeveragesModal,
-    AddNewHealthcareModal
+    AddNewHealthcareModal,
+    EditUserModal
   },
   name: 'AdminDashboardView',
   data() {
@@ -271,6 +279,8 @@ export default {
       isAddTechnologyModalVisible: false,
       isAddFoodAndBeveragesModalVisible: false,
       isAddHealthcareModalVisible: false,
+      isEditUserModalVisible: false,
+      selectedUser: null,
       showModal: false,
       isEditing: false,
       selectedType: '',
@@ -344,6 +354,14 @@ export default {
     
     closeAddUserModal() {
       this.isAddUserModalVisible = false;
+    },
+    showEditModal(type, user) {
+      this.selectedUser  = user; // Set the selected user
+      this.isEditUserModalVisible = true; // Show the modal
+    },
+    closeEditUserModal() {
+      this.isEditUserModalVisible = false; // Hide the modal
+      this.selectedUser  = null; // Reset selected user
     },
     showAddModal(type) {
       switch(type) {
