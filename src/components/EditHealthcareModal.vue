@@ -1,9 +1,9 @@
 <template>
-    <div class="admin-retail-modal">
-      <div class="admin-retail-modal-content">
-        <h1>Please verify all information is correct on the retail prediction before altering!</h1>
+    <div class="admin-healthcare-modal">
+      <div class="admin-healthcare-modal-content">
+        <h1>Please verify all information is correct on the healthcare prediction before altering!</h1>
         <div class="modal-scroll-container">
-          <form @submit.prevent="updateRetail">
+          <form @submit.prevent="updateHealthcare">
             <div class="form-group">
               <label for="Symbol">Symbol:</label>
               <input 
@@ -529,7 +529,7 @@
   
   export default {
     props: {
-      retail: Object,
+      healthcare: Object,
       isLoading: Boolean
     },
     data() {
@@ -589,86 +589,86 @@
     }
     },
     watch: {
-      retail: {
-        handler(newRetail) {
-          if (newRetail) {
-            this.populateForm(newRetail);
+      healthcare: {
+        handler(newHealthcare) {
+          if (newHealthcare) {
+            this.populateForm(newHealthcare);
           }
         },
         immediate: true
       }
     },
     methods: {
-      ...mapActions(['updateRetail']),
+      ...mapActions(['updateHealthcare']),
       
-      populateForm(retail) {
-        this.Symbol = retail.Symbol || '';
-        this.AssetType = retail.AssetType || '';
-        this.Name =  retail.Name || '';
-        this.Description = retail.Description || '';
-        this.CIK = retail.CIK || '';
-        this.Exchange = retail.Exchange || '';
-        this.Currency = retail.Currency || ''
-        this.Country = retail.Country || '';
-        this.Sector = retail.Sector || '';
-        this.Industry = retail.Industry || '';
-        this.Address = retail.Address || '';
-        this.OfficialSite = retail.OfficialSite || '';
-        this.FiscalYearEnd = retail.FiscalYearEnd || '';
-        this.LatestQuarter = retail.LatestQuarter || '';
-        this.MarketCapitalization = retail.MarketCapitalization != undefined ? retail.MarketCapitalization : null;
-        this.EBITDA = retail.EBITDA != undefined ? retail.EBITDA : null;
-        this.PERatio = retail.PERatio != undefined ? retail.PERatio : null;
-        this.PEGRatio = retail.PEGRatio != undefined ? retail.PEGRatio : null;
-        this.BookValue = retail.BookValue != undefined ? retail.BookValue : null;
-        this.DividendPerShare = retail.DividendPerShare != undefined ? retail.DividendPerShare : null;
-        this.DividendYield = retail.DividendYield != undefined ? retail.DividendYield : null;
-        this.EPS = retail.EPS != undefined ? retail.EPS : null;
-        this.RevenuePerShareTTM = retail.RevenuePerShareTTM != undefined ? retail.RevenuePerShareTTM : null;
-        this.ProfitMargin = retail.ProfitMargin != undefined ? retail.ProfitMargin : null;
-        this.OperatingMarginTTM = retail.OperatingMarginTTM != undefined ? retail.OperatingMarginTTM : null;
-        this.ReturnOnAssetsTTM = retail.ReturnOnAssetsTTM != undefined ? retail.ReturnOnAssetsTTM : null;
-        this.ReturnOnEquityTTM = retail.ReturnOnEquityTTM != undefined ? retail.ReturnOnEquityTTM : null;
-        this.RevenueTTM = retail.RevenueTTM != undefined ? retail.RevenueTTM : null;
-        this.GrossProfitTTM = retail.GrossProfitTTM != undefined ? retail.GrossProfitTTM : null;
-        this.DilutedEPSTTM = retail.DilutedEPSTTM != undefined ? retail.DilutedEPSTTM  : null;
-        this.QuarterlyEarningsGrowthYOY = retail.QuarterlyEarningsGrowthYOY != undefined ? retail.QuarterlyEarningsGrowthYOY : null;
-        this.QuarterlyRevenueGrowthYOY = retail.QuarterlyRevenueGrowthYOY != undefined ? retail.QuarterlyRevenueGrowthYOY : null;
-        this.AnalystTargetPrice = retail.AnalystTargetPrice != undefined ? retail.AnalystTargetPrice : null;
-        this.AnalystRatingStrongBuy = retail.AnalystRatingStrongBuy != undefined ? retail.AnalystRatingStrongBuy : null;
-        this.AnalystRatingBuy = retail.AnalystRatingBuy != undefined ? retail.AnalystRatingBuy : null;
-        this.AnalystRatingHold = retail.AnalystRatingHold != undefined ? retail.AnalystRatingHold : null;
-        this.AnalystRatingSell = retail.AnalystRatingSell != undefined ? retail.AnalystRatingSell : null;
-        this.AnalystRatingStrongSell = retail.AnalystRatingStrongSell != undefined ? retail.AnalystRatingStrongSell : null;
-        this.TrailingPE = retail.TrailingPE != undefined ? retail.TrailingPE : null;
-        this.ForwardPE = retail.ForwardPE != undefined ? retail.ForwardPE : null;
-        this.PriceToSalesRatioTTM = retail.PriceToSalesRatioTTM != undefined ? retail.PriceToSalesRatioTTM : null;
-        this.PriceToBookRatio = retail.PriceToBookRatio != undefined ? retail.PriceToBookRatio : null;
-        this.EVToRevenue = retail.EVToRevenue != undefined ? retail.EVToRevenue : null;
-        this.EVToEBITDA = retail.EVToEBITDA != undefined ? retail.EVToEBITDA : null;
-        this.Beta = retail.Beta != undefined ? retail.Beta : null;
-        this.Week52High = retail['52WeekHigh'] != undefined ? retail['52WeekHigh'] : null;
-        this.Week52Low = retail['52WeekLow'] != undefined ? retail['52WeekLow'] : null;
-        this.Day50MovingAverage = retail['50DayMovingAverage'] != undefined ? retail['50DayMovingAverage'] : null;
-        this.Day200MovingAverage = retail['200DayMovingAverage'] != undefined ? retail['200DayMovingAverage'] : null;
-        this.SharesOutstanding = retail.SharesOutstanding != undefined ? retail.SharesOutstanding : null;
-        this.DividendDate = retail.DividendDate ? retail.DividendDate.split('T')[0] : '';
-  this.ExDividendDate = retail.ExDividendDate ? retail.ExDividendDate.split('T')[0] : '';
+      populateForm(healthcare) {
+        this.Symbol = healthcare.Symbol || '';
+        this.AssetType = healthcare.AssetType || '';
+        this.Name =  healthcare.Name || '';
+        this.Description = healthcare.Description || '';
+        this.CIK = healthcare.CIK || '';
+        this.Exchange = healthcare.Exchange || '';
+        this.Currency = healthcare.Currency || ''
+        this.Country = healthcare.Country || '';
+        this.Sector = healthcare.Sector || '';
+        this.Industry = healthcare.Industry || '';
+        this.Address = healthcare.Address || '';
+        this.OfficialSite = healthcare.OfficialSite || '';
+        this.FiscalYearEnd = healthcare.FiscalYearEnd || '';
+        this.LatestQuarter = healthcare.LatestQuarter || '';
+        this.MarketCapitalization = healthcare.MarketCapitalization != undefined ? healthcare.MarketCapitalization : null;
+        this.EBITDA = healthcare.EBITDA != undefined ? healthcare.EBITDA : null;
+        this.PERatio = healthcare.PERatio != undefined ? healthcare.PERatio : null;
+        this.PEGRatio = healthcare.PEGRatio != undefined ? healthcare.PEGRatio : null;
+        this.BookValue = healthcare.BookValue != undefined ? healthcare.BookValue : null;
+        this.DividendPerShare = healthcare.DividendPerShare != undefined ? healthcare.DividendPerShare : null;
+        this.DividendYield = healthcare.DividendYield != undefined ? healthcare.DividendYield : null;
+        this.EPS = healthcare.EPS != undefined ? healthcare.EPS : null;
+        this.RevenuePerShareTTM = healthcare.RevenuePerShareTTM != undefined ? healthcare.RevenuePerShareTTM : null;
+        this.ProfitMargin = healthcare.ProfitMargin != undefined ? healthcare.ProfitMargin : null;
+        this.OperatingMarginTTM = healthcare.OperatingMarginTTM != undefined ? healthcare.OperatingMarginTTM : null;
+        this.ReturnOnAssetsTTM = healthcare.ReturnOnAssetsTTM != undefined ? healthcare.ReturnOnAssetsTTM : null;
+        this.ReturnOnEquityTTM = healthcare.ReturnOnEquityTTM != undefined ? healthcare.ReturnOnEquityTTM : null;
+        this.RevenueTTM = healthcare.RevenueTTM != undefined ? healthcare.RevenueTTM : null;
+        this.GrossProfitTTM = healthcare.GrossProfitTTM != undefined ? healthcare.GrossProfitTTM : null;
+        this.DilutedEPSTTM = healthcare.DilutedEPSTTM != undefined ? healthcare.DilutedEPSTTM  : null;
+        this.QuarterlyEarningsGrowthYOY = healthcare.QuarterlyEarningsGrowthYOY != undefined ? healthcare.QuarterlyEarningsGrowthYOY : null;
+        this.QuarterlyRevenueGrowthYOY = healthcare.QuarterlyRevenueGrowthYOY != undefined ? healthcare.QuarterlyRevenueGrowthYOY : null;
+        this.AnalystTargetPrice = healthcare.AnalystTargetPrice != undefined ? healthcare.AnalystTargetPrice : null;
+        this.AnalystRatingStrongBuy = healthcare.AnalystRatingStrongBuy != undefined ? healthcare.AnalystRatingStrongBuy : null;
+        this.AnalystRatingBuy = healthcare.AnalystRatingBuy != undefined ? healthcare.AnalystRatingBuy : null;
+        this.AnalystRatingHold = healthcare.AnalystRatingHold != undefined ? healthcare.AnalystRatingHold : null;
+        this.AnalystRatingSell = healthcare.AnalystRatingSell != undefined ? healthcare.AnalystRatingSell : null;
+        this.AnalystRatingStrongSell = healthcare.AnalystRatingStrongSell != undefined ? healthcare.AnalystRatingStrongSell : null;
+        this.TrailingPE = healthcare.TrailingPE != undefined ? healthcare.TrailingPE : null;
+        this.ForwardPE = healthcare.ForwardPE != undefined ? healthcare.ForwardPE : null;
+        this.PriceToSalesRatioTTM = healthcare.PriceToSalesRatioTTM != undefined ? healthcare.PriceToSalesRatioTTM : null;
+        this.PriceToBookRatio = healthcare.PriceToBookRatio != undefined ? healthcare.PriceToBookRatio : null;
+        this.EVToRevenue = healthcare.EVToRevenue != undefined ? healthcare.EVToRevenue : null;
+        this.EVToEBITDA = healthcare.EVToEBITDA != undefined ? healthcare.EVToEBITDA : null;
+        this.Beta = healthcare.Beta != undefined ? healthcare.Beta : null;
+        this.Week52High = healthcare['52WeekHigh'] != undefined ? healthcare['52WeekHigh'] : null;
+        this.Week52Low = healthcare['52WeekLow'] != undefined ? healthcare['52WeekLow'] : null;
+        this.Day50MovingAverage = healthcare['50DayMovingAverage'] != undefined ? healthcare['50DayMovingAverage'] : null;
+        this.Day200MovingAverage = healthcare['200DayMovingAverage'] != undefined ? healthcare['200DayMovingAverage'] : null;
+        this.SharesOutstanding = healthcare.SharesOutstanding != undefined ? healthcare.SharesOutstanding : null;
+        this.DividendDate = healthcare.DividendDate ? healthcare.DividendDate.split('T')[0] : '';
+  this.ExDividendDate = healthcare.ExDividendDate ? healthcare.ExDividendDate.split('T')[0] : '';
       },
       
-      async updateRetail () {
-    const retailId = this.retail.id;
-    console.log('User  object:', this.retail);
-    console.log('retail  ID:', retailId);
+      async updateHealthcare () {
+    const healthcareId = this.healthcare.id;
+    console.log('healthcare object:', this.healthcare);
+    console.log('healthcare  ID:', healthcareId);
   
-    if (!retailId) {
-      console.error('Retail  ID is undefined');
+    if (!healthcareId) {
+      console.error('healthcare  ID is undefined');
       return;
     }
   
-    console.log('Updating user with ID:', retailId);
+    console.log('Updating healthcare with ID:', healthcareId);
   
-    const retailData = {
+    const healthcareData = {
   Symbol: (this.Symbol || '').trim(),
   AssetType: (this.AssetType || '').trim(),
   Name: (this.Name || '').trim(),
@@ -722,9 +722,9 @@
   ExDividendDate: (this.ExDividendDate || '').trim()
 };
   
-    console.log('retail  data to be sent:', retailData);
+    console.log('healthcare  data to be sent:', healthcareData);
     try {
-      await this.updateRetail({ id: retailId, retailData });
+      await this.updateHealthcare({ id: healthcareId, healthcareData });
       this.$emit('close'); // Close the modal after updating
     } catch (error) {
       console.error('Update error:', error);
@@ -735,7 +735,7 @@
   </script>
   
   <style scoped>
-  .admin-retail-modal {
+  .admin-healthcare-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -752,7 +752,7 @@
     text-align: center;
   }
   
-  .admin-retail-modal-content {
+  .admin-healthcare-modal-content {
     background: #4169E1;
     padding: 20px;
     border-radius: 8px;

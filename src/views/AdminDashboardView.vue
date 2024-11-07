@@ -248,6 +248,24 @@
       :isLoading="loading"
       @close="closeEditRetailModal"
     />
+<EditTechnologyModal 
+     v-if="isEditTechnologyModalVisible"
+      :technology="selectedTechnology"
+      :isLoading="loading"
+      @close="closeEditTechnologyModal"
+    />
+<EditFoodAndBeveragesModal 
+     v-if="isEditFoodAndBeveragesModalVisible"
+      :foodAndBeverages="selectedFoodAndBeverages"
+      :isLoading="loading"
+      @close="closeEditFoodAndBeveragesModal"
+    />
+<EditHealthcareModal 
+     v-if="isEditHealthcareModalVisible"
+      :healthcare="selectedHealthcare"
+      :isLoading="loading"
+      @close="closeEditHealthcareModal"
+    />
 </template>
 
 <script>
@@ -263,6 +281,9 @@ import AddNewFoodAndBeveragesModal from '@/components/AddNewFoodAndBeveragesModa
 import AddNewHealthcareModal from '@/components/AddNewHealthcareModal.vue'
 import EditUserModal from '@/components/EditUserModal.vue'
 import EditRetailModal from '@/components/EditRetailModal.vue'
+import EditTechnologyModal from '@/components/EditTechnologyModal.vue'
+import EditFoodAndBeveragesModal from '@/components/EditFoodAndBeveragesModal.vue'
+import EditHealthcareModal from '@/components/EditHealthcareModal.vue'
 
 library.add(faArrowLeft, faArrowRight);
 
@@ -275,7 +296,10 @@ export default {
     AddNewFoodAndBeveragesModal,
     AddNewHealthcareModal,
     EditUserModal,
-    EditRetailModal
+    EditRetailModal,
+    EditTechnologyModal,
+    EditFoodAndBeveragesModal,
+    EditHealthcareModal
   },
   name: 'AdminDashboardView',
   data() {
@@ -287,6 +311,9 @@ export default {
       isAddHealthcareModalVisible: false,
       isEditUserModalVisible: false,
       isEditRetailModalVisible: false,
+      isEditTechnologyModalVisible: false,
+      isEditFoodAndBeveragesModalVisible: false,
+      isEditHealthcareModalVisible: false,
       selectedUser: null,
       showModal: false,
       isEditing: false,
@@ -362,8 +389,8 @@ export default {
     closeAddUserModal() {
       this.isAddUserModalVisible = false;
     },
-    showEditUserModal(type, user) {
-      this.selectedUser  = user; // Set the selected user
+    showEditUserModal(type, UserID) {
+      this.selectedUser  = UserID; 
       this.isEditUserModalVisible = true; // Show the modal
     },
     closeEditUserModal() {
@@ -402,25 +429,37 @@ export default {
     this.isAddRetailModalVisible = false; // Close the retail modal
   },
 
-  showEditModal(type, retail) {
+  showEditModal(type, id) {
       switch(type) {
         case 'retail':
-          this.selectedRetail = retail;
+          this.selectedRetail = id;
           this.isEditRetailModalVisible = true;
           break;
         case 'technology':
-          this.iEditTechnologyModalVisible = true;
+          this.selectedTechnology = id;
+          this.isEditTechnologyModalVisible = true;
           break;
         case 'foodAndBeverages':
+          this.selectedFoodAndBeverages = id;
           this.isEditFoodAndBeveragesModalVisible = true;
           break;
         case 'healthcare':
+          this.selectedHealthcare = id;
           this.isEditHealthcareModalVisible = true;
           break;
       }
     },
     closeEditRetailModal() {
       this.isEditRetailModalVisible = false;
+    },
+    closeEditTechnologyModal () {
+      this.isEditTechnologyModalVisible = false;
+    },
+    closeEditFoodAndBeveragesModal () {
+      this.isEditFoodAndBeveragesModalVisible = false;
+    },
+    closeEditHealthcareModal () {
+      this.isEditHealthcareModalVisible = false;
     },
 
     async confirmDelete(type, id) {

@@ -1,9 +1,9 @@
 <template>
-    <div class="admin-retail-modal">
-      <div class="admin-retail-modal-content">
-        <h1>Please verify all information is correct on the retail prediction before altering!</h1>
+    <div class="admin-food-beverage-modal">
+      <div class="admin-food-beverage-modal-content">
+        <h1>Please verify all information is correct on the food/beverage prediction before altering!</h1>
         <div class="modal-scroll-container">
-          <form @submit.prevent="updateRetail">
+          <form @submit.prevent="updateFoodAndBeverages">
             <div class="form-group">
               <label for="Symbol">Symbol:</label>
               <input 
@@ -529,7 +529,7 @@
   
   export default {
     props: {
-      retail: Object,
+      foodAndBeverages: Object,
       isLoading: Boolean
     },
     data() {
@@ -589,86 +589,86 @@
     }
     },
     watch: {
-      retail: {
-        handler(newRetail) {
-          if (newRetail) {
-            this.populateForm(newRetail);
+      foodAndBeverages: {
+        handler(newFoodAndBeverages) {
+          if (newFoodAndBeverages) {
+            this.populateForm(newFoodAndBeverages);
           }
         },
         immediate: true
       }
     },
     methods: {
-      ...mapActions(['updateRetail']),
+      ...mapActions(['updateFoodAndBeverages']),
       
-      populateForm(retail) {
-        this.Symbol = retail.Symbol || '';
-        this.AssetType = retail.AssetType || '';
-        this.Name =  retail.Name || '';
-        this.Description = retail.Description || '';
-        this.CIK = retail.CIK || '';
-        this.Exchange = retail.Exchange || '';
-        this.Currency = retail.Currency || ''
-        this.Country = retail.Country || '';
-        this.Sector = retail.Sector || '';
-        this.Industry = retail.Industry || '';
-        this.Address = retail.Address || '';
-        this.OfficialSite = retail.OfficialSite || '';
-        this.FiscalYearEnd = retail.FiscalYearEnd || '';
-        this.LatestQuarter = retail.LatestQuarter || '';
-        this.MarketCapitalization = retail.MarketCapitalization != undefined ? retail.MarketCapitalization : null;
-        this.EBITDA = retail.EBITDA != undefined ? retail.EBITDA : null;
-        this.PERatio = retail.PERatio != undefined ? retail.PERatio : null;
-        this.PEGRatio = retail.PEGRatio != undefined ? retail.PEGRatio : null;
-        this.BookValue = retail.BookValue != undefined ? retail.BookValue : null;
-        this.DividendPerShare = retail.DividendPerShare != undefined ? retail.DividendPerShare : null;
-        this.DividendYield = retail.DividendYield != undefined ? retail.DividendYield : null;
-        this.EPS = retail.EPS != undefined ? retail.EPS : null;
-        this.RevenuePerShareTTM = retail.RevenuePerShareTTM != undefined ? retail.RevenuePerShareTTM : null;
-        this.ProfitMargin = retail.ProfitMargin != undefined ? retail.ProfitMargin : null;
-        this.OperatingMarginTTM = retail.OperatingMarginTTM != undefined ? retail.OperatingMarginTTM : null;
-        this.ReturnOnAssetsTTM = retail.ReturnOnAssetsTTM != undefined ? retail.ReturnOnAssetsTTM : null;
-        this.ReturnOnEquityTTM = retail.ReturnOnEquityTTM != undefined ? retail.ReturnOnEquityTTM : null;
-        this.RevenueTTM = retail.RevenueTTM != undefined ? retail.RevenueTTM : null;
-        this.GrossProfitTTM = retail.GrossProfitTTM != undefined ? retail.GrossProfitTTM : null;
-        this.DilutedEPSTTM = retail.DilutedEPSTTM != undefined ? retail.DilutedEPSTTM  : null;
-        this.QuarterlyEarningsGrowthYOY = retail.QuarterlyEarningsGrowthYOY != undefined ? retail.QuarterlyEarningsGrowthYOY : null;
-        this.QuarterlyRevenueGrowthYOY = retail.QuarterlyRevenueGrowthYOY != undefined ? retail.QuarterlyRevenueGrowthYOY : null;
-        this.AnalystTargetPrice = retail.AnalystTargetPrice != undefined ? retail.AnalystTargetPrice : null;
-        this.AnalystRatingStrongBuy = retail.AnalystRatingStrongBuy != undefined ? retail.AnalystRatingStrongBuy : null;
-        this.AnalystRatingBuy = retail.AnalystRatingBuy != undefined ? retail.AnalystRatingBuy : null;
-        this.AnalystRatingHold = retail.AnalystRatingHold != undefined ? retail.AnalystRatingHold : null;
-        this.AnalystRatingSell = retail.AnalystRatingSell != undefined ? retail.AnalystRatingSell : null;
-        this.AnalystRatingStrongSell = retail.AnalystRatingStrongSell != undefined ? retail.AnalystRatingStrongSell : null;
-        this.TrailingPE = retail.TrailingPE != undefined ? retail.TrailingPE : null;
-        this.ForwardPE = retail.ForwardPE != undefined ? retail.ForwardPE : null;
-        this.PriceToSalesRatioTTM = retail.PriceToSalesRatioTTM != undefined ? retail.PriceToSalesRatioTTM : null;
-        this.PriceToBookRatio = retail.PriceToBookRatio != undefined ? retail.PriceToBookRatio : null;
-        this.EVToRevenue = retail.EVToRevenue != undefined ? retail.EVToRevenue : null;
-        this.EVToEBITDA = retail.EVToEBITDA != undefined ? retail.EVToEBITDA : null;
-        this.Beta = retail.Beta != undefined ? retail.Beta : null;
-        this.Week52High = retail['52WeekHigh'] != undefined ? retail['52WeekHigh'] : null;
-        this.Week52Low = retail['52WeekLow'] != undefined ? retail['52WeekLow'] : null;
-        this.Day50MovingAverage = retail['50DayMovingAverage'] != undefined ? retail['50DayMovingAverage'] : null;
-        this.Day200MovingAverage = retail['200DayMovingAverage'] != undefined ? retail['200DayMovingAverage'] : null;
-        this.SharesOutstanding = retail.SharesOutstanding != undefined ? retail.SharesOutstanding : null;
-        this.DividendDate = retail.DividendDate ? retail.DividendDate.split('T')[0] : '';
-  this.ExDividendDate = retail.ExDividendDate ? retail.ExDividendDate.split('T')[0] : '';
+      populateForm(foodAndBeverages) {
+        this.Symbol = foodAndBeverages.Symbol || '';
+        this.AssetType = foodAndBeverages.AssetType || '';
+        this.Name =  foodAndBeverages.Name || '';
+        this.Description = foodAndBeverages.Description || '';
+        this.CIK = foodAndBeverages.CIK || '';
+        this.Exchange = foodAndBeverages.Exchange || '';
+        this.Currency = foodAndBeverages.Currency || ''
+        this.Country = foodAndBeverages.Country || '';
+        this.Sector = foodAndBeverages.Sector || '';
+        this.Industry = foodAndBeverages.Industry || '';
+        this.Address = foodAndBeverages.Address || '';
+        this.OfficialSite = foodAndBeverages.OfficialSite || '';
+        this.FiscalYearEnd = foodAndBeverages.FiscalYearEnd || '';
+        this.LatestQuarter = foodAndBeverages.LatestQuarter || '';
+        this.MarketCapitalization = foodAndBeverages.MarketCapitalization != undefined ? foodAndBeverages.MarketCapitalization : null;
+        this.EBITDA = foodAndBeverages.EBITDA != undefined ? foodAndBeverages.EBITDA : null;
+        this.PERatio = foodAndBeverages.PERatio != undefined ? foodAndBeverages.PERatio : null;
+        this.PEGRatio = foodAndBeverages.PEGRatio != undefined ? foodAndBeverages.PEGRatio : null;
+        this.BookValue = foodAndBeverages.BookValue != undefined ? foodAndBeverages.BookValue : null;
+        this.DividendPerShare = foodAndBeverages.DividendPerShare != undefined ? foodAndBeverages.DividendPerShare : null;
+        this.DividendYield = foodAndBeverages.DividendYield != undefined ? foodAndBeverages.DividendYield : null;
+        this.EPS = foodAndBeverages.EPS != undefined ? foodAndBeverages.EPS : null;
+        this.RevenuePerShareTTM = foodAndBeverages.RevenuePerShareTTM != undefined ? foodAndBeverages.RevenuePerShareTTM : null;
+        this.ProfitMargin = foodAndBeverages.ProfitMargin != undefined ? foodAndBeverages.ProfitMargin : null;
+        this.OperatingMarginTTM = foodAndBeverages.OperatingMarginTTM != undefined ? foodAndBeverages.OperatingMarginTTM : null;
+        this.ReturnOnAssetsTTM = foodAndBeverages.ReturnOnAssetsTTM != undefined ? foodAndBeverages.ReturnOnAssetsTTM : null;
+        this.ReturnOnEquityTTM = foodAndBeverages.ReturnOnEquityTTM != undefined ? foodAndBeverages.ReturnOnEquityTTM : null;
+        this.RevenueTTM = foodAndBeverages.RevenueTTM != undefined ? foodAndBeverages.RevenueTTM : null;
+        this.GrossProfitTTM = foodAndBeverages.GrossProfitTTM != undefined ? foodAndBeverages.GrossProfitTTM : null;
+        this.DilutedEPSTTM = foodAndBeverages.DilutedEPSTTM != undefined ? foodAndBeverages.DilutedEPSTTM  : null;
+        this.QuarterlyEarningsGrowthYOY = foodAndBeverages.QuarterlyEarningsGrowthYOY != undefined ? foodAndBeverages.QuarterlyEarningsGrowthYOY : null;
+        this.QuarterlyRevenueGrowthYOY = foodAndBeverages.QuarterlyRevenueGrowthYOY != undefined ? foodAndBeverages.QuarterlyRevenueGrowthYOY : null;
+        this.AnalystTargetPrice = foodAndBeverages.AnalystTargetPrice != undefined ? foodAndBeverages.AnalystTargetPrice : null;
+        this.AnalystRatingStrongBuy = foodAndBeverages.AnalystRatingStrongBuy != undefined ? foodAndBeverages.AnalystRatingStrongBuy : null;
+        this.AnalystRatingBuy = foodAndBeverages.AnalystRatingBuy != undefined ? foodAndBeverages.AnalystRatingBuy : null;
+        this.AnalystRatingHold = foodAndBeverages.AnalystRatingHold != undefined ? foodAndBeverages.AnalystRatingHold : null;
+        this.AnalystRatingSell = foodAndBeverages.AnalystRatingSell != undefined ? foodAndBeverages.AnalystRatingSell : null;
+        this.AnalystRatingStrongSell = foodAndBeverages.AnalystRatingStrongSell != undefined ? foodAndBeverages.AnalystRatingStrongSell : null;
+        this.TrailingPE = foodAndBeverages.TrailingPE != undefined ? foodAndBeverages.TrailingPE : null;
+        this.ForwardPE = foodAndBeverages.ForwardPE != undefined ? foodAndBeverages.ForwardPE : null;
+        this.PriceToSalesRatioTTM = foodAndBeverages.PriceToSalesRatioTTM != undefined ? foodAndBeverages.PriceToSalesRatioTTM : null;
+        this.PriceToBookRatio = foodAndBeverages.PriceToBookRatio != undefined ? foodAndBeverages.PriceToBookRatio : null;
+        this.EVToRevenue = foodAndBeverages.EVToRevenue != undefined ? foodAndBeverages.EVToRevenue : null;
+        this.EVToEBITDA = foodAndBeverages.EVToEBITDA != undefined ? foodAndBeverages.EVToEBITDA : null;
+        this.Beta = foodAndBeverages.Beta != undefined ? foodAndBeverages.Beta : null;
+        this.Week52High = foodAndBeverages['52WeekHigh'] != undefined ? foodAndBeverages['52WeekHigh'] : null;
+        this.Week52Low = foodAndBeverages['52WeekLow'] != undefined ? foodAndBeverages['52WeekLow'] : null;
+        this.Day50MovingAverage = foodAndBeverages['50DayMovingAverage'] != undefined ? foodAndBeverages['50DayMovingAverage'] : null;
+        this.Day200MovingAverage = foodAndBeverages['200DayMovingAverage'] != undefined ? foodAndBeverages['200DayMovingAverage'] : null;
+        this.SharesOutstanding = foodAndBeverages.SharesOutstanding != undefined ? foodAndBeverages.SharesOutstanding : null;
+        this.DividendDate = foodAndBeverages.DividendDate ? foodAndBeverages.DividendDate.split('T')[0] : '';
+        this.ExDividendDate = foodAndBeverages.ExDividendDate ? foodAndBeverages.ExDividendDate.split('T')[0] : '';
       },
       
-      async updateRetail () {
-    const retailId = this.retail.id;
-    console.log('User  object:', this.retail);
-    console.log('retail  ID:', retailId);
+      async updateFoodAndBeverages () {
+    const foodAndBeverageslId = this.foodAndBeverages.id;
+    console.log('food/beverage  object:', this.technology);
+    console.log('food/beverage  ID:', foodAndBeverageslId);
   
-    if (!retailId) {
-      console.error('Retail  ID is undefined');
+    if (!foodAndBeverageslId) {
+      console.error('food/beverage ID is undefined');
       return;
     }
   
-    console.log('Updating user with ID:', retailId);
+    console.log('Updating food/beverage with ID:', foodAndBeverageslId);
   
-    const retailData = {
+    const foodAndBeveragesData = {
   Symbol: (this.Symbol || '').trim(),
   AssetType: (this.AssetType || '').trim(),
   Name: (this.Name || '').trim(),
@@ -722,9 +722,9 @@
   ExDividendDate: (this.ExDividendDate || '').trim()
 };
   
-    console.log('retail  data to be sent:', retailData);
+    console.log('food/beverage  data to be sent:', foodAndBeveragesData);
     try {
-      await this.updateRetail({ id: retailId, retailData });
+      await this.updateFoodAndBeverages({ id: foodAndBeverageslId, foodAndBeveragesData });
       this.$emit('close'); // Close the modal after updating
     } catch (error) {
       console.error('Update error:', error);
@@ -735,7 +735,7 @@
   </script>
   
   <style scoped>
-  .admin-retail-modal {
+  .admin-food-beverage-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -752,7 +752,7 @@
     text-align: center;
   }
   
-  .admin-retail-modal-content {
+  .admin-food-beverage-modal-content {
     background: #4169E1;
     padding: 20px;
     border-radius: 8px;

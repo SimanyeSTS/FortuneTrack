@@ -1,9 +1,9 @@
 <template>
-    <div class="admin-retail-modal">
-      <div class="admin-retail-modal-content">
-        <h1>Please verify all information is correct on the retail prediction before altering!</h1>
+    <div class="admin-technology-modal">
+      <div class="admin-technology-modal-content">
+        <h1>Please verify all information is correct on the technology prediction before altering!</h1>
         <div class="modal-scroll-container">
-          <form @submit.prevent="updateRetail">
+          <form @submit.prevent="updateTechnology">
             <div class="form-group">
               <label for="Symbol">Symbol:</label>
               <input 
@@ -529,7 +529,7 @@
   
   export default {
     props: {
-      retail: Object,
+      technology: Object,
       isLoading: Boolean
     },
     data() {
@@ -589,86 +589,86 @@
     }
     },
     watch: {
-      retail: {
-        handler(newRetail) {
-          if (newRetail) {
-            this.populateForm(newRetail);
+      technology: {
+        handler(newTechnology) {
+          if (newTechnology) {
+            this.populateForm(newTechnology);
           }
         },
         immediate: true
       }
     },
     methods: {
-      ...mapActions(['updateRetail']),
+      ...mapActions(['updateTechnology']),
       
-      populateForm(retail) {
-        this.Symbol = retail.Symbol || '';
-        this.AssetType = retail.AssetType || '';
-        this.Name =  retail.Name || '';
-        this.Description = retail.Description || '';
-        this.CIK = retail.CIK || '';
-        this.Exchange = retail.Exchange || '';
-        this.Currency = retail.Currency || ''
-        this.Country = retail.Country || '';
-        this.Sector = retail.Sector || '';
-        this.Industry = retail.Industry || '';
-        this.Address = retail.Address || '';
-        this.OfficialSite = retail.OfficialSite || '';
-        this.FiscalYearEnd = retail.FiscalYearEnd || '';
-        this.LatestQuarter = retail.LatestQuarter || '';
-        this.MarketCapitalization = retail.MarketCapitalization != undefined ? retail.MarketCapitalization : null;
-        this.EBITDA = retail.EBITDA != undefined ? retail.EBITDA : null;
-        this.PERatio = retail.PERatio != undefined ? retail.PERatio : null;
-        this.PEGRatio = retail.PEGRatio != undefined ? retail.PEGRatio : null;
-        this.BookValue = retail.BookValue != undefined ? retail.BookValue : null;
-        this.DividendPerShare = retail.DividendPerShare != undefined ? retail.DividendPerShare : null;
-        this.DividendYield = retail.DividendYield != undefined ? retail.DividendYield : null;
-        this.EPS = retail.EPS != undefined ? retail.EPS : null;
-        this.RevenuePerShareTTM = retail.RevenuePerShareTTM != undefined ? retail.RevenuePerShareTTM : null;
-        this.ProfitMargin = retail.ProfitMargin != undefined ? retail.ProfitMargin : null;
-        this.OperatingMarginTTM = retail.OperatingMarginTTM != undefined ? retail.OperatingMarginTTM : null;
-        this.ReturnOnAssetsTTM = retail.ReturnOnAssetsTTM != undefined ? retail.ReturnOnAssetsTTM : null;
-        this.ReturnOnEquityTTM = retail.ReturnOnEquityTTM != undefined ? retail.ReturnOnEquityTTM : null;
-        this.RevenueTTM = retail.RevenueTTM != undefined ? retail.RevenueTTM : null;
-        this.GrossProfitTTM = retail.GrossProfitTTM != undefined ? retail.GrossProfitTTM : null;
-        this.DilutedEPSTTM = retail.DilutedEPSTTM != undefined ? retail.DilutedEPSTTM  : null;
-        this.QuarterlyEarningsGrowthYOY = retail.QuarterlyEarningsGrowthYOY != undefined ? retail.QuarterlyEarningsGrowthYOY : null;
-        this.QuarterlyRevenueGrowthYOY = retail.QuarterlyRevenueGrowthYOY != undefined ? retail.QuarterlyRevenueGrowthYOY : null;
-        this.AnalystTargetPrice = retail.AnalystTargetPrice != undefined ? retail.AnalystTargetPrice : null;
-        this.AnalystRatingStrongBuy = retail.AnalystRatingStrongBuy != undefined ? retail.AnalystRatingStrongBuy : null;
-        this.AnalystRatingBuy = retail.AnalystRatingBuy != undefined ? retail.AnalystRatingBuy : null;
-        this.AnalystRatingHold = retail.AnalystRatingHold != undefined ? retail.AnalystRatingHold : null;
-        this.AnalystRatingSell = retail.AnalystRatingSell != undefined ? retail.AnalystRatingSell : null;
-        this.AnalystRatingStrongSell = retail.AnalystRatingStrongSell != undefined ? retail.AnalystRatingStrongSell : null;
-        this.TrailingPE = retail.TrailingPE != undefined ? retail.TrailingPE : null;
-        this.ForwardPE = retail.ForwardPE != undefined ? retail.ForwardPE : null;
-        this.PriceToSalesRatioTTM = retail.PriceToSalesRatioTTM != undefined ? retail.PriceToSalesRatioTTM : null;
-        this.PriceToBookRatio = retail.PriceToBookRatio != undefined ? retail.PriceToBookRatio : null;
-        this.EVToRevenue = retail.EVToRevenue != undefined ? retail.EVToRevenue : null;
-        this.EVToEBITDA = retail.EVToEBITDA != undefined ? retail.EVToEBITDA : null;
-        this.Beta = retail.Beta != undefined ? retail.Beta : null;
-        this.Week52High = retail['52WeekHigh'] != undefined ? retail['52WeekHigh'] : null;
-        this.Week52Low = retail['52WeekLow'] != undefined ? retail['52WeekLow'] : null;
-        this.Day50MovingAverage = retail['50DayMovingAverage'] != undefined ? retail['50DayMovingAverage'] : null;
-        this.Day200MovingAverage = retail['200DayMovingAverage'] != undefined ? retail['200DayMovingAverage'] : null;
-        this.SharesOutstanding = retail.SharesOutstanding != undefined ? retail.SharesOutstanding : null;
-        this.DividendDate = retail.DividendDate ? retail.DividendDate.split('T')[0] : '';
-  this.ExDividendDate = retail.ExDividendDate ? retail.ExDividendDate.split('T')[0] : '';
+      populateForm(technology) {
+        this.Symbol = technology.Symbol || '';
+        this.AssetType = technology.AssetType || '';
+        this.Name =  technology.Name || '';
+        this.Description = technology.Description || '';
+        this.CIK = technology.CIK || '';
+        this.Exchange = technology.Exchange || '';
+        this.Currency = technology.Currency || ''
+        this.Country = technology.Country || '';
+        this.Sector = technology.Sector || '';
+        this.Industry = technology.Industry || '';
+        this.Address = technology.Address || '';
+        this.OfficialSite = technology.OfficialSite || '';
+        this.FiscalYearEnd = technology.FiscalYearEnd || '';
+        this.LatestQuarter = technology.LatestQuarter || '';
+        this.MarketCapitalization = technology.MarketCapitalization != undefined ? technology.MarketCapitalization : null;
+        this.EBITDA = technology.EBITDA != undefined ? technology.EBITDA : null;
+        this.PERatio = technology.PERatio != undefined ? technology.PERatio : null;
+        this.PEGRatio = technology.PEGRatio != undefined ? technology.PEGRatio : null;
+        this.BookValue = technology.BookValue != undefined ? technology.BookValue : null;
+        this.DividendPerShare = technology.DividendPerShare != undefined ? technology.DividendPerShare : null;
+        this.DividendYield = technology.DividendYield != undefined ? technology.DividendYield : null;
+        this.EPS = technology.EPS != undefined ? technology.EPS : null;
+        this.RevenuePerShareTTM = technology.RevenuePerShareTTM != undefined ? technology.RevenuePerShareTTM : null;
+        this.ProfitMargin = technology.ProfitMargin != undefined ? technology.ProfitMargin : null;
+        this.OperatingMarginTTM = technology.OperatingMarginTTM != undefined ? technology.OperatingMarginTTM : null;
+        this.ReturnOnAssetsTTM = technology.ReturnOnAssetsTTM != undefined ? technology.ReturnOnAssetsTTM : null;
+        this.ReturnOnEquityTTM = technology .ReturnOnEquityTTM != undefined ? technology.ReturnOnEquityTTM : null;
+        this.RevenueTTM = technology.RevenueTTM != undefined ? technology.RevenueTTM : null;
+        this.GrossProfitTTM = technology.GrossProfitTTM != undefined ? technology.GrossProfitTTM : null;
+        this.DilutedEPSTTM = technology.DilutedEPSTTM != undefined ? technology.DilutedEPSTTM  : null;
+        this.QuarterlyEarningsGrowthYOY = technology.QuarterlyEarningsGrowthYOY != undefined ? technology.QuarterlyEarningsGrowthYOY : null;
+        this.QuarterlyRevenueGrowthYOY = technology.QuarterlyRevenueGrowthYOY != undefined ? technology.QuarterlyRevenueGrowthYOY : null;
+        this.AnalystTargetPrice = technology.AnalystTargetPrice != undefined ? technology.AnalystTargetPrice : null;
+        this.AnalystRatingStrongBuy = technology.AnalystRatingStrongBuy != undefined ? technology.AnalystRatingStrongBuy : null;
+        this.AnalystRatingBuy = technology.AnalystRatingBuy != undefined ? technology.AnalystRatingBuy : null;
+        this.AnalystRatingHold = technology.AnalystRatingHold != undefined ? technology.AnalystRatingHold : null;
+        this.AnalystRatingSell = technology.AnalystRatingSell != undefined ? technology.AnalystRatingSell : null;
+        this.AnalystRatingStrongSell = technology.AnalystRatingStrongSell != undefined ? technology.AnalystRatingStrongSell : null;
+        this.TrailingPE = technology.TrailingPE != undefined ? technology.TrailingPE : null;
+        this.ForwardPE = technology.ForwardPE != undefined ? technology.ForwardPE : null;
+        this.PriceToSalesRatioTTM = technology.PriceToSalesRatioTTM != undefined ? technology.PriceToSalesRatioTTM : null;
+        this.PriceToBookRatio = technology.PriceToBookRatio != undefined ? technology.PriceToBookRatio : null;
+        this.EVToRevenue = technology.EVToRevenue != undefined ? technology.EVToRevenue : null;
+        this.EVToEBITDA = technology.EVToEBITDA != undefined ? technology.EVToEBITDA : null;
+        this.Beta = technology.Beta != undefined ? technology.Beta : null;
+        this.Week52High = technology['52WeekHigh'] != undefined ? technology['52WeekHigh'] : null;
+        this.Week52Low = technology['52WeekLow'] != undefined ? technology['52WeekLow'] : null;
+        this.Day50MovingAverage = technology['50DayMovingAverage'] != undefined ? technology['50DayMovingAverage'] : null;
+        this.Day200MovingAverage = technology['200DayMovingAverage'] != undefined ? technology['200DayMovingAverage'] : null;
+        this.SharesOutstanding = technology.SharesOutstanding != undefined ? technology.SharesOutstanding : null;
+        this.DividendDate = technology.DividendDate ? technology.DividendDate.split('T')[0] : '';
+  this.ExDividendDate = technology.ExDividendDate ? technology.ExDividendDate.split('T')[0] : '';
       },
       
-      async updateRetail () {
-    const retailId = this.retail.id;
-    console.log('User  object:', this.retail);
-    console.log('retail  ID:', retailId);
+      async updateTechnology () {
+    const technologylId = this.technology.id;
+    console.log('tech  object:', this.technology);
+    console.log('tech  ID:', technologylId);
   
-    if (!retailId) {
-      console.error('Retail  ID is undefined');
+    if (!technologylId) {
+      console.error('tech  ID is undefined');
       return;
     }
   
-    console.log('Updating user with ID:', retailId);
+    console.log('Updating tech with ID:', technologylId);
   
-    const retailData = {
+    const technologyData = {
   Symbol: (this.Symbol || '').trim(),
   AssetType: (this.AssetType || '').trim(),
   Name: (this.Name || '').trim(),
@@ -722,9 +722,9 @@
   ExDividendDate: (this.ExDividendDate || '').trim()
 };
   
-    console.log('retail  data to be sent:', retailData);
+    console.log('tech  data to be sent:', technologyData);
     try {
-      await this.updateRetail({ id: retailId, retailData });
+      await this.updateTechnology({ id: technologylId, technologyData });
       this.$emit('close'); // Close the modal after updating
     } catch (error) {
       console.error('Update error:', error);
@@ -735,7 +735,7 @@
   </script>
   
   <style scoped>
-  .admin-retail-modal {
+  .admin-technology-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -752,7 +752,7 @@
     text-align: center;
   }
   
-  .admin-retail-modal-content {
+  .admin-technology-modal-content {
     background: #4169E1;
     padding: 20px;
     border-radius: 8px;
