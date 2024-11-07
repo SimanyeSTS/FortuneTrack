@@ -183,152 +183,152 @@ export default {
 
 <style scoped>
 .admin-modal {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.1)!important;
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1)!important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 h1 {
-text-align: center;
+  text-align: center;
 }
 
 .admin-modal-content {
-background: #4169E1;
-padding: 20px;
-border-radius: 8px;
-width: 50%;
-height: 50%;
-position: relative;
-display: flex;
-flex-direction: column;
-max-width: 800px;
-max-height: 600px;
-min-height: 400px;
+  background: #4169E1;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  max-height: 600px;
+  min-height: 400px;
 }
 
 .modal-scroll-container {
-overflow-y: auto;
-margin-right: -10px;
-padding-right: 10px;
-flex-grow: 1;
+  overflow-y: auto;
+  margin-right: -10px;
+  padding-right: 10px;
+  flex-grow: 1;
 }
 
 .modal-scroll-container::-webkit-scrollbar {
-width: 8px;
+  width: 8px;
 }
 
 .modal-scroll-container::-webkit-scrollbar-track {
-background: #2d5bd7;
-border-radius: 4px;
+  background: #2d5bd7;
+  border-radius: 4px;
 }
 
 .modal-scroll-container::-webkit-scrollbar-thumb {
-background: #1a3c9e;
-border-radius: 4px;
+  background: #1a3c9e;
+  border-radius: 4px;
 }
 
 .form-group {
-margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .form-group label {
-display: block;
-margin-bottom: 5px;
-color: rgb(45, 43, 43);
-text-align: center;
-font-family: 'Montserrat', sans-serif;
-font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+  color: rgb(45, 43, 43);
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 }
 
 .form-group input,
-.form-group select {
-width: 100%;
-padding: 10px;
-border: 1px solid #ccc;
-border-radius: 4px;
-background-color: white;
+.form-group select, .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
 }
 
 .form-group input:disabled,
 .form-group select:disabled {
-background-color: #f5f5f5;
-cursor: not-allowed;
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 .button-group {
-display: flex;
-justify-content: center;
-margin-top: 20px;
-margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .save-button {
-background-color: white;
-color: #4169E1;
-border: 2px solid #002080;
-padding: 10px 20px;
-font-family: 'Montserrat', sans-serif;
-font-weight: 900;
-cursor: pointer;
-border-radius: 4px;
-transition: background-color 0.3s;
+  background-color: white;
+  color: #4169E1;
+  border: 2px solid #002080;
+  padding: 10px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .save-button:hover {
-background-color: #1249ef;
-color: black;
-border: solid black;
+  background-color: #1249ef;
+  color: black;
+  border: solid black;
 }
 
 .save-button:disabled {
-opacity: 0.7;
-cursor: not-allowed;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .close-button {
-background: none;
-border: none;
-color: #000;
-font-size: 24px;
-cursor: pointer;
-margin-top: 10px;
-transition: color 0.3s;
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: color 0.3s;
 }
 
 .close-button:hover {
-color: black;
-background: #0f3dc6;
-border: solid black;
+  color: black;
+  background: #0f3dc6;
+  border: solid black;
 }
 
 .close-button:disabled {
-opacity: 0.7;
-cursor: not-allowed;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 h1 {
-margin: 0 0 20px 0;
-font-family: 'Montserrat', sans-serif;
-font-weight: 900;
-color: white;
-font-size: 24px;
+  margin: 0 0 20px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: 24px;
 }
 
 /* Media Queries */
 @media (max-width: 450px) {
-.admin-modal-content {
+/* .admin-modal-content {
   width: 90vw; 
   height: auto;
   padding: 15px;
   max-height: 85vh;
-}
+} */
 
 .form-group input,
 .form-group select {
@@ -341,9 +341,9 @@ h1 {
 }
 
 @media (max-width: 300px) {
-.admin-modal-content {
+/* .admin-modal-content {
   padding: 10px;
-}
+} */
 
 .form-group {
   margin-bottom: 10px;

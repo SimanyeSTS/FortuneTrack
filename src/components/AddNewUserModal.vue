@@ -325,12 +325,12 @@ h1 {
 
 /* Media Queries */
 @media (max-width: 450px) {
-  .admin-modal-content {
+  /* .admin-modal-content {
     width: 90vw; 
     height: auto;
     padding: 15px;
     max-height: 85vh;
-  }
+  } */
 
   .form-group input,
   .form-group select {
@@ -343,9 +343,9 @@ h1 {
 }
 
 @media (max-width: 300px) {
-  .admin-modal-content {
+  /* .admin-modal-content {
     padding: 10px;
-  }
+  } */
 
   .form-group {
     margin-bottom: 10px;
