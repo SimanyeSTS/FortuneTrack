@@ -2,6 +2,8 @@ import axios from 'axios'
 import Retail from '../model/Retail.js'
 
 const apikey = 'UZKLRJ8NRMMH51PQ'
+const apikey2 = 'QDH8TZ6T7U3FFARZ'
+const apikey3 = 'OFXEEMU7MC6ZSWYL'
 const baseUrl = 'https://www.alphavantage.co/query'
 
 const getRetailData = async (req, res) => {
@@ -67,6 +69,146 @@ const getRetailData = async (req, res) => {
     }
 
     await Retail.saveRetailData(retailData)
+
+    res.json(data)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching retail data' })
+  }
+}
+
+const getRetailData2 = async (req, res) => {
+  try {
+    const symbol = 'WMT'
+    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
+    const response = await axios.get(url)
+    const data = response.data
+
+    const retailData2 = {
+      Symbol: data.Symbol,
+      AssetType: data.AssetType,
+      Name: data.Name,
+      Description: data.Description,
+      CIK: data.CIK,
+      Exchange: data.Exchange,
+      Currency: data.Currency,
+      Country: data.Country,
+      Sector: data.Sector,
+      Industry: data.Industry,
+      Address: data.Address,
+      OfficialSite: data.OfficialSite,
+      FiscalYearEnd: data.FiscalYearEnd,
+      LatestQuarter: data.LatestQuarter,
+      MarketCapitalization: parseFloat(data.MarketCapitalization),
+      EBITDA: parseFloat(data.EBITDA),
+      PERatio: parseFloat(data.PERatio),
+      PEGRatio: parseFloat(data.PEGRatio),
+      BookValue: parseFloat(data.BookValue),
+      DividendPerShare: parseFloat(data.DividendPerShare),
+      DividendYield: parseFloat(data.DividendYield),
+      EPS: parseFloat(data.EPS),
+      RevenuePerShareTTM: parseFloat(data.RevenuePerShareTTM),
+      ProfitMargin: parseFloat(data.ProfitMargin),
+      OperatingMarginTTM: parseFloat(data.OperatingMarginTTM),
+      ReturnOnAssetsTTM: parseFloat(data.ReturnOnAssetsTTM),
+      ReturnOnEquityTTM: parseFloat(data.ReturnOnEquityTTM),
+      RevenueTTM: parseFloat(data.RevenueTTM),
+      GrossProfitTTM: parseFloat(data.GrossProfitTTM),
+      DilutedEPSTTM: parseFloat(data.DilutedEPSTTM),
+      QuarterlyEarningsGrowthYOY: parseFloat(data.QuarterlyEarningsGrowthYOY),
+      QuarterlyRevenueGrowthYOY: parseFloat(data.QuarterlyRevenueGrowthYOY),
+      AnalystTargetPrice: parseFloat(data.AnalystTargetPrice),
+      AnalystRatingStrongBuy: parseInt(data.AnalystRatingStrongBuy),
+      AnalystRatingBuy: parseInt(data.AnalystRatingBuy),
+      AnalystRatingHold: parseInt(data.AnalystRatingHold),
+      AnalystRatingSell: parseInt(data.AnalystRatingSell),
+      AnalystRatingStrongSell: parseInt(data.AnalystRatingStrongSell),
+      TrailingPE: parseFloat(data.TrailingPE),
+      ForwardPE: parseFloat(data.ForwardPE),
+      PriceToSalesRatioTTM: parseFloat(data.PriceToSalesRatioTTM),
+      PriceToBookRatio: parseFloat(data.PriceToBookRatio),
+      EVToRevenue: parseFloat(data.EVToRevenue),
+      EVToEBITDA: parseFloat(data.EVToEBITDA),
+      Beta: parseFloat(data.Beta),
+      Week52High: parseFloat(data['52WeekHigh']),
+      Week52Low: parseFloat(data['52WeekLow']),
+      Day50MovingAverage: parseFloat(data['50DayMovingAverage']),
+      Day200MovingAverage: parseFloat(data['200DayMovingAverage']),
+      SharesOutstanding: parseInt(data.SharesOutstanding),
+      DividendDate: data.DividendDate,
+      ExDividendDate: data.ExDividendDate,
+    }
+
+    await Retail.saveRetailData(retailData2)
+
+    res.json(data)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching retail data' })
+  }
+}
+
+const getRetailData3 = async (req, res) => {
+  try {
+    const symbol = 'TGT'
+    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
+    const response = await axios.get(url)
+    const data = response.data
+
+    const retailData3 = {
+      Symbol: data.Symbol,
+      AssetType: data.AssetType,
+      Name: data.Name,
+      Description: data.Description,
+      CIK: data.CIK,
+      Exchange: data.Exchange,
+      Currency: data.Currency,
+      Country: data.Country,
+      Sector: data.Sector,
+      Industry: data.Industry,
+      Address: data.Address,
+      OfficialSite: data.OfficialSite,
+      FiscalYearEnd: data.FiscalYearEnd,
+      LatestQuarter: data.LatestQuarter,
+      MarketCapitalization: parseFloat(data.MarketCapitalization),
+      EBITDA: parseFloat(data.EBITDA),
+      PERatio: parseFloat(data.PERatio),
+      PEGRatio: parseFloat(data.PEGRatio),
+      BookValue: parseFloat(data.BookValue),
+      DividendPerShare: parseFloat(data.DividendPerShare),
+      DividendYield: parseFloat(data.DividendYield),
+      EPS: parseFloat(data.EPS),
+      RevenuePerShareTTM: parseFloat(data.RevenuePerShareTTM),
+      ProfitMargin: parseFloat(data.ProfitMargin),
+      OperatingMarginTTM: parseFloat(data.OperatingMarginTTM),
+      ReturnOnAssetsTTM: parseFloat(data.ReturnOnAssetsTTM),
+      ReturnOnEquityTTM: parseFloat(data.ReturnOnEquityTTM),
+      RevenueTTM: parseFloat(data.RevenueTTM),
+      GrossProfitTTM: parseFloat(data.GrossProfitTTM),
+      DilutedEPSTTM: parseFloat(data.DilutedEPSTTM),
+      QuarterlyEarningsGrowthYOY: parseFloat(data.QuarterlyEarningsGrowthYOY),
+      QuarterlyRevenueGrowthYOY: parseFloat(data.QuarterlyRevenueGrowthYOY),
+      AnalystTargetPrice: parseFloat(data.AnalystTargetPrice),
+      AnalystRatingStrongBuy: parseInt(data.AnalystRatingStrongBuy),
+      AnalystRatingBuy: parseInt(data.AnalystRatingBuy),
+      AnalystRatingHold: parseInt(data.AnalystRatingHold),
+      AnalystRatingSell: parseInt(data.AnalystRatingSell),
+      AnalystRatingStrongSell: parseInt(data.AnalystRatingStrongSell),
+      TrailingPE: parseFloat(data.TrailingPE),
+      ForwardPE: parseFloat(data.ForwardPE),
+      PriceToSalesRatioTTM: parseFloat(data.PriceToSalesRatioTTM),
+      PriceToBookRatio: parseFloat(data.PriceToBookRatio),
+      EVToRevenue: parseFloat(data.EVToRevenue),
+      EVToEBITDA: parseFloat(data.EVToEBITDA),
+      Beta: parseFloat(data.Beta),
+      Week52High: parseFloat(data['52WeekHigh']),
+      Week52Low: parseFloat(data['52WeekLow']),
+      Day50MovingAverage: parseFloat(data['50DayMovingAverage']),
+      Day200MovingAverage: parseFloat(data['200DayMovingAverage']),
+      SharesOutstanding: parseInt(data.SharesOutstanding),
+      DividendDate: data.DividendDate,
+      ExDividendDate: data.ExDividendDate,
+    }
+
+    await Retail.saveRetailData(retailData3)
 
     res.json(data)
   } catch (error) {
@@ -154,6 +296,8 @@ const addRetailData = async (req, res) => {
 
 export default {
   getRetailData,
+  getRetailData2,
+  getRetailData3,
   getRetailDataById,
   getAllRetailData,
   patchRetailData,

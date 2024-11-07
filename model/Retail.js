@@ -3,6 +3,8 @@ import axios from 'axios'
 import cron from 'node-cron'
 
 const apikey = 'UZKLRJ8NRMMH51PQ'
+const apikey2 = 'QDH8TZ6T7U3FFARZ'
+const apikey3 = 'OFXEEMU7MC6ZSWYL'
 const baseUrl = 'https://www.alphavantage.co/query'
 
 class Retail {
@@ -113,6 +115,32 @@ class Retail {
       const data = response.data
 
       await Retail.patchRetailData(1, data)
+    } catch (error) {
+      throw new Error(`Failed to update retail data: ${error.message}`)
+    }
+  }
+
+  static async updateRetailData2() {
+    try {
+      const symbol = 'WMT'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Retail.patchRetailData(2, data)
+    } catch (error) {
+      throw new Error(`Failed to update retail data: ${error.message}`)
+    }
+  }
+
+  static async updateRetailData3() {
+    try {
+      const symbol = 'TGT'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Retail.patchRetailData(3, data)
     } catch (error) {
       throw new Error(`Failed to update retail data: ${error.message}`)
     }

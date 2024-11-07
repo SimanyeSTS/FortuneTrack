@@ -3,6 +3,7 @@ import axios from 'axios'
 import cron from 'node-cron'
 
 const apikey = 'R4015USIUYJ56RBE'
+const apikey2 = 'CD9K8NRWJVO13Q70'
 const baseUrl = 'https://www.alphavantage.co/query'
 
 class Technology {
@@ -111,6 +112,29 @@ class Technology {
       }
   
       await Technology.patchTechnologyData(1, data);
+    } catch (error) {
+      throw new Error(`Failed to update technology data: ${error.message}`);
+    }
+  }
+
+  static async updateTechnologyData2() {
+    try {
+      const symbol = 'CSCO';
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`;
+      const response = await axios.get(url);
+      const data = response.data;
+  
+      // Convert 'None' strings and '-' to actual null values
+      for (const key in data) {
+        if (data[key] === 'None' || data[key] === '-') {
+          data[key] = null; // Set to null for invalid decimal values
+        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
+          // Convert string numbers to actual numbers
+          data[key] = parseFloat(data[key]);
+        }
+      }
+  
+      await Technology.patchTechnologyData(2, data);
     } catch (error) {
       throw new Error(`Failed to update technology data: ${error.message}`);
     }

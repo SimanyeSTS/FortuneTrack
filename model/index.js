@@ -13,6 +13,8 @@ const router = express.Router()
 
 // Retail routes
 router.get('/retail', retailController.getRetailData) // fetching from API only
+router.get('/retail-2', retailController.getRetailData2)
+router.get('/retail-3', retailController.getRetailData3)
 router.get('/retail/:id', retailController.getRetailDataById)
 router.get('/retail-data', retailController.getAllRetailData)
 router.patch('/retail/:id', retailController.patchRetailData)
@@ -22,6 +24,7 @@ router.get('/retail/:Symbol', retailController.getRetailDataBySymbol)
 
 // Technology routes
 router.get('/technology', technologyController.getTechnologyData) // fetching from API only
+router.get('/technology-2', technologyController.getTechnologyData2)
 router.get('/technology/:id', technologyController.getTechnologyDataById)
 router.get('/technology-data', technologyController.getAllTechnologyData)
 router.patch('/technology/:id', technologyController.patchTechnologyData)
