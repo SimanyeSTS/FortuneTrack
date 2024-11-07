@@ -1,9 +1,9 @@
 <template>
   <div class="admin-modal">
     <div class="admin-modal-content">
-      <h1>Edit Your Information</h1>
+      <h1>A little admin touch is never wrong!</h1>
       <div class="modal-scroll-container">
-        <form @submit.prevent="updateUser ">
+        <form @submit.prevent="updateUser">
           <div class="form-group">
             <label for="firstName">First Name:</label>
             <input 
@@ -126,8 +126,8 @@ export default {
   watch: {
     user: {
       handler(newUser ) {
-        if (newUser ) {
-          this.populateForm(newUser );
+        if (newUser) {
+          this.populateForm(newUser);
         }
       },
       immediate: true

@@ -47,7 +47,7 @@
               <td>{{ formatDate(user.createdAt) }}</td>
               <td>{{ formatDate(user.updatedAt) }}</td>
               <td>
-                <button @click="showEditModal('user', user)" class="edit-btn"><i class="bi bi-pencil"></i></button>
+                <button @click="showEditUserModal('user', user)" class="edit-btn"><i class="bi bi-pencil"></i></button>
                 <button @click="confirmDelete('user', user.UserID)" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
               </td>
             </tr>
@@ -72,13 +72,11 @@
   />
   <EditUserModal 
       v-if="isEditUserModalVisible"
-      :user="selectedUser "
+      :user="selectedUser"
       :isLoading="loading"
       @close="closeEditUserModal"
     />
 
-    <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
-    <!-- Stock Tables (Retail, Technology, F&B, Healthcare) -->
   <template v-for="type in stockTypes" :key="type.name">
     <div class="table-section">
       <div class="section-header">
@@ -199,8 +197,8 @@
                 <td>{{ item.Beta }}</td>
                 <td>{{ formatCurrency(item.Week52High) }}</td>
                 <td>{{ formatCurrency(item.Week52Low) }}</td>
-                <td>{{ item.Day50MovingAverage }}</td>
-                <td>{{ item.Day200MovingAverage }}</td>
+                <td>{{ item['50DayMovingAverage'] }}</td>
+                <td>{{ item['200DayMovingAverage'] }}</td>
                 <td>{{ item.SharesOutstanding }}</td>
                 <td>{{ item.DividendDate }}</td>
                 <td>{{ item.ExDividendDate }}</td>
@@ -244,6 +242,12 @@
   :isLoading="loading"
   @close="closeAddHealthcareModal"
 />
+<EditRetailModal 
+      v-if="isEditRetailModalVisible"
+      :retail="selectedRetail"
+      :isLoading="loading"
+      @close="closeEditRetailModal"
+    />
 </template>
 
 <script>
@@ -258,6 +262,7 @@ import AddNewTechnologyModal from '@/components/AddNewTechnologyModal.vue'
 import AddNewFoodAndBeveragesModal from '@/components/AddNewFoodAndBeveragesModal.vue'
 import AddNewHealthcareModal from '@/components/AddNewHealthcareModal.vue'
 import EditUserModal from '@/components/EditUserModal.vue'
+import EditRetailModal from '@/components/EditRetailModal.vue'
 
 library.add(faArrowLeft, faArrowRight);
 
@@ -269,7 +274,8 @@ export default {
     AddNewTechnologyModal,
     AddNewFoodAndBeveragesModal,
     AddNewHealthcareModal,
-    EditUserModal
+    EditUserModal,
+    EditRetailModal
   },
   name: 'AdminDashboardView',
   data() {
@@ -280,6 +286,7 @@ export default {
       isAddFoodAndBeveragesModalVisible: false,
       isAddHealthcareModalVisible: false,
       isEditUserModalVisible: false,
+      isEditRetailModalVisible: false,
       selectedUser: null,
       showModal: false,
       isEditing: false,
@@ -355,7 +362,7 @@ export default {
     closeAddUserModal() {
       this.isAddUserModalVisible = false;
     },
-    showEditModal(type, user) {
+    showEditUserModal(type, user) {
       this.selectedUser  = user; // Set the selected user
       this.isEditUserModalVisible = true; // Show the modal
     },
@@ -394,6 +401,27 @@ export default {
   closeAddRetailModal() {
     this.isAddRetailModalVisible = false; // Close the retail modal
   },
+
+  showEditModal(type, retail) {
+      switch(type) {
+        case 'retail':
+          this.selectedRetail = retail;
+          this.isEditRetailModalVisible = true;
+          break;
+        case 'technology':
+          this.iEditTechnologyModalVisible = true;
+          break;
+        case 'foodAndBeverages':
+          this.isEditFoodAndBeveragesModalVisible = true;
+          break;
+        case 'healthcare':
+          this.isEditHealthcareModalVisible = true;
+          break;
+      }
+    },
+    closeEditRetailModal() {
+      this.isEditRetailModalVisible = false;
+    },
 
     async confirmDelete(type, id) {
       const result = await SweetAlert.fire({
