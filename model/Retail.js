@@ -122,7 +122,7 @@ class Retail {
 
   static async updateRetailData2() {
     try {
-      const symbol = 'WMT'
+      const symbol = 'BABA'
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
       const response = await axios.get(url)
       const data = response.data
@@ -135,7 +135,7 @@ class Retail {
 
   static async updateRetailData3() {
     try {
-      const symbol = 'TGT'
+      const symbol = 'IDEXY'
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
       const response = await axios.get(url)
       const data = response.data

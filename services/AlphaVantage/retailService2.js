@@ -5,7 +5,7 @@ const apikey = 'QDH8TZ6T7U3FFARZ';
 const baseUrl = 'https://www.alphavantage.co/query';
 
 const getRetailData2 = async () => {
-  const symbol = 'WMT'
+  const symbol = 'BABA'
   const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
 
   try {

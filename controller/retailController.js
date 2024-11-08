@@ -78,10 +78,14 @@ const getRetailData = async (req, res) => {
 
 const getRetailData2 = async (req, res) => {
   try {
-    const symbol = 'WMT'
-    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
-    const response = await axios.get(url)
-    const data = response.data
+    const symbol = 'BABA';
+    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`;
+    const response = await axios.get(url);
+    const data = response.data;
+
+    if (!data || Object.keys(data).length === 0) {
+      throw new Error(`No data returned for symbol ${symbol} with API key ${apikey2}`);
+    }
 
     const retailData2 = {
       Symbol: data.Symbol,
@@ -138,20 +142,24 @@ const getRetailData2 = async (req, res) => {
       ExDividendDate: data.ExDividendDate,
     }
 
-    await Retail.saveRetailData(retailData2)
-
-    res.json(data)
+    await Retail.saveRetailData(retailData2);
+    res.json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching retail data' })
+    console.error(error);  // Logs the full error for debugging
+    res.status(500).json({ message: 'Error fetching retail data-2' });
   }
-}
+};
 
 const getRetailData3 = async (req, res) => {
   try {
-    const symbol = 'TGT'
+    const symbol = 'ADDYY'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
     const response = await axios.get(url)
     const data = response.data
+
+    if (!data || Object.keys(data).length === 0) {
+      throw new Error(`No data returned for symbol ${symbol} with API key ${apikey3}`);
+    }
 
     const retailData3 = {
       Symbol: data.Symbol,
@@ -212,7 +220,8 @@ const getRetailData3 = async (req, res) => {
 
     res.json(data)
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching retail data' })
+    console.error(error);  // Logs the full error for debugging
+    res.status(500).json({ message: 'Error fetching retail data-3' })
   }
 }
 
