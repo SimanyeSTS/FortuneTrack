@@ -5,7 +5,7 @@ const apikey = 'CD9K8NRWJVO13Q70';
 const baseUrl = 'https://www.alphavantage.co/query';
 
 const getTechnologyData2 = async () => {
-  const symbol = 'CSCO'
+  const symbol = 'SIEGY'
   const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
 
   try {

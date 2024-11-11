@@ -77,7 +77,7 @@ const getTechnologyData = async (req, res) => {
 
 const getTechnologyData2 = async (req, res) => {
   try {
-    const symbol = 'CSCO'
+    const symbol = 'SIEGY'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
     const response = await axios.get(url)
     const data = response.data

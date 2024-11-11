@@ -5,7 +5,7 @@ const apikey = 'OFXEEMU7MC6ZSWYL';
 const baseUrl = 'https://www.alphavantage.co/query';
 
 const getRetailData3 = async () => {
-  const symbol = 'IDEXY'
+  const symbol = 'SONY'
   const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
 
   try {
