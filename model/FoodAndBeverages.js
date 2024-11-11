@@ -3,6 +3,7 @@ import axios from "axios"
 import cron from 'node-cron'
 import Retail from "./Retail.js"
 
+//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'K9HED7RC8QLPJTT0'
 const baseUrl = 'https://www.alphavantage.co/query'
 

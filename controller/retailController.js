@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Retail from '../model/Retail.js'
 
+//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'UZKLRJ8NRMMH51PQ'
 const apikey2 = 'QDH8TZ6T7U3FFARZ'
 const apikey3 = 'OFXEEMU7MC6ZSWYL'

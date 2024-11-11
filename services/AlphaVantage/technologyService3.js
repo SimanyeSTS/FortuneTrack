@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { connection as db } from '../../config';
 
+//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore) 
 const apikey = 'CD9K8NRWJVO13Q70';
 const baseUrl = 'https://www.alphavantage.co/query';
 
 const getTechnologyData2 = async () => {
-  const symbol = 'CSCO'
+  const symbol = ''
   const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
 
   try {

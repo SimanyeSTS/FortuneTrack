@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { connection as db } from '../../config';
 
+//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'R4015USIUYJ56RBE';
 const baseUrl = 'https://www.alphavantage.co/query';
 

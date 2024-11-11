@@ -2,6 +2,7 @@ import { connection as db } from "../config/index.js"
 import axios from 'axios'
 import cron from 'node-cron'
 
+//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'UZKLRJ8NRMMH51PQ'
 const apikey2 = 'QDH8TZ6T7U3FFARZ'
 const apikey3 = 'OFXEEMU7MC6ZSWYL'
@@ -167,5 +168,7 @@ class Retail {
 }
 
 cron.schedule('0 */2 * * *', Retail.updateRetailData)
+cron.schedule('0 */2 * * *', Retail.updateRetailData2)
+cron.schedule('0 */2 * * *', Retail.updateRetailData3)
 
 export default Retail

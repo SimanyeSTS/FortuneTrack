@@ -25,6 +25,7 @@ router.get('/retail/:Symbol', retailController.getRetailDataBySymbol)
 // Technology routes
 router.get('/technology', technologyController.getTechnologyData) // fetching from API only
 router.get('/technology-2', technologyController.getTechnologyData2)
+router.get('/technology-3', technologyController.getTechnologyData3)
 router.get('/technology/:id', technologyController.getTechnologyDataById)
 router.get('/technology-data', technologyController.getAllTechnologyData)
 router.patch('/technology/:id', technologyController.patchTechnologyData)
