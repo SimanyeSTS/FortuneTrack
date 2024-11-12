@@ -7,8 +7,12 @@ const connection = createPool({
   password: process.env.PW_DB,
   database: process.env.DB_NAME,
   multipleStatements: true,
-  connectionLimit: 5,
-  namedPlaceholders: true
+  connectionLimit: 75,
+  namedPlaceholders: true,
+  acquireTimeout: 30000,
+  idleTimeout: 60000,
+  waitForConnections: true,
+  queueLimit: 0,
 })
 
 connection.on('error', (err) => {

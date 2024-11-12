@@ -1,7 +1,4 @@
 import { Users } from "./Users.js";
-import { Prediction } from "./Predictions.js";
-import { ForecastAffector } from "./ForecastAffectors.js";
-import { ForecastContributor } from "./ForecastContributors.js";
 import express from 'express';
 import retailController from '../controller/retailController.js';
 import technologyController from '../controller/technologyController.js';
@@ -46,6 +43,9 @@ router.post('/food-and-beverages-data', foodAndBeveragesController.addFoodAndBev
 
 // Healthcare routes
 router.get('/healthcare', healthcareController.getHealthcareData) // fetching from API only
+router.get('/healthcare-2', healthcareController.getHealthcareData2)
+router.get('/healthcare-3', healthcareController.getHealthcareData3)
+
 router.get('/healthcare/:id', healthcareController.getHealthcareDataById)
 router.get('/healthcare-data', healthcareController.getAllHealthcareData)
 router.patch('/healthcare/:id', healthcareController.patchHealthcareData)
@@ -53,15 +53,9 @@ router.delete('/healthcare/:id', healthcareController.deleteHealthcareData)
 router.post('/healthcare-data', healthcareController.addHealthcareData)
 
 const users = new Users()
-const prediction = new Prediction()
-const forecastAffector = new ForecastAffector()
-const forecastContributor = new ForecastContributor()
 
 export { 
-  users, 
-  prediction, 
-  forecastAffector, 
-  forecastContributor, 
+  users,
   router,
   allSectorsRouter
 }

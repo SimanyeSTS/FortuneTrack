@@ -2,11 +2,6 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { userRouter } from "./controller/UserController.js";
-import { equityRouter } from "./controller/equityController.js";
-import { forexRouter } from "./controller/forexController.js";
-import { cryptoRouter } from "./controller/cryptoController.js";
-import { commodityRouter } from "./controller/commodityController.js";
-import { predictionRouter } from "./controller/PredictionsController.js";
 import { router } from './model/index.js';
 import { allSectorsRouter } from './controller/allSectorsController.js';
 
@@ -29,17 +24,6 @@ app.use(express.static('./static'))
 
 app.use('/users', userRouter)
 app.use('/user', userRouter)
-
-app.use('/predictions', predictionRouter)
-app.use('/prediction', predictionRouter)
-
-app.use('/equity', equityRouter)
-
-app.use('/forex', forexRouter)
-
-app.use('/crypto', cryptoRouter)
-
-app.use('/commodity', commodityRouter)
 
 app.use('/from/api', router) //this is for fetching from api only
 app.use('/from/db', router) //this is for fetching from db only

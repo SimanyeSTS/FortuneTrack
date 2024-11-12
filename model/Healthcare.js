@@ -4,6 +4,9 @@ import cron from 'node-cron'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'PIJIS96UCXDW58KF'
+const apikey2 = '67DAX9WMDSD7ISLF'
+const apikey3 = 'JHJT0T1Q8BFTMHTX'
+
 const baseUrl = 'https://www.alphavantage.co/query'
 class Healthcare {
   static async getHealthcareData() {
@@ -105,6 +108,32 @@ class Healthcare {
     }
   }
 
+  static async updateHealthcareData2() {
+    try {
+      const symbol = 'NVS'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Healthcare.patchHealthcareData(2, data)
+    } catch (error) {
+      throw new Error(`Failed to update healthcare data: ${error.message}`)
+    }
+  }
+
+  static async updateHealthcareData3() {
+    try {
+      const symbol = 'AZN'
+      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
+      const response = await axios.get(url)
+      const data = response.data
+
+      await Healthcare.patchHealthcareData(3, data)
+    } catch (error) {
+      throw new Error(`Failed to update healthcare data: ${error.message}`)
+    }
+  }
+
   static async addHealthcareData(data) {
     try {
       if (!data) {
@@ -125,4 +154,7 @@ class Healthcare {
 }
 
 cron.schedule('0 */2 * * *', Healthcare.updateHealthcareData)
+cron.schedule('0 */2 * * *', Healthcare.updateHealthcareData2)
+cron.schedule('0 */2 * * *', Healthcare.updateHealthcareData3)
+
 export default Healthcare
