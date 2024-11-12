@@ -35,6 +35,9 @@ router.post('/technology-data', technologyController.addTechnologyData)
 
 // Food and Beverages routes
 router.get('/food-and-beverages', foodAndBeveragesController.getFoodAndBeveragesData) // fetching from API only
+router.get('/food-and-beverages-2', foodAndBeveragesController.getFoodAndBeveragesData2)
+router.get('/food-and-beverages-3', foodAndBeveragesController.getFoodAndBeveragesData3)
+
 router.get('/food-and-beverages/:id', foodAndBeveragesController.getFoodAndBeveragesDataById)
 router.get('/food-and-beverages-data', foodAndBeveragesController.getAllFoodAndBeveragesData)
 router.patch('/food-and-beverages/:id', foodAndBeveragesController.patchFoodAndBeveragesData)
