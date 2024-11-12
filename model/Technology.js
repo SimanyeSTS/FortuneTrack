@@ -121,7 +121,7 @@ class Technology {
 
   static async updateTechnologyData2() {
     try {
-      const symbol = 'SIEGY';
+      const symbol = 'ASML';
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`;
       const response = await axios.get(url);
       const data = response.data;
@@ -144,7 +144,7 @@ class Technology {
 
   static async updateTechnologyData3() {
     try {
-      const symbol = 'SSNLF';
+      const symbol = 'MELI';
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`;
       const response = await axios.get(url);
       const data = response.data;

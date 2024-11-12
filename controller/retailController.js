@@ -221,7 +221,6 @@ const getRetailData3 = async (req, res) => {
 
     res.json(data)
   } catch (error) {
-    console.error(error);  // Logs the full error for debugging
     res.status(500).json({ message: 'Error fetching retail data-3' })
   }
 }

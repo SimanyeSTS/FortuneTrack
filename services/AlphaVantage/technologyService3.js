@@ -5,15 +5,15 @@ import { connection as db } from '../../config';
 const apikey = 'CD9K8NRWJVO13Q70';
 const baseUrl = 'https://www.alphavantage.co/query';
 
-const getTechnologyData2 = async () => {
-  const symbol = ''
+const getTechnologyData3 = async () => {
+  const symbol = 'MELI'
   const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
 
   try {
     const response = await axios.get(url)
     const data = response.data
 
-    await saveTechnologyData2(data)
+    await saveTechnologyData3(data)
 
     return data
   } catch (error) {
@@ -21,7 +21,7 @@ const getTechnologyData2 = async () => {
   }
 }
 
-const saveTechnologyData2 = async (data) => {
+const saveTechnologyData3 = async (data) => {
   try {
     const query = `INSERT INTO Technology SET ?`
     await db.query(query, data)
@@ -30,4 +30,4 @@ const saveTechnologyData2 = async (data) => {
   }
 }
 
-export default getTechnologyData2
+export default getTechnologyData3
