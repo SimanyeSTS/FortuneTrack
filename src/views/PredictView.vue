@@ -436,33 +436,37 @@ export default defineComponent({
       store.dispatch('fetchHealthcare');
     });
 
-    const prepareChartData = (data) => ({
-      labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
-      datasets: [
-        {
-          label: data.Symbol,
-          data: [
-            parseFloat(data.QuarterlyEarningsGrowthYOY) * 100,
-            parseFloat(data.RevenueTTM) / 1e9,
-            parseFloat(data.AnalystTargetPrice),
-            parseFloat(data['52WeekHigh'])
-          ],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)'
-          ],
-          borderWidth: 1
-        }
-      ]
-    });
+    const prepareChartData = (data) => {
+  const Week52High = data['52WeekHigh'] !== null ? data['52WeekHigh'] : data['Week52High'];
+
+  return {
+    labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
+    datasets: [
+      {
+        label: data.Symbol,
+        data: [
+          parseFloat(data.QuarterlyEarningsGrowthYOY) * 100,
+          parseFloat(data.RevenueTTM) / 1e9,
+          parseFloat(data.AnalystTargetPrice),
+          parseFloat(Week52High) // Use the determined property here
+        ],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
+      }
+    ]
+  };
+};
 
     return {
       isLoading,

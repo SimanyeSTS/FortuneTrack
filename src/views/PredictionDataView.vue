@@ -163,22 +163,22 @@ export default defineComponent({
     });
 
     const prepareEfficiencyMetricsData = () => ({
-      labels: ['Beta', '50 Day Moving Average', '200 Day Moving Average'],
-      datasets: [{
-        label: 'Efficiency Metrics',
-        data: [
-          parseFloat(predictionData.value.Beta),
-          parseFloat(predictionData.value['50DayMovingAverage']),
-          parseFloat(predictionData.value['200DayMovingAverage'])
-        ],
-        backgroundColor: 'rgba(23, 162, 184, 0.2)',
-        borderColor: 'rgba(23, 162, 184, 0.8)',
-        pointBackgroundColor: 'rgba(23, 162, 184, 0.8)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(23, 162, 184, 0.8)'
-      }]
-    });
+  labels: ['Beta', '50 Day Moving Average', '200 Day Moving Average'],
+  datasets: [{
+    label: 'Efficiency Metrics',
+    data: [
+      parseFloat(predictionData.value.Beta),
+      parseFloat(predictionData.value['50DayMovingAverage'] ?? predictionData.value['Day50MovingAverage']),
+      parseFloat(predictionData.value['200DayMovingAverage'] ?? predictionData.value['Day200MovingAverage'])
+    ],
+    backgroundColor: 'rgba(23, 162, 184, 0.2)',
+    borderColor: 'rgba(23, 162, 184, 0.8)',
+    pointBackgroundColor: 'rgba(23, 162, 184, 0.8)',
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: 'rgba(23, 162, 184, 0.8)'
+  }]
+});
 
     const prepareValuationMetricsData = () => ({
       labels: ['P/E Ratio', 'PEG Ratio', 'Price to Sales Ratio TTM', 'Price to Book Ratio', 'EV to Revenue', 'EV to EBITDA'],
@@ -276,9 +276,9 @@ export default defineComponent({
 const prepareAnalystTargetPriceData = () => {
   if (!predictionData.value) return null;
 
-  const currentPrice = parseFloat(predictionData.value['52WeekLow'] || 0);
+  const currentPrice = parseFloat(predictionData.value['52WeekLow'] || predictionData.value['Week52Low'] || 0);
   const targetPrice = parseFloat(predictionData.value.AnalystTargetPrice || 0);
-  const highPrice = parseFloat(predictionData.value['52WeekHigh'] || 0);
+  const highPrice = parseFloat(predictionData.value['52WeekHigh'] || predictionData.value['Week52High'] || 0);
 
   return {
     datasets: [{

@@ -144,6 +144,7 @@
                 <th>Dividend Date</th>
                 <th>Ex-Dividend Date</th>
                 <th>Created At</th>
+                <th>Updated At</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -203,6 +204,7 @@
                 <td>{{ item.DividendDate }}</td>
                 <td>{{ item.ExDividendDate }}</td>
                 <td>{{ item.CreatedAt }}</td>
+                <td>{{  item.updatedAt }}</td>
                 <td>
                   <button @click="showEditModal(type.name, item)" class="edit-btn"><i class="bi bi-pencil"></i></button>
                   <button @click="confirmDelete(type.name, item.id)" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
