@@ -78,6 +78,12 @@
         <td>-</td>
     </tr>
     <tr>
+        <td>POST</td>
+        <td>/user/logout</td>
+        <td>This endpoint is used to logout a registered user/admin out of FortuneTrack.</td>
+        <td>-</td>
+    </tr>
+    <tr>
         <td>PATCH/PUT</td>
         <td>/user/:id</td>
         <td>This endpoint is used to update a registered user's details according to their UserID from the database.</td>
@@ -111,7 +117,12 @@
         <td>/from/db/all-predictions</td>
         <td>This endpoint when used retrieves all the predictions from the database.</td>
         <td>-</td>
-
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/all-predictions/:symbol</td>
+        <td>This endpoint when used retrieves a predictions from the database based on it's symbol.</td>
+        <td>-</td>
     </tr>
     </tr>
 </table>
@@ -135,7 +146,18 @@
         <td>/from/api/retail</td>
         <td>This endpoint when used retrieves the default retail prediction from the AlphaVantage API and saves it to the database.</td>
         <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default retail prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
-
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/retail-2</td>
+        <td>This endpoint when used retrieves the default retail prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default retail prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/retail-3</td>
+        <td>This endpoint when used retrieves the default retail prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default retail prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -189,7 +211,18 @@
         <td>/from/api/technology</td>
         <td>This endpoint when used retrieves the default technology prediction from the AlphaVantage API and saves it to the database.</td>
         <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default technology prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
-
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/technology-2</td>
+        <td>This endpoint when used retrieves the default technology prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default technology prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/technology-3</td>
+        <td>This endpoint when used retrieves the default technology prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default technology prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -243,7 +276,18 @@
         <td>/from/api/food-and-beverages</td>
         <td>This endpoint when used retrieves the default food and beverage prediction from the AlphaVantage API and saves it to the database.</td>
         <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default food and beverage prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
-
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/food-and-beverages-2</td>
+        <td>This endpoint when used retrieves the default food and beverage prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default food and beverage prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/api/food-and-beverages-3</td>
+        <td>This endpoint when used retrieves the default food and beverage prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default food and beverage prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -297,7 +341,18 @@
         <td>/from/db/healthcare</td>
         <td>This endpoint when used retrieves the default healthcare prediction from the AlphaVantage API and saves it to the database.</td>
         <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default healthcare prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
-
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/healthcare-2</td>
+        <td>This endpoint when used retrieves the default healthcare prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default healthcare prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/from/db/healthcare-3</td>
+        <td>This endpoint when used retrieves the default healthcare prediction from the AlphaVantage API and saves it to the database.</td>
+        <td>Please note, running this endpoint is not recommended as it will result in the duplication of the default healthcare prediction. Cron Job has been setup to automatically update the prediction data as needed.</td>
     </tr>
     <tr>
         <td>GET</td>

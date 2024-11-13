@@ -136,7 +136,7 @@ class Retail {
 
   static async updateRetailData3() {
     try {
-      const symbol = 'IDEXY'
+      const symbol = 'UL'
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
       const response = await axios.get(url)
       const data = response.data
