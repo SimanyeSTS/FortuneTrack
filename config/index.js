@@ -9,8 +9,6 @@ const connection = createPool({
   multipleStatements: true,
   connectionLimit: 75,
   namedPlaceholders: true,
-  acquireTimeout: 30000,
-  idleTimeout: 60000,
   waitForConnections: true,
   queueLimit: 0,
 })

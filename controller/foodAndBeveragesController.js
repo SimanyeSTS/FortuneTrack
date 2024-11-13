@@ -186,7 +186,7 @@ const getFoodAndBeveragesData2 = async (req, res) => {
 const getFoodAndBeveragesData3 = async (req, res) => {
   try {
     const symbol = 'DEO'
-    const url = `${baseUrl}?function =OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
+    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
     const response = await axios.get(url)
     const data = response.data
 
