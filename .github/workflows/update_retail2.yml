@@ -1,0 +1,36 @@
+name: Update Retail Data-2
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+
+jobs:
+  update_retail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.0'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+        env:
+          HOST_DB: ${{ secrets.HOST_DB }}
+          PORT: ${{ secrets.PORT }}
+
+      - name: Run updateRetail2.js
+        run: node updateRetail2.js
+        env:
+          HOST_DB: ${{ secrets.HOST_DB }}
+          USER_DB: ${{ secrets.USER_DB }}
+          PW_DB: ${{ secrets.PW_DB }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          PORT: ${{ secrets.PORT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          RETAIL_KEY_2: ${{ secrets.RETAIL_KEY_2 }}
