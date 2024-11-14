@@ -1,158 +1,158 @@
-<template>
-  <div class="admin-modal">
-    <div class="admin-modal-content">
-      <h1>A little admin touch is never wrong!</h1>
-      <div class="modal-scroll-container">
-        <form @submit.prevent="updateUser">
-          <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <input 
-              type="text" 
-              id="firstName" 
-              v-model="firstName" 
-              required
-              :disabled="isLoading"
-            />
-          </div>
-          <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <input 
-              type="text" 
-              id="lastName" 
-              v-model="lastName" 
-              required
-              :disabled="isLoading"
-            />
-          </div>
-          <div class="form-group">
-            <label for="userAge">Age:</label>
-            <input 
-              type="number" 
-              id="userAge" 
-              v-model="userAge" 
-              required
-              :disabled="isLoading"
-            />
-          </div>
-          <div class="form-group">
-            <label for="gender">Gender:</label>
-            <select v-model="gender" id="gender" required :disabled="isLoading">
-              <option value="" disabled>Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="emailAdd">Email Address:</label>
-            <input 
-              type="email" 
-              id="emailAdd" 
-              v-model="emailAdd" 
-              required
-              :disabled="isLoading"
-            />
-          </div>
-          <div class="form-group">
-            <label for="userPass">Password:</label>
-            <input 
-              type="password" 
-              id="userPass" 
-              v-model="userPass" 
-              placeholder="Leave empty to keep current"
-              :disabled="isLoading"
-            />
-          </div>
-          <div class="form-group">
-            <label for="userProfile">Profile Picture URL:</label>
-            <input 
-              type="text" 
-              id="userProfile" 
-              v-model="userProfile" 
-              placeholder="Leave to use default"
-              :disabled="isLoading"
-            />
-          </div>
-          <div class="form-group">
-            <label for="userRole">Role:</label>
-            <select v-model="userRole" id="userRole" required :disabled="isLoading">
-              <option value="" disabled>Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="User ">User </option>
-            </select>
-          </div>
-          <div class="button-group">
-            <button 
-              type="submit" 
-              class="save-button"
-              :disabled="isLoading"
-            >
-              {{ isLoading ? 'Updating...' : 'Update User' }}
-            </button>
-          </div>
-        </form>
+  <template>
+    <div class="admin-modal">
+      <div class="admin-modal-content">
+        <h1>A little admin touch is never wrong!</h1>
+        <div class="modal-scroll-container">
+          <form @submit.prevent="updateUser">
+            <div class="form-group">
+              <label for="firstName">First Name:</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                v-model="firstName" 
+                required
+                :disabled="isLoading"
+              />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name:</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                v-model="lastName" 
+                required
+                :disabled="isLoading"
+              />
+            </div>
+            <div class="form-group">
+              <label for="userAge">Age:</label>
+              <input 
+                type="number" 
+                id="userAge" 
+                v-model="userAge" 
+                required
+                :disabled="isLoading"
+              />
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender:</label>
+              <select v-model="gender" id="gender" required :disabled="isLoading">
+                <option value="" disabled>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="emailAdd">Email Address:</label>
+              <input 
+                type="email" 
+                id="emailAdd" 
+                v-model="emailAdd" 
+                required
+                :disabled="isLoading"
+              />
+            </div>
+            <div class="form-group">
+              <label for="userPass">Password:</label>
+              <input 
+                type="password" 
+                id="userPass" 
+                v-model="userPass" 
+                placeholder="Leave empty to keep current"
+                :disabled="isLoading"
+              />
+            </div>
+            <div class="form-group">
+              <label for="userProfile">Profile Picture URL:</label>
+              <input 
+                type="text" 
+                id="userProfile" 
+                v-model="userProfile" 
+                placeholder="Leave to use default"
+                :disabled="isLoading"
+              />
+            </div>
+            <div class="form-group">
+              <label for="userRole">Role:</label>
+              <select v-model="userRole" id="userRole" required :disabled="isLoading">
+                <option value="" disabled>Select Role</option>
+                <option value="Admin">Admin</option>
+                <option value="User ">User </option>
+              </select>
+            </div>
+            <div class="button-group">
+              <button 
+                type="submit" 
+                class="save-button"
+                :disabled="isLoading"
+              >
+                {{ isLoading ? 'Updating...' : 'Update User' }}
+              </button>
+            </div>
+          </form>
+        </div>
+        <button 
+          class="close-button" 
+          @click="$emit('close')"
+          :disabled="isLoading"
+        >
+          &times;
+        </button>
       </div>
-      <button 
-        class="close-button" 
-        @click="$emit('close')"
-        :disabled="isLoading"
-      >
-        &times;
-      </button>
     </div>
-  </div>
-</template>
+  </template>
 
-<script>
-import { mapActions } from 'vuex';
+  <script>
+  import { mapActions } from 'vuex';
 
-export default {
-  props: {
-    user: Object,
-    isLoading: Boolean
-  },
-  data() {
-    return {
-      firstName: '',
-      lastName: '',
-      userAge: null,
-      gender: '',
-      emailAdd: '',
-      userPass: '',
-      userProfile: '',
-      userRole: ''
-    };
-  },
-  watch: {
-    user: {
-      handler(newUser ) {
-        if (newUser) {
-          this.populateForm(newUser);
-        }
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    ...mapActions(['updateUserProfile']),
-    
-    populateForm(user) {
-      this.firstName = user.firstName || '';
-      this.lastName = user.lastName || '';
-      this.userAge = user.userAge !== undefined ? user.userAge : null;
-      this.gender = user.gender || '';
-      this.emailAdd = user.emailAdd || '';
-      this.userProfile = user.userProfile || '';
-      this.userRole = user.userRole || '';
+  export default {
+    props: {
+      user: Object,
+      isLoading: Boolean
     },
-    async updateUser () {
+    data() {
+      return {
+        firstName: '',
+        lastName: '',
+        userAge: null,
+        gender: '',
+        emailAdd: '',
+        userPass: '',
+        userProfile: '',
+        userRole: ''
+      };
+    },
+    watch: {
+      user: {
+        handler(newUser ) {
+          if (newUser) {
+            this.populateForm(newUser);
+          }
+        },
+        immediate: true
+      }
+    },
+    methods: {
+      ...mapActions(['updateUserProfile']),
+      
+      populateForm(user) {
+        this.firstName = user.firstName || '';
+        this.lastName = user.lastName || '';
+        this.userAge = user.userAge !== undefined ? user.userAge : null;
+        this.gender = user.gender || '';
+        this.emailAdd = user.emailAdd || '';
+        this.userProfile = user.userProfile || '';
+        this.userRole = user.userRole || '';
+      },
+      async updateUser() {
   const userId = this.user.UserID; // Ensure you have the user ID
-  console.log('User  object:', this.user); // Log the user object to check its properties
-  console.log('User  ID:', userId); // Log the user ID to confirm it's defined
+  console.log('User object:', this.user); // Log the user object to check its properties
+  console.log('User ID:', userId); // Log the user ID to confirm it's defined
 
   if (!userId) {
-    console.error('User  ID is undefined');
-    return;
+    console.error('User ID is undefined');
+    return; // Exit if userId is undefined
   }
 
   console.log('Updating user with ID:', userId); // Log the user ID
@@ -163,198 +163,203 @@ export default {
     userAge: parseInt(this.userAge),
     gender: this.gender,
     emailAdd: this.emailAdd.toLowerCase().trim(),
-    userPass: this.userPass,
     userProfile: this.userProfile.trim() || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
     userRole: this.userRole.trim()
   };
 
-  console.log('User  data to be sent:', userData); // Log the user data
+  if (this.userPass) {
+    userData.userPass = this.userPass; // Only include password if it's provided
+  }
+
+  console.log('User data to be sent:', userData); // Log the user data
 
   try {
-    await this.updateUserProfile({ id: userId, userData });
+    // Ensure the userId is being passed correctly
+    await this.updateUserProfile({ userId, userData }); // Use userId here
     this.$emit('close'); // Close the modal after updating
   } catch (error) {
     console.error('Update error:', error);
   }
 }
+}
   }
-};
-</script>
 
-<style scoped>
-.admin-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.1)!important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+  </script>
 
-h1 {
-  text-align: center;
-}
+  <style scoped>
+  .admin-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1)!important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
 
-.admin-modal-content {
-  background: #4169E1;
-  padding: 20px;
-  border-radius: 8px;
-  width: 50%;
-  height: 50%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  max-width: 800px;
-  max-height: 600px;
-  min-height: 400px;
-}
+  h1 {
+    text-align: center;
+  }
 
-.modal-scroll-container {
-  overflow-y: auto;
-  margin-right: -10px;
-  padding-right: 10px;
-  flex-grow: 1;
-}
+  .admin-modal-content {
+    background: #4169E1;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    height: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    max-height: 600px;
+    min-height: 400px;
+  }
 
-.modal-scroll-container::-webkit-scrollbar {
-  width: 8px;
-}
+  .modal-scroll-container {
+    overflow-y: auto;
+    margin-right: -10px;
+    padding-right: 10px;
+    flex-grow: 1;
+  }
 
-.modal-scroll-container::-webkit-scrollbar-track {
-  background: #2d5bd7;
-  border-radius: 4px;
-}
+  .modal-scroll-container::-webkit-scrollbar {
+    width: 8px;
+  }
 
-.modal-scroll-container::-webkit-scrollbar-thumb {
-  background: #1a3c9e;
-  border-radius: 4px;
-}
+  .modal-scroll-container::-webkit-scrollbar-track {
+    background: #2d5bd7;
+    border-radius: 4px;
+  }
 
-.form-group {
-  margin-bottom: 15px;
-}
+  .modal-scroll-container::-webkit-scrollbar-thumb {
+    background: #1a3c9e;
+    border-radius: 4px;
+  }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: rgb(45, 43, 43);
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-}
+  .form-group {
+    margin-bottom: 15px;
+  }
 
-.form-group input,
-.form-group select, .form-group textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-}
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: rgb(45, 43, 43);
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+  }
 
-.form-group input:disabled,
-.form-group select:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
+  .form-group input,
+  .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+  }
 
-.button-group {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
+  .form-group input:disabled,
+  .form-group select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
 
-.save-button {
-  background-color: white;
-  color: #4169E1;
-  border: 2px solid #002080;
-  padding: 10px 20px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
+  .button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
 
-.save-button:hover {
-  background-color: #1249ef;
-  color: black;
-  border: solid black;
-}
+  .save-button {
+    background-color: white;
+    color: #4169E1;
+    border: 2px solid #002080;
+    padding: 10px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
 
-.save-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
+  .save-button:hover {
+    background-color: #1249ef;
+    color: black;
+    border: solid black;
+  }
 
-.close-button {
-  background: none;
-  border: none;
-  color: #000;
-  font-size: 24px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: color 0.3s;
-}
+  .save-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 
-.close-button:hover {
-  color: black;
-  background: #0f3dc6;
-  border: solid black;
-}
+  .close-button {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: color 0.3s;
+  }
 
-.close-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
+  .close-button:hover {
+    color: black;
+    background: #0f3dc6;
+    border: solid black;
+  }
 
-h1 {
-  margin: 0 0 20px 0;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  color: white;
-  font-size: 24px;
-}
+  .close-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 
-/* Media Queries */
-@media (max-width: 450px) {
-/* .admin-modal-content {
-  width: 90vw; 
-  height: auto;
-  padding: 15px;
-  max-height: 85vh;
-} */
+  h1 {
+    margin: 0 0 20px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    color: white;
+    font-size: 24px;
+  }
 
-.form-group input,
-.form-group select {
-  padding: 8px;
-}
+  /* Media Queries */
+  @media (max-width: 450px) {
+  /* .admin-modal-content {
+    width: 90vw; 
+    height: auto;
+    padding: 15px;
+    max-height: 85vh;
+  } */
 
-h1 {
-  font-size: 20px;
-}
-}
+  .form-group input,
+  .form-group select {
+    padding: 8px;
+  }
 
-@media (max-width: 300px) {
-/* .admin-modal-content {
-  padding: 10px;
-} */
+  h1 {
+    font-size: 20px;
+  }
+  }
 
-.form-group {
-  margin-bottom: 10px;
-}
+  @media (max-width: 300px) {
+  /* .admin-modal-content {
+    padding: 10px;
+  } */
 
-.save-button {
-  padding: 8px 16px;
-}
+  .form-group {
+    margin-bottom: 10px;
+  }
 
-.close-button {
-  font-size: 20px;
-}
-}
-</style>
+  .save-button {
+    padding: 8px 16px;
+  }
+
+  .close-button {
+    font-size: 20px;
+  }
+  }
+  </style>

@@ -656,80 +656,80 @@
   this.ExDividendDate = retail.ExDividendDate ? retail.ExDividendDate.split('T')[0] : '';
       },
       
-      async updateRetail () {
-    const retailId = this.retail.id;
-    console.log('User  object:', this.retail);
-    console.log('retail  ID:', retailId);
-  
-    if (!retailId) {
-      console.error('Retail  ID is undefined');
-      return;
-    }
-  
-    console.log('Updating user with ID:', retailId);
-  
-    const retailData = {
-  Symbol: (this.Symbol || '').trim(),
-  AssetType: (this.AssetType || '').trim(),
-  Name: (this.Name || '').trim(),
-  Description: (this.Description || '').trim(),
-  CIK: (this.CIK || '').trim(),
-  Exchange: (this.Exchange || '').trim(),
-  Currency: (this.Currency || '').trim(),
-  Country: (this.Country || '').trim(),
-  Sector: (this.Sector || '').trim(),
-  Industry: (this.Industry || '').trim(),
-  Address: (this.Address || '').trim(),
-  OfficialSite: (this.OfficialSite || '').trim(),
-  FiscalYearEnd: (this.FiscalYearEnd || '').trim(),
-  LatestQuarter: (this.LatestQuarter || '').trim(),
-  MarketCapitalization: this.MarketCapitalization || null,
-  EBITDA: this.EBITDA || null,
-  PERatio: this.PERatio || null,
-  PEGRatio: this.PEGRatio || null,
-  BookValue: this.BookValue || null,
-  DividendYield: this.DividendYield || null,
-  EPS: this.EPS || null,
-  RevenuePerShareTTM: this.RevenuePerShareTTM || null,
-  ProfitMarginTTM: this.ProfitMarginTTM || null,
-  OperatingMarginTTM: this.OperatingMarginTTM || null,
-  ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
-  ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
-  RevenueTTM: this.RevenueTTM || null,
-  GrossProfitTTM: this.GrossProfitTTM || null,
-  DilutedEPSTTM: this.DilutedEPSTTM || null,
-  QuarterlyEarningsGrowthYOY: this.QuarterlyEarningsGrowthYOY || null,
-  QuarterlyRevenueGrowthYOY: this.QuarterlyRevenueGrowthYOY || null,
-  AnalystTargetPrice: this.AnalystTargetPrice || null,
-  AnalystRatingStrongBuy: this.AnalystRatingStrongBuy || null,
-  AnalystRatingBuy: this.AnalystRatingBuy || null,
-  AnalystRatingHold: this.AnalystRatingHold || null,
-  AnalystRatingSell: this.AnalystRatingSell || null,
-  AnalystRatingStrongSell: this.AnalystRatingStrongSell || null,
-  TrailingPE: this.TrailingPE || null,
-  ForwardPE: this.ForwardPE || null,
-  PriceToSalesRatioTTM: this.PriceToSalesRatioTTM || null,
-  PriceToBookRatio: this.PriceToBookRatio || null,
-  EVToRevenue: this.EVToRevenue || null,
-  EVToEBITDA: this.EVToEBITDA || null,
-  Beta: this.Beta || null,
-  Week52High: this.Week52High || null,
-  Week52Low: this.Week52Low || null,
-  Day50MovingAverage: this.Day50MovingAverage || null,
-  Day200MovingAverage: this.Day200MovingAverage || null,
-  SharesOutstanding: this.SharesOutstanding || null,
-  DividendDate: (this.DividendDate || '').trim(),
-  ExDividendDate: (this.ExDividendDate || '').trim()
-};
-  
-    console.log('retail  data to be sent:', retailData);
-    try {
-      await this.updateRetail({ id: retailId, retailData });
-      this.$emit('close'); // Close the modal after updating
-    } catch (error) {
-      console.error('Update error:', error);
-    }
+      async updateRetail() {
+  const retailId = this.retail.id;
+
+  if (!retailId) {
+    console.error('Retail ID is undefined');
+    this.$emit('error', 'Retail ID is undefined');
+    return;
   }
+
+  const retailData = {
+    Symbol: (this.Symbol || '').trim(),
+    AssetType: (this.AssetType || '').trim(),
+    Name: (this.Name || '').trim(),
+    Description: (this.Description || '').trim(),
+    CIK: (this.CIK || '').trim(),
+    Exchange: (this.Exchange || '').trim(),
+    Currency: (this.Currency || '').trim(),
+    Country: (this.Country || '').trim(),
+    Sector: (this.Sector || '').trim(),
+    Industry: (this.Industry || '').trim(),
+    Address: (this.Address || '').trim(),
+    OfficialSite: (this.OfficialSite || '').trim(),
+    FiscalYearEnd: (this.FiscalYearEnd || '').trim(),
+    LatestQuarter: (this.LatestQuarter || '').trim(),
+    MarketCapitalization: this.MarketCapitalization || null,
+    EBITDA: this.EBITDA || null,
+    PERatio: this.PERatio || null,
+    PEGRatio: this.PEGRatio || null,
+    BookValue: this.BookValue || null,
+    DividendYield: this.DividendYield || null,
+    EPS: this.EPS || null,
+    RevenuePerShareTTM: this.RevenuePerShareTTM || null,
+    ProfitMargin: this.ProfitMargin || null,
+    OperatingMarginTTM: this.OperatingMarginTTM || null,
+    ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
+    ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
+    RevenueTTM: this.RevenueTTM || null,
+    GrossProfitTTM: this.GrossProfitTTM || null,
+    DilutedEPSTTM: this.DilutedEPSTTM || null,
+    QuarterlyEarningsGrowthYOY: this.QuarterlyEarningsGrowthYOY || null,
+    QuarterlyRevenueGrowthYOY: this.QuarterlyRevenueGrowthYOY || null,
+    AnalystTargetPrice: this.AnalystTargetPrice || null,
+    AnalystRatingStrongBuy: this.AnalystRatingStrongBuy || null,
+    AnalystRatingBuy: this.AnalystRatingBuy || null,
+    AnalystRatingHold: this.AnalystRatingHold || null,
+    AnalystRatingSell: this.AnalystRatingSell || null,
+    AnalystRatingStrongSell: this.AnalystRatingStrongSell || null,
+    TrailingPE: this.TrailingPE || null,
+    ForwardPE: this.ForwardPE || null,
+    PriceToSalesRatioTTM: this.PriceToSalesRatioTTM || null,
+    PriceToBookRatio: this.PriceToBookRatio || null,
+    EVToRevenue: this.EVToRevenue || null,
+    EVToEBITDA: this.EVToEBITDA || null,
+    Beta: this.Beta || null,
+    Week52High: this.Week52High || null,
+    Week52Low: this.Week52Low || null,
+    Day50MovingAverage: this.Day50MovingAverage || null,
+    Day200MovingAverage: this.Day200MovingAverage || null,
+    SharesOutstanding: this.SharesOutstanding || null,
+    DividendDate: (this.DividendDate || '').trim(),
+    ExDividendDate: (this.ExDividendDate || '').trim()
+  };
+  console.log('Retail data to be sent:', retailData); // Log the data being sent
+
+
+  try {
+    // Call the Vuex action instead of the method itself
+    await this.$store.dispatch('updateRetail', { id: retailId, retailData });
+    this.$emit('close'); // Close the modal after updating
+  } catch (error) {
+    console.error('Update error:', error);
+    this.$emit('error', 'Failed to update retail data. Please try again.');
+  }
+}
     }
   };
   </script>

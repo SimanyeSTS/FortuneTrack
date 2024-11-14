@@ -245,11 +245,12 @@
   @close="closeAddHealthcareModal"
 />
 <EditRetailModal 
-      v-if="isEditRetailModalVisible"
-      :retail="selectedRetail"
-      :isLoading="loading"
-      @close="closeEditRetailModal"
-    />
+  v-if="isEditRetailModalVisible"
+  :retail="selectedRetail"
+  :isLoading="loading"
+  @close ="closeEditRetailModal"
+  @error="handleError"
+/>
 <EditTechnologyModal 
      v-if="isEditTechnologyModalVisible"
       :technology="selectedTechnology"
@@ -372,6 +373,10 @@ export default {
       'deleteHealthcare'
     ]),
 
+    handleError(message) {
+    SweetAlert.fire('Error!', message, 'error');
+  },
+
     startAccountCheck() {
       this.checkAccountInterval = setInterval(async () => {
         const accountExists = await this.checkUserAccount(); 
@@ -405,14 +410,15 @@ export default {
     closeAddUserModal() {
       this.isAddUserModalVisible = false;
     },
-    showEditUserModal(type, UserID) {
-      this.selectedUser  = UserID; 
-      this.isEditUserModalVisible = true; // Show the modal
-    },
-    closeEditUserModal() {
-      this.isEditUserModalVisible = false; // Hide the modal
-      this.selectedUser  = null; // Reset selected user
-    },
+    showEditUserModal(type, user) {
+    this.selectedUser  = user; // Pass the entire user object
+    this.isEditUserModalVisible = true; // Show the modal
+  },
+
+  closeEditUserModal() {
+    this.isEditUserModalVisible = false; // Hide the modal
+    this.selectedUser  = null; // Reset selected user
+  },
     showAddModal(type) {
       switch(type) {
         case 'retail':

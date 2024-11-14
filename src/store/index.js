@@ -474,9 +474,9 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/retail/${id}`, retailData);
-        const data = response.data?.results || response.data;
-        if (response.status === 200 && data) {
-          commit('UPDATE_RETAIL', data);
+        console.log('Response from API:', response);
+        if (response.status === 200) {
+          commit('UPDATE_RETAIL', response.data);
           toast.success('Retail data updated successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
@@ -485,6 +485,7 @@ export default createStore({
           throw new Error(`Failed to update retail: ${response.statusText || response.status}`);
         }
       } catch (error) {
+        console.error('Error in updateRetail action:', error);
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
