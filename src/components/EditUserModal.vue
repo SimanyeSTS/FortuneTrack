@@ -66,7 +66,7 @@
           <div class="form-group">
             <label for="userProfile">Profile Picture URL:</label>
             <input 
-              type="url" 
+              type="text" 
               id="userProfile" 
               v-model="userProfile" 
               placeholder="Leave to use default"

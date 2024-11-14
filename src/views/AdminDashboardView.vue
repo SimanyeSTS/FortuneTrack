@@ -48,7 +48,7 @@
               <td>{{ formatDate(user.updatedAt) }}</td>
               <td>
                 <button @click="showEditUserModal('user', user)" class="edit-btn"><i class="bi bi-pencil"></i></button>
-                <button @click="confirmDelete('user', user.UserID)" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
+                <button @click="confirmDelete('user', user.UserID)" id="user-delete" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
               </td>
             </tr>
           </tbody>
@@ -196,18 +196,18 @@
                 <td>{{ item.EVToRevenue }}</td>
                 <td>{{ item.EVToEBITDA }}</td>
                 <td>{{ item.Beta }}</td>
-                <td>{{ formatCurrency(item.Week52High) }}</td>
-                <td>{{ formatCurrency(item.Week52Low) }}</td>
-                <td>{{ item['50DayMovingAverage'] }}</td>
-                <td>{{ item['200DayMovingAverage'] }}</td>
+                <td>{{ formatCurrency(item.Week52High || item['52WeekHigh']) }}</td>
+                <td>{{ formatCurrency(item.Week52Low || item['52WeekLow']) }}</td>
+                <td>{{ item['50DayMovingAverage'] || item.Day50MovingAverage }}</td>
+                <td>{{ item['200DayMovingAverage'] || item.Day200MovingAverage }}</td>
                 <td>{{ item.SharesOutstanding }}</td>
-                <td>{{ item.DividendDate }}</td>
-                <td>{{ item.ExDividendDate }}</td>
-                <td>{{ item.CreatedAt }}</td>
-                <td>{{  item.updatedAt }}</td>
+                <td>{{ formatDate(item.DividendDate) }}</td>
+                <td>{{ formatDate(item.ExDividendDate) }}</td>
+                <td>{{ formatDate(item.CreatedAt) }}</td>
+                <td>{{ formatDate(item.updatedAt) }}</td>
                 <td>
                   <button @click="showEditModal(type.name, item)" class="edit-btn"><i class="bi bi-pencil"></i></button>
-                  <button @click="confirmDelete(type.name, item.id)" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
+                  <button @click="confirmDelete1(type.name, item.id)" id="prediction-delete" class="delete-btn"><i class="bi bi-trash3-fill"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -479,10 +479,33 @@ export default {
         try {
           const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
           await this[methodName](id);
-          await SweetAlert.fire('Deleted!', 'The account has been deleted.', 'success');
+          await SweetAlert.fire('Deleted!', 'The account has been deleted.' , 'success');
           await this.fetchData();
         } catch (error) {
           await SweetAlert.fire('Error!', 'Failed to delete the account.', 'error ');
+        }
+      }
+    },
+
+    async confirmDelete1(type, id) {
+      const result = await SweetAlert.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '# 3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
+          await this[methodName](id);
+          await SweetAlert.fire('Deleted!', 'The prediction has been deleted.', 'success');
+          await this.fetchData();
+        } catch (error) {
+          await SweetAlert.fire('Error!', 'Failed to delete the prediction.', 'error ');
         }
       }
     },
@@ -523,7 +546,7 @@ export default {
     },
     scrollLeft(type) {
       const tableWrapper = document.querySelector(`#table-${type}`);
-      tableWrapper.scrollLeft -= 100; // Scroll left by 100 pixels
+      tableWrapper.scrollLeft -= 200; // Scroll left by 100 pixels
       tableWrapper.scroll({
         left: tableWrapper.scrollLeft,
         behavior: 'smooth'
@@ -531,7 +554,7 @@ export default {
     },
     scrollRight(type) {
       const tableWrapper = document.querySelector(`#table-${type}`);
-      tableWrapper.scrollLeft += 100; // Scroll right by 100 pixels
+      tableWrapper.scrollLeft += 200; // Scroll right by 100 pixels
       tableWrapper.scroll({
         left: tableWrapper.scrollLeft,
         behavior: 'smooth'

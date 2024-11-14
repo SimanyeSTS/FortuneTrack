@@ -67,7 +67,7 @@
             <label for="userProfile">Profile Picture:</label>
             <input 
               placeholder="Leave to use default"
-              type="url"
+              type="text"
               id="userProfile"
               v-model="userProfile"
               :disabled="isLoading"

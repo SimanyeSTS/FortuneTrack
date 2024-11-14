@@ -108,7 +108,7 @@
             <div class="form-group">
               <label for="OfficialSite">Official Site:</label>
               <input 
-                type="url" 
+                type="text" 
                 id="OfficialSite" 
                 v-model="OfficialSite" 
                 :disabled="isLoading"
