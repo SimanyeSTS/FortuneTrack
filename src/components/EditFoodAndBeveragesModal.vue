@@ -401,7 +401,7 @@
                 type="number" 
                 id="PriceToBookRatio" 
                 v-model.number="PriceToBookRatio" 
-                 step="0.01"
+                 step="0.001"
                 :disabled="isLoading"
               >
             </div>
@@ -691,7 +691,7 @@
   DividendYield: this.DividendYield || null,
   EPS: this.EPS || null,
   RevenuePerShareTTM: this.RevenuePerShareTTM || null,
-  ProfitMarginTTM: this.ProfitMarginTTM || null,
+  ProfitMargin: this.ProfitMargin || null,
   OperatingMarginTTM: this.OperatingMarginTTM || null,
   ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
   ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
@@ -724,10 +724,11 @@
   
     console.log('food/beverage  data to be sent:', foodAndBeveragesData);
     try {
-      await this.updateFoodAndBeverages({ id: foodAndBeverageslId, foodAndBeveragesData });
+      await this.$store.dispatch('updateFoodAndBeverages',{ id: foodAndBeverageslId, foodAndBeveragesData });
       this.$emit('close'); // Close the modal after updating
     } catch (error) {
       console.error('Update error:', error);
+      this.$emit('error', 'Failed to update food and beverages data. Please try again.');
     }
   }
     }

@@ -420,7 +420,7 @@ export default createStore({
       }
     },
 
-    async deleteUser({ commit }, id) {  // Removed space after deleteUser
+    async deleteUser({ commit }, id) {
       commit('SET_LOADING', true);
       try {
         const response = await axios.delete(`${hostedData}user/${id}`);
@@ -537,9 +537,9 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/technology/${id}`, technologyData);
-        const data = response.data?.results || response.data;
-        if (response.status === 200 && data) {
-          commit('UPDATE_TECHNOLOGY', data);
+        console.log('Response from API:', response);
+        if (response.status === 200) {
+          commit('UPDATE_TECHNOLOGY', response.data);
           toast.success('Technology data updated successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
@@ -548,6 +548,7 @@ export default createStore({
           throw new Error(`Failed to update technology: ${response.statusText || response.status}`);
         }
       } catch (error) {
+        console.error('Error in updateTechnology action:', error)
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
@@ -599,9 +600,9 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/food-and-beverages/${id}`, foodAndBeveragesData);
-        const data = response.data?.results || response.data;
-        if (response.status === 200 && data) {
-          commit('UPDATE_FOOD_AND_BEVERAGES', data);
+        console.log('Response from API', response)
+        if (response.status === 200) {
+          commit('UPDATE_FOOD_AND_BEVERAGES', response.data);
           toast.success('Food and beverages data updated successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
@@ -610,6 +611,7 @@ export default createStore({
           throw new Error(`Failed to update food and beverages: ${response.statusText || response.status}`);
         }
       } catch (error) {
+        console.error('Error in updateFoodAndBeverages action:', error)
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
@@ -661,9 +663,9 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/healthcare/${id}`, healthcareData);
-        const data = response.data?.results || response.data;
-        if (response.status === 200 && data) {
-          commit('UPDATE_HEALTHCARE', data);
+        console.log('Response from API:', response);
+        if (response.status === 200) {
+          commit('UPDATE_HEALTHCARE', response.data);
           toast.success('Healthcare data updated successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
@@ -672,6 +674,7 @@ export default createStore({
           throw new Error(`Failed to update healthcare: ${response.statusText || response.status}`);
         }
       } catch (error) {
+        console.error('Error in updateHealthcare action:', error)
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);

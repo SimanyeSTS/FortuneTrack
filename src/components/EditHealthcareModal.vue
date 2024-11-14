@@ -691,7 +691,7 @@
   DividendYield: this.DividendYield || null,
   EPS: this.EPS || null,
   RevenuePerShareTTM: this.RevenuePerShareTTM || null,
-  ProfitMarginTTM: this.ProfitMarginTTM || null,
+  ProfitMargin: this.ProfitMargin || null,
   OperatingMarginTTM: this.OperatingMarginTTM || null,
   ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
   ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
@@ -724,10 +724,11 @@
   
     console.log('healthcare  data to be sent:', healthcareData);
     try {
-      await this.updateHealthcare({ id: healthcareId, healthcareData });
-      this.$emit('close'); // Close the modal after updating
+      await this.$store.dispatch('updateHealthcare', { id: healthcareId, healthcareData });
+      this.$emit('close');
     } catch (error) {
       console.error('Update error:', error);
+      this.$emit('error', 'Failed to update healthcare data. Please try again.');
     }
   }
     }

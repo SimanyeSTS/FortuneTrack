@@ -722,9 +722,8 @@
 
 
   try {
-    // Call the Vuex action instead of the method itself
     await this.$store.dispatch('updateRetail', { id: retailId, retailData });
-    this.$emit('close'); // Close the modal after updating
+    this.$emit('close');
   } catch (error) {
     console.error('Update error:', error);
     this.$emit('error', 'Failed to update retail data. Please try again.');

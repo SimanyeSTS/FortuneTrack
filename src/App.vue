@@ -24,7 +24,7 @@ export default {
     this.clearInactivityTimer();
   },
   methods: {
-    ...mapActions('auth', ['logoutUser ']),
+    ...mapActions('auth', ['logoutUser']),
 
     setupInactivityTimer() {
       this.clearInactivityTimer(); 
@@ -45,34 +45,36 @@ export default {
     },
 
     showLogoutWarning() {
-      let countdown = 60;
+  let countdown = 60;
+  Swal.fire({
+    title: 'Inactivity Warning',
+    text: `You will be logged out in ${countdown} seconds due to inactivity.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Logout',
+    cancelButtonText: 'Stay Logged In',
+    allowOutsideClick: false,
+    onBeforeOpen: () => {
       const interval = setInterval(() => {
+        countdown--;
+        Swal.getContent().querySelector('p').textContent = `You will be logged out in ${countdown} seconds due to inactivity.`;
         if (countdown <= 0) {
           clearInterval(interval);
           this.handleLogout();
-        } else {
-          Swal.fire({
-            title: 'Inactivity Warning',
-            text: `You will be logged out in ${countdown} seconds due to inactivity.`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Logout',
-            cancelButtonText: 'Stay Logged In',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              clearInterval(interval);
-              this.handleLogout();
-            } else {
-              this.resetTimer();
-            }
-          });
         }
-        countdown--;
       }, 1000);
-    },
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.handleLogout();
+    } else {
+      this.resetTimer();
+    }
+  });
+},
 
     handleLogout() {
-      this.logoutUser ();
+      this.logoutUser();
       this.$router.push('/');
     }
   }

@@ -656,7 +656,7 @@
   this.ExDividendDate = technology.ExDividendDate ? technology.ExDividendDate.split('T')[0] : '';
       },
       
-      async updateTechnology () {
+      async updateTechnology() {
     const technologylId = this.technology.id;
     console.log('tech  object:', this.technology);
     console.log('tech  ID:', technologylId);
@@ -691,7 +691,7 @@
   DividendYield: this.DividendYield || null,
   EPS: this.EPS || null,
   RevenuePerShareTTM: this.RevenuePerShareTTM || null,
-  ProfitMarginTTM: this.ProfitMarginTTM || null,
+  ProfitMargin: this.ProfitMargin || null,
   OperatingMarginTTM: this.OperatingMarginTTM || null,
   ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
   ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
@@ -724,10 +724,11 @@
   
     console.log('tech  data to be sent:', technologyData);
     try {
-      await this.updateTechnology({ id: technologylId, technologyData });
+      await this.$store.dispatch('updateTechnology', { id: technologylId, technologyData });
       this.$emit('close'); // Close the modal after updating
     } catch (error) {
       console.error('Update error:', error);
+      this.$emit('error', 'Failed to update technology data. Please try again.');
     }
   }
     }

@@ -1,9 +1,9 @@
 <template>
-    <div class="admin-retail-modal">
-      <div class="admin-retail-modal-content">
-        <h1>This will lead in an unmaintained retail prediction!</h1>
-        <div class="modal-scroll-container">
-          <form @submit.prevent="createRetail">
+  <div class="admin-retail-modal">
+    <div class="admin-retail-modal-content">
+      <h1>This will lead in an unmaintained retail prediction!</h1>
+      <div class="modal-scroll-container">
+        <form @submit.prevent="createRetail">
             <div class="form-group">
               <label for="Symbol">Symbol:</label>
               <input 

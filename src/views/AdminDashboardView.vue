@@ -7,7 +7,7 @@
       Loading data...
     </div>
     
-    <div v-if="error" class="error-message">
+    <div v-if="error" class="error1-message">
       {{ error }}
     </div>
 
@@ -256,18 +256,21 @@
       :technology="selectedTechnology"
       :isLoading="loading"
       @close="closeEditTechnologyModal"
+      @error="handleError"
     />
 <EditFoodAndBeveragesModal 
      v-if="isEditFoodAndBeveragesModalVisible"
       :foodAndBeverages="selectedFoodAndBeverages"
       :isLoading="loading"
       @close="closeEditFoodAndBeveragesModal"
+      @error="handleError"
     />
 <EditHealthcareModal 
      v-if="isEditHealthcareModalVisible"
       :healthcare="selectedHealthcare"
       :isLoading="loading"
       @close="closeEditHealthcareModal"
+      @error="handleError"
     />
 </template>
 
@@ -649,7 +652,7 @@ img {
   margin-right: 10px!important;
 }
 
-.error-message {
+.error1-message {
   color: #ff4444;
   background-color: rgba(255, 68, 68, 0.1);
   padding: 10px;
