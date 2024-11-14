@@ -735,14 +735,13 @@ export default createStore({
         await axios.post(`${hostedData}user/logout`);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        commit('SET_USER', null);
+        commit('LOGOUT_USER');
         delete axios.defaults.headers.common['Authorization'];
         toast.success('Logged out successfully', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
         });
       } catch (error) {
-        console.error(error);
         toast.error('Failed to logout', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000

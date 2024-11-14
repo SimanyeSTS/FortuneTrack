@@ -65,14 +65,14 @@
     </div>
 
      <!-- Updated AddNewUserModal component usage -->
-  <AddNewUserModal 
-    v-if="isAddUserModalVisible"
-    :isLoading="loading"
-    @close="closeAddUserModal"
-  />
-  <EditUserModal 
+     <AddNewUserModal 
+      v-if="isAddUserModalVisible"
+      :isLoading="loading"
+      @close="closeAddUserModal"
+    />
+    <EditUserModal 
       v-if="isEditUserModalVisible"
-      :user="selectedUser"
+      :user="selectedUser "
       :isLoading="loading"
       @close="closeEditUserModal"
     />
@@ -317,6 +317,7 @@ export default {
       isEditFoodAndBeveragesModalVisible: false,
       isEditHealthcareModalVisible: false,
       selectedUser: null,
+      checkAccountInterval: null,
       showModal: false,
       isEditing: false,
       selectedType: '',
@@ -346,9 +347,13 @@ export default {
   mounted() {
     window.scrollTo(0, 0)
   },
+  beforeUnmount() {
+    clearInterval(this.checkAccountInterval);
+  },
   methods: {
     ...mapActions([
       'fetchUsers',
+      'logoutUser',
       'fetchRetail',
       'fetchTechnology',
       'fetchFoodAndBeverages',
@@ -367,6 +372,16 @@ export default {
       'deleteHealthcare'
     ]),
 
+    startAccountCheck() {
+      this.checkAccountInterval = setInterval(async () => {
+        const accountExists = await this.checkUserAccount(); 
+        if (!accountExists) {
+          await this.logoutUser();
+          this.$router.push('/');
+        }
+      }, 5000);
+    },
+
     formatCurrency(value) {
       if (!value) return '$0';
       return new Intl.NumberFormat('en-US', {
@@ -383,7 +398,6 @@ export default {
     getStockData(type) {
       return this[type] || [];
     },
-    // Update the modal methods
     showAddNewUserModal() {
       this.isAddUserModalVisible = true;
     },
@@ -428,7 +442,7 @@ export default {
       this.isAddHealthcareModalVisible = false;
     },
   closeAddRetailModal() {
-    this.isAddRetailModalVisible = false; // Close the retail modal
+    this.isAddRetailModalVisible = false;
   },
 
   showEditModal(type, id) {
@@ -463,6 +477,21 @@ export default {
     closeEditHealthcareModal () {
       this.isEditHealthcareModalVisible = false;
     },
+
+    async checkUserAccount() {
+      try {
+        
+        const response = await this.$axios.get(`https://fortunetrack.onrender.com/user/${this.current.id}`);
+        return response.data.exists;
+      } catch (error) {
+        console.error('Error checking user account:', error);
+        return false;
+      }
+    },
+
+    async created() {
+    await this.fetchUsers();
+  },
 
     async confirmDelete(type, id) {
       const result = await SweetAlert.fire({

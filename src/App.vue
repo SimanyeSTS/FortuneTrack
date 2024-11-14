@@ -7,36 +7,97 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
-import FooterComp from './components/FooterComp.vue'
+import NavBar from './components/NavBar.vue';
+import FooterComp from './components/FooterComp.vue';
+import { mapActions } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
   components: {
     NavBar,
     FooterComp
+  },
+  mounted() {
+    this.setupInactivityTimer();
+  },
+  beforeUnmount() {
+    this.clearInactivityTimer();
+  },
+  methods: {
+    ...mapActions('auth', ['logoutUser ']),
+
+    setupInactivityTimer() {
+      this.clearInactivityTimer(); 
+      this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
+
+      window.addEventListener('mousemove', this.resetTimer);
+      window.addEventListener('keypress', this.resetTimer);
+      window.addEventListener('touchstart', this.resetTimer);
+    },
+    
+    resetTimer() {
+      this.clearInactivityTimer();
+      this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
+    },
+
+    clearInactivityTimer() {
+      clearTimeout(this.timeout);
+    },
+
+    showLogoutWarning() {
+      let countdown = 60;
+      const interval = setInterval(() => {
+        if (countdown <= 0) {
+          clearInterval(interval);
+          this.handleLogout();
+        } else {
+          Swal.fire({
+            title: 'Inactivity Warning',
+            text: `You will be logged out in ${countdown} seconds due to inactivity.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Logout',
+            cancelButtonText: 'Stay Logged In',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              clearInterval(interval);
+              this.handleLogout();
+            } else {
+              this.resetTimer();
+            }
+          });
+        }
+        countdown--;
+      }, 1000);
+    },
+
+    handleLogout() {
+      this.logoutUser ();
+      this.$router.push('/');
+    }
   }
 }
 </script>
 
 <style>
 html, body {
-  height: 100%; /* Ensure full height for body */
-  margin: 0; /* Remove default margins */
+  height: 100%;
+  margin: 0; 
 }
 
 .wrapper {
   display: flex;
-  flex-direction: column; /* Stack children vertically */
-  min-height: 100vh; /* Full height of the viewport */
-  background-color: #000080; /* Background color for the wrapper */
+  flex-direction: column;
+  min-height: 100vh; 
+  background-color: #000080; 
 }
 
 body {
-  background-color: #000080; /* Background color for the body */
+  background-color: #000080;
 }
 
 footer {
-  margin-top: auto; /* Push footer to the bottom */
+  margin-top: auto;
 }
 </style>
 
