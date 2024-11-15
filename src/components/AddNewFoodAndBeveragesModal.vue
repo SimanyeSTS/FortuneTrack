@@ -5,7 +5,7 @@
         <div class="modal-scroll-container">
           <form @submit.prevent="createFoodAndBeverage">
             <div class="form-group">
-              <label for="Symbol">Symbol:</label>
+            <label for="Symbol">Symbol:</label>
               <input 
                 type="text" 
                 id="Symbol" 
@@ -137,7 +137,8 @@
               <input 
                 type="number" 
                 id="MarketCapitalization" 
-                v-model.number="MarketCapitalization" 
+                v-model.number="MarketCapitalization"
+                step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -147,6 +148,7 @@
                 type="number" 
                 id="EBITDA" 
                 v-model.number="EBITDA" 
+                step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -155,7 +157,8 @@
               <input 
                 type="number" 
                 id="PERatio" 
-                v-model.number="PERatio" 
+                v-model.number="PERatio"
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -165,6 +168,7 @@
                 type="number" 
                 id="PEGRatio" 
                 v-model.number="PEGRatio" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -174,6 +178,7 @@
                 type="number" 
                 id="BookValue" 
                 v-model.number="BookValue" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -183,6 +188,7 @@
                 type="number" 
                 id="DividendPerShare" 
                 v-model.number="DividendPerShare" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -192,6 +198,7 @@
                 type="number" 
                 id="DividendYield" 
                 v-model.number="DividendYield" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -201,6 +208,7 @@
                 type="number" 
                 id="EPS" 
                 v-model.number="EPS" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -210,6 +218,7 @@
                 type="number" 
                 id="RevenuePerShareTTM" 
                 v-model.number="RevenuePerShareTTM" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -219,6 +228,7 @@
                 type="number" 
                 id="ProfitMargin" 
                 v-model.number="ProfitMargin" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -228,6 +238,7 @@
                 type="number" 
                 id="OperatingMarginTTM" 
                 v-model.number="OperatingMarginTTM" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -237,6 +248,7 @@
                 type="number" 
                 id="ReturnOnAssetsTTM" 
                 v-model.number="ReturnOnAssetsTTM" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -246,6 +258,7 @@
                 type="number" 
                 id="ReturnOnEquityTTM" 
                 v-model.number="ReturnOnEquityTTM" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -254,7 +267,8 @@
               <input 
                 type="number" 
                 id="RevenueTTM" 
-                v-model.number="RevenueTTM" 
+                v-model.number="RevenueTTM"
+                step="0.01" 
                 :disabled="isLoading"
               >
             </div>
@@ -263,7 +277,8 @@
               <input 
                 type="number" 
                 id="GrossProfitTTM" 
-                v-model.number="GrossProfitTTM" 
+                v-model.number="GrossProfitTTM"
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -273,6 +288,7 @@
                 type="number" 
                 id="DilutedEPSTTM" 
                 v-model.number="DilutedEPSTTM" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -282,6 +298,7 @@
                 type="number" 
                 id="QuarterlyEarningsGrowthYOY"
                 v-model.number="QuarterlyEarningsGrowthYOY" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -291,6 +308,7 @@
                 type="number" 
                 id="QuarterlyRevenueGrowthYOY" 
                 v-model.number="QuarterlyRevenueGrowthYOY" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -300,6 +318,7 @@
                 type="number" 
                 id="AnalystTargetPrice" 
                 v-model.number="AnalystTargetPrice" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -354,6 +373,7 @@
                 type="number" 
                 id="TrailingPE" 
                 v-model.number="TrailingPE" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -363,6 +383,7 @@
                 type="number" 
                 id="ForwardPE" 
                 v-model.number="ForwardPE" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -372,6 +393,7 @@
                 type="number" 
                 id="PriceToSalesRatioTTM" 
                 v-model.number="PriceToSalesRatioTTM" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -381,6 +403,7 @@
                 type="number" 
                 id="PriceToBookRatio" 
                 v-model.number="PriceToBookRatio" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -390,6 +413,7 @@
                 type="number" 
                 id="EVToRevenue" 
                 v-model.number="EVToRevenue" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -399,6 +423,7 @@
                 type="number" 
                 id="EVToEBITDA" 
                 v-model.number="EVToEBITDA" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -408,24 +433,27 @@
                 type="number" 
                 id="Beta" 
                 v-model.number="Beta" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
             <div class="form-group">
-              <label for="Week52High">Week 52 High:</label>
+              <label for="Week52High">52-Week High:</label>
               <input 
                 type="number" 
                 id="Week52High" 
                 v-model.number="Week52High" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
             <div class="form-group">
-              <label for="Week52Low">Week 52 Low:</label>
+              <label for="Week52Low">52-Week Low:</label>
               <input 
                 type="number" 
                 id="Week52Low" 
                 v-model.number="Week52Low" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -435,6 +463,7 @@
                 type="number" 
                 id="Day50MovingAverage" 
                 v-model.number="Day50MovingAverage" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -444,6 +473,7 @@
                 type="number" 
                 id="Day200MovingAverage" 
                 v-model.number="Day200MovingAverage" 
+                 step="0.01"
                 :disabled="isLoading"
               >
             </div>
@@ -473,27 +503,27 @@
                 v-model="ExDividendDate" 
                 :disabled="isLoading"
               >
-            </div>
-            <div class="button-group">
-              <button 
-                type="submit" 
-                class="save-button"
-                :disabled="isLoading"
-              >
-                {{ isLoading ? 'Adding...' : 'Add' }}
-              </button>
-            </div>
-          </form>
-        </div>
-        <button 
-          class="close-button" 
-          @click="$emit('close')"
-          :disabled="isLoading"
-        >
-          &times;
-        </button>
+          </div>
+          <div class="button-group">
+            <button 
+              type="submit" 
+              class="save-button"
+              :disabled="isLoading || !isFormValid"
+            >
+              {{ isLoading ? 'Adding...' : 'Add' }}
+            </button>
+          </div>
+        </form>
       </div>
+      <button 
+        class="close-button" 
+        @click="$emit('close')"
+        :disabled="isLoading"
+      >
+        &times;
+      </button>
     </div>
+  </div>
 </template>
 
 <script>
@@ -561,69 +591,74 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isLoading']),
-    isFormValid() {
-      return (
-        this.Symbol &&
-        this.AssetType &&
-        this.Name &&
-        (!this.Description || this.Description.length <= 500) && // Optional, max length
-        (!this.CIK || this.CIK.length <= 20) && // Optional, max length
-        (!this.Exchange || this.Exchange.length <= 10) && // Optional, max length
-        (!this.Currency || this.Currency.length === 3) && // Optional, must be 3 characters
-        (!this.Country || this.Country.length <= 10) && // Optional, max length
-        (!this.Sector || this.Sector.length <= 20) && // Optional, max length
-        (!this.Industry || this.Industry.length <= 50) && // Optional, max length
-        (!this.Address || this.Address.length <= 100) && // Optional, max length
-        (!this.OfficialSite || this.OfficialSite.length <= 100) && // Optional, max length
-        (!this.FiscalYearEnd || this.FiscalYearEnd.length <= 10) && // Optional, max length
-        (!this.LatestQuarter || this.LatestQuarter.length <= 10) && // Optional, max length
-        (this.MarketCapitalization >= 0 || this.MarketCapitalization === null) && // Optional, must be non-negative
-        (this.EBITDA >= 0 || this.EBITDA === null) && // Optional, must be non-negative
-        (this.PERatio >= 0 || this.PERatio === null) && // Optional, must be non-negative
-        (this.PEGRatio >= 0 || this.PEGRatio === null) && // Optional, must be non-negative
-        (this.BookValue >= 0 || this.BookValue === null) && // Optional, must be non-negative
-        (this.DividendPerShare >= 0 || this.DividendPerShare === null) && // Optional, must be non-negative
-        (this.DividendYield >= 0 || this.DividendYield === null) && // Optional, must be non-negative
-        (this.EPS >= 0 || this.EPS === null) && // Optional, must be non-negative
-        (this.RevenuePerShareTTM >= 0 || this.RevenuePerShareTTM === null) && // Optional, must be non-negative
-        (this.ProfitMargin >= 0 || this.ProfitMargin === null) && // Optional, must be non-negative
-        (this.OperatingMarginTTM >= 0 || this.OperatingMarginTTM === null) && // Optional, must be non-negative
-        (this.ReturnOnAssetsTTM >= 0 || this.ReturnOnAssetsTTM === null) && // Optional, must be non-negative
-        (this.ReturnOnEquityTTM >= 0 || this.ReturnOnEquityTTM === null) && // Optional, must be non-negative
-        (this.RevenueTTM >= 0 || this.RevenueTTM === null) && // Optional, must be non-negative
-        (this.GrossProfitTTM >= 0 || this.GrossProfitTTM === null) && // Optional, must be non-negative
-        (this.DilutedEPSTTM >= 0 || this.DilutedEPSTTM === null) && // Optional, must be non-negative
-        (this.QuarterlyEarningsGrowthYOY >= 0 || this.QuarterlyEarningsGrowthYOY === null) && // Optional, must be non-negative
-        (this.QuarterlyRevenueGrowthYOY >= 0 || this.QuarterlyRevenueGrowthYOY === null) && // Optional, must be non-negative
-        (this.AnalystTargetPrice >= 0 || this.AnalystTargetPrice === null) && // Optional, must be non-negative
-        (this.AnalystRatingStrongBuy >= 0 || this.AnalystRatingStrongBuy === null) && // Optional, must be non-negative
-        (this.AnalystRatingBuy >= 0 || this.AnalystRatingBuy === null) && // Optional, must be non-negative
-        (this.AnalystRatingHold >= 0 || this.AnalystRatingHold === null) && // Optional, must be non-negative
-        (this.AnalystRatingSell >= 0 || this.AnalystRatingSell === null) && // Optional, must be non-negative
-        (this.AnalystRatingStrongSell >= 0 || this.AnalystRatingStrongSell === null) && // Optional, must be non-negative
-        (this.TrailingPE >= 0 || this.TrailingPE === null) && // Optional, must be non-negative
-        (this.ForwardPE >= 0 || this.ForwardPE === null) && // Optional, must be non-negative
-        (this.PriceToSalesRatioTTM >= 0 || this.PriceToSalesRatioTTM === null) && // Optional, must be non-negative
-        (this.PriceToBookRatio >= 0 || this.PriceToBookRatio === null) && // Optional, must be non-negative
-        (this.EVToRevenue >= 0 || this.EVToRevenue === null) && // Optional, must be non-negative
-        (this.EVToEBITDA >= 0 || this.EVToEBITDA === null) && // Optional, must be non-negative
-        (this.Beta >= 0 || this.Beta === null) && // Optional, must be non-negative
-        (this.Week52High >= 0 || this.Week52High === null) && // Optional, must be non-negative
-        (this.Week52Low >= 0 || this.Week52Low === null) && // Optional, must be non-negative
-        (this.Day50MovingAverage >= 0 || this.Day50MovingAverage === null) && // Optional, must be non-negative
-        (this.Day200MovingAverage >= 0 || this.Day200MovingAverage === null) && // Optional, must be non-negative
-        (this.SharesOutstanding >= 0 || this.SharesOutstanding === null) && // Optional, must be non-negative
-        (!this.DividendDate || this.isValidDate(this.DividendDate)) && // Optional, must be a valid date
-        (!this.ExDividendDate || this.isValidDate(this.ExDividendDate)) // Optional, must be a valid date
-      );
-    }
+  ...mapState(['isLoading']),
+  isFormValid() {
+    return (
+      this.Symbol && this.Symbol.length <= 10 && // VARCHAR(10) NOT NULL
+      this.AssetType && this.AssetType.length <= 20 && // VARCHAR(20) NOT NULL
+      this.Name && this.Name.length <= 100 && // VARCHAR(100) NOT NULL
+      (!this.Description || this.Description.length <= 65535) && // TEXT (up to 65535 characters)
+      (!this.CIK || this.CIK.length <= 20) && // VARCHAR(20)
+      (!this.Exchange || this.Exchange.length <= 10) && // VARCHAR(10)
+      (!this.Currency || this.Currency.length === 3) && // VARCHAR(3)
+      (!this.Country || this.Country.length <= 10) && // VARCHAR(10)
+      (!this.Sector || this.Sector.length <= 20) && // VARCHAR(20)
+      (!this.Industry || this.Industry.length <= 50) && // VARCHAR(50)
+      (!this.Address || this.Address.length <= 100) && // VARCHAR(100)
+      (!this.OfficialSite || this.OfficialSite.length <= 100) && // VARCHAR(100)
+      (!this.FiscalYearEnd || this.FiscalYearEnd.length <= 10) && // VARCHAR(10)
+      (!this.LatestQuarter || this.LatestQuarter.length <= 10) && // VARCHAR(10)
+      (this.MarketCapitalization === null || this.MarketCapitalization >= 0) && // DECIMAL(20, 2)
+      (this.EBITDA === null || this.EBITDA >= 0) && // DECIMAL(20, 2)
+      (this.PERatio === null || this.PERatio >= 0) && // DECIMAL(10, 2)
+      (this.PEGRatio === null || this.PEGRatio >= 0) && // DECIMAL(10, 2)
+      (this.BookValue === null || this.BookValue >= 0) && // DECIMAL(10, 2)
+      (this.DividendPerShare === null || this.DividendPerShare >= 0) && // DECIMAL(10, 2)
+      (this.DividendYield === null || this.DividendYield >= 0) && // DECIMAL(5, 2)
+      (this.EPS === null || this.EPS >= 0) && // DECIMAL(10, 2)
+      (this.RevenuePerShareTTM === null || this.RevenuePerShareTTM >= 0) && // DECIMAL(10, 2)
+      (this.ProfitMargin === null || this.ProfitMargin >= 0) && // DECIMAL(5, 2)
+      (this.OperatingMarginTTM === null || this.OperatingMarginTTM >= 0) && // DECIMAL(5, 2)
+      (this.ReturnOnAssetsTTM === null || this.ReturnOnAssetsTTM >= 0) && // DECIMAL(5, 2)
+      (this.ReturnOnEquityTTM === null || this.ReturnOnEquityTTM >= 0) && // DECIMAL(5, 2)
+      (this.RevenueTTM === null || this.RevenueTTM >= 0) && // DECIMAL(20, 2)
+      (this.GrossProfitTTM === null || this.GrossProfitTTM >= 0) && // DECIMAL(20, 2)
+      (this.DilutedEPSTTM === null || this.DilutedEPSTTM >= 0) && // DECIMAL(10, 2)
+      (this.QuarterlyEarningsGrowthYOY === null || this.QuarterlyEarningsGrowthYOY >= 0) && // DECIMAL(5, 2)
+      (this.QuarterlyRevenueGrowthYOY === null || this.QuarterlyRevenueGrowthYOY >= 0) && // DECIMAL(5, 2)
+      (this.AnalystTargetPrice === null || this.AnalystTargetPrice >= 0) && // DECIMAL(10, 2)
+      (this.AnalystRatingStrongBuy === null || this.AnalystRatingStrongBuy >= 0) && // INT
+      (this.AnalystRatingBuy === null || this.AnalystRatingBuy >= 0) && // INT
+      (this.AnalystRatingHold === null || this.AnalystRatingHold >= 0) && // INT
+      (this.AnalystRatingSell === null || this.AnalystRatingSell >= 0) && // INT
+      (this.AnalystRatingStrongSell === null || this.AnalystRatingStrongSell >= 0) && // INT
+      (this.TrailingPE === null || this.TrailingPE >= 0) && // DECIMAL(10, 2)
+      (this.ForwardPE === null || this.ForwardPE >= 0) && // DECIMAL(10, 2)
+      (this.PriceToSalesRatioTTM === null || this.PriceToSalesRatioTTM >= 0) && // DECIMAL(5, 2)
+      (this.PriceToBookRatio === null || this.PriceToBookRatio >= 0) && // DECIMAL(5, 2)
+      (this.EVToRevenue === null || this.EVToRevenue >= 0) && // DECIMAL(5, 2)
+      (this.EVToEBITDA === null || this.EVToEBITDA >= 0) && // DECIMAL(5, 2)
+      (this.Beta === null || this.Beta >= 0) && // DECIMAL(5, 2)
+      (this.Week52High === null || this.Week52High >= 0) && // DECIMAL(10, 2)
+      (this.Week52Low === null || this.Week52Low >= 0) && // DECIMAL(10, 2)
+      (this.Day50MovingAverage === null || this.Day50MovingAverage >= 0) && // DECIMAL(10, 2)
+      (this.Day200MovingAverage === null || this.Day200MovingAverage >= 0) && // DECIMAL(10, 2)
+      (this.SharesOutstanding === null || this.SharesOutstanding >= 0) && // INT
+      (!this.DividendDate || this.isValidDate(this.DividendDate)) && // DATE
+      (!this.ExDividendDate || this.isValidDate(this.ExDividendDate)) // DATE
+    );
+  }
+},
+methods: {
+    isValidDate(date) {
+    return !isNaN(new Date(date).getTime()); // Check if the date is valid
   },
-  methods: {
-    async createFoodAndBeverages() {
-      if (!this.isFormValid) {
-        return;
-      }
+    async createFoodAndBeverage() {
+  console.log('create FoodAndBeverages called'); // Log to confirm the method is called
+  if (!this.isFormValid) {
+    console.log('Form is not valid'); // Log if the form is not valid
+    return;
+  }
 
       try {
         const foodAndBeveragesData = {
@@ -688,7 +723,7 @@ export default {
         
         this.$emit('close'); // Close the modal after submission
       } catch (error) {
-        console.error('Error adding retail prediction:', error);
+        console.error('Error adding food and beverages prediction:', error);
       }
     },
     resetForm() {

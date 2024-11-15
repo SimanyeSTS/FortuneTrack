@@ -137,7 +137,8 @@
               <input 
                 type="number" 
                 id="MarketCapitalization" 
-                v-model.number="MarketCapitalization" 
+                v-model.number="MarketCapitalization"
+                step="0.01" 
                 :disabled="isLoading"
               >
             </div>
@@ -147,6 +148,7 @@
                 type="number" 
                 id="EBITDA" 
                 v-model.number="EBITDA" 
+                step="0.01"
                 :disabled="isLoading"
               >
             </div>

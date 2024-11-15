@@ -30,13 +30,13 @@ export default createStore({
     healthcarePrediction: null,
     allSectorsData: [],
     singlePrediction: null,
-    token: null, // Add token to state
+    token: null,
     filteredSectors: [],
     sectors: []
   },
   getters: {
     allUsers: (state) => state.users,
-    current: (state) => state.user, // Corrected this line
+    current: (state) => state.user,
     allRetail: (state) => state.retail,
     singleRetailPrediction: (state) => state.retailPrediction,
     allTechnology: (state) => state.technology,

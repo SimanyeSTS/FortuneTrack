@@ -9,13 +9,16 @@
 <script>
 import NavBar from './components/NavBar.vue';
 import FooterComp from './components/FooterComp.vue';
-import { mapActions } from 'vuex';
 import Swal from 'sweetalert2';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
     NavBar,
     FooterComp
+  },
+  computed: {
+    ...mapGetters(['current']), // Get the current user from Vuex
   },
   mounted() {
     this.setupInactivityTimer();
@@ -24,15 +27,19 @@ export default {
     this.clearInactivityTimer();
   },
   methods: {
-    ...mapActions('auth', ['logoutUser']),
-
     setupInactivityTimer() {
-      this.clearInactivityTimer(); 
-      this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
+      // Only set up the timer if there is a logged-in user
+      if (this.current) {
+        this.clearInactivityTimer(); 
+        this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
 
-      window.addEventListener('mousemove', this.resetTimer);
-      window.addEventListener('keypress', this.resetTimer);
-      window.addEventListener('touchstart', this.resetTimer);
+        // Event listeners for desktop and mobile interaction
+        window.addEventListener('mousemove', this.resetTimer);
+        window.addEventListener('keypress', this.resetTimer);
+        window.addEventListener('touchstart', this.resetTimer);
+        window.addEventListener('touchmove', this.resetTimer);
+        window.addEventListener('scroll', this.resetTimer);
+      }
     },
     
     resetTimer() {
@@ -45,43 +52,59 @@ export default {
     },
 
     showLogoutWarning() {
-  let countdown = 60;
-  Swal.fire({
-    title: 'Inactivity Warning',
-    text: `You will be logged out in ${countdown} seconds due to inactivity.`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Logout',
-    cancelButtonText: 'Stay Logged In',
-    allowOutsideClick: false,
-    onBeforeOpen: () => {
-      const interval = setInterval(() => {
-        countdown--;
-        Swal.getContent().querySelector('p').textContent = `You will be logged out in ${countdown} seconds due to inactivity.`;
-        if (countdown <= 0) {
-          clearInterval(interval);
-          this.handleLogout();
+      let countdown = 30;
+      Swal.fire({
+        title: 'Inactivity Warning',
+        html: `<p>You will be logged out in <strong>${countdown}</strong> seconds due to inactivity.</p>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Logout',
+        cancelButtonText: 'Stay Logged In',
+        allowOutsideClick: false,
+        didOpen: () => {
+          const interval = setInterval(() => {
+            countdown--;
+            const content = Swal.getHtmlContainer();
+            if (content && countdown > 0) {
+              content.querySelector('strong').textContent = countdown.toString();
+            } else if (countdown <= 0) {
+              clearInterval(interval);
+              this.handleLogout();
+              Swal.close();
+            }
+          }, 1000);
+          this.countdownInterval = interval;
+        },
+        willClose: () => {
+          clearInterval(this.countdownInterval);
+        },
+        customClass: {
+          popup: 'inactivity-modal'
         }
-      }, 1000);
-    }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.handleLogout();
-    } else {
-      this.resetTimer();
-    }
-  });
-},
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.handleLogout();
+        } else {
+          this.resetTimer();
+        }
+      });
+    },
 
     handleLogout() {
-      this.logoutUser();
-      this.$router.push('/');
+      this.$store.dispatch('logoutUser')
+        .then(() => {
+          this.$router.push('/');
+        })
+        .catch((error) => {
+          console.error("Logout failed:", error);
+        });
     }
   }
 }
 </script>
 
 <style>
+/* Basic styling for the layout */
 html, body {
   height: 100%;
   margin: 0; 
@@ -90,7 +113,7 @@ html, body {
 .wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; 
+  min-height: 100vh;
   background-color: #000080; 
 }
 
@@ -100,6 +123,27 @@ body {
 
 footer {
   margin-top: auto;
+}
+
+/* Styling for SweetAlert2 on smaller screens */
+.inactivity-modal {
+  font-size: 16px; /* Adjust font size for mobile readability */
+  max-width: 90%; /* Limit modal width on small screens */
+}
+
+@media (max-width: 768px) {
+  /* Adjustments for mobile devices */
+  /* .wrapper {
+    padding: 0 10px;
+  } */
+
+  .inactivity-modal {
+    font-size: 14px; /* Slightly smaller font size for better fit */
+  }
+
+  /* footer {
+    padding-bottom: 20px;
+  } */
 }
 </style>
 
