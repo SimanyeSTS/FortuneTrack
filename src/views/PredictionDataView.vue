@@ -6,7 +6,7 @@
     <div v-else-if="predictionData">
       <h1>{{ predictionData.Name }} ({{ predictionData.Symbol }})</h1>
       <p>Sector: {{ sector }}</p>
-
+      
       <div class="data-section">
         <h2>Prediction Overview</h2>
         <p><strong>Description:</strong> {{ predictionData.Description || 'N/A' }}</p>
@@ -18,8 +18,8 @@
         <p>
            <strong>Official Site:</strong> 
            <a :href="predictionData.OfficialSite || '#' " target="_blank">
-            {{ predictionData.OfficialSite || 'N/A' }}
-           </a></p>
+             {{ predictionData.OfficialSite || 'N/A' }}
+            </a></p>
         <p><strong>Fiscal Year End:</strong> {{ predictionData.FiscalYearEnd || 'N/A' }}</p>
         <p><strong>Latest Quarter:</strong> {{ formatDate(predictionData.LatestQuarter) }}</p>
       </div>
@@ -38,7 +38,7 @@
         <h2>Profitability Metrics</h2>
         <RadarChart :chartData="prepareProfitabilityMetricsData()" />
       </div>
-
+      
       <div class="chart-section" v-if="predictionData.Beta !== undefined && predictionData['50DayMovingAverage'] !== undefined && predictionData['200DayMovingAverage'] !== undefined">
         <h2>Efficiency Metrics</h2>
         <RadarChart :chartData="prepareEfficiencyMetricsData()" />
@@ -58,11 +58,12 @@
         <h2>PE Ratio Analysis</h2>
         <ScatterChart :chartData="preparePerformanceData()" />
       </div>
-
+      
       <div class="chart-section" v-if="predictionData && predictionData.AnalystTargetPrice">
         <h2>Analyst Target Price</h2>
         <GaugeChart :chartData="prepareAnalystTargetPriceData()" />
       </div>
+      <ChatBot :predictionData="predictionData" />
     </div>
     <div v-else class="error">No data available for this symbol</div>
   </div>
@@ -78,6 +79,7 @@ import BarChart from '@/components/BarChart.vue';
 import ScatterChart from '@/components/ScatterChart.vue';
 import GaugeChart from '@/components/GaugeChart.vue';
 import SpinnerComp from '@/components/SpinnerComp.vue';
+import ChatBot from '@/components/ChatBot.vue';
 
 export default defineComponent({
   name: 'PredictionDataView',
@@ -87,7 +89,8 @@ export default defineComponent({
     BarChart,
     ScatterChart,
     GaugeChart,
-    SpinnerComp
+    SpinnerComp,
+    ChatBot
   },
   mounted() {
     window.scrollTo(0, 0)
