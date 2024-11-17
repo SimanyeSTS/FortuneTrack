@@ -137,9 +137,9 @@ footer {
     padding: 0 10px;
   } */
 
-  .inactivity-modal {
-    font-size: 14px; /* Slightly smaller font size for better fit */
-  }
+  /* .inactivity-modal {
+    font-size: 14px; Slightly smaller font size for better fit 
+  } */
 
   /* footer {
     padding-bottom: 20px;
