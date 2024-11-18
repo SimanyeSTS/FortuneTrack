@@ -22,15 +22,17 @@ export default {
   },
   mounted() {
     this.setupInactivityTimer();
+    window.addEventListener('visibilitychange', this.handleVisibilityChange);
   },
   beforeUnmount() {
     this.clearInactivityTimer();
+    window.removeEventListener('visibilitychange', this.handleVisibilityChange);
   },
   methods: {
     setupInactivityTimer() {
       // Only set up the timer if there is a logged-in user
       if (this.current) {
-        this.clearInactivityTimer(); 
+        this.clearInactivityTimer();
         this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
 
         // Event listeners for desktop and mobile interaction
@@ -41,7 +43,7 @@ export default {
         window.addEventListener('scroll', this.resetTimer);
       }
     },
-    
+
     resetTimer() {
       this.clearInactivityTimer();
       this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
@@ -98,6 +100,16 @@ export default {
         .catch((error) => {
           console.error("Logout failed:", error);
         });
+    },
+
+    handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        // User has switched tabs/apps (consider starting the timer)
+        this.resetTimer();
+      } else {
+        // User has returned to the app (reset the timer)
+        this.resetTimer();
+      }
     }
   }
 }
