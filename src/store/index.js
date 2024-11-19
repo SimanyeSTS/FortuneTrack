@@ -32,7 +32,8 @@ export default createStore({
     singlePrediction: null,
     token: null,
     filteredSectors: [],
-    sectors: []
+    sectors: [],
+    chatLoading: false
   },
   getters: {
     allUsers: (state) => state.users,
@@ -174,6 +175,9 @@ export default createStore({
     },
     SET_FILTERED_SECTORS(state, sectors) {
       state.filteredSectors = sectors;
+    },
+    SET_CHAT_LOADING(state, value) {
+      state.chatLoading = value;
     }
   },
   actions: {
@@ -765,6 +769,29 @@ export default createStore({
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
+      }
+    },
+
+    async generatePrediction({ commit, state }, { message, companyData }) {
+      commit('SET_CHAT_LOADING', true); // Commit chat-specific loading state
+      try {
+        const response = await axios.post(`${hostedData}chatbot/gemini`, {
+          message,
+          companyData
+        });
+        const newPrediction = response.data.response;
+    
+        // Only commit if the new prediction is different
+        if (JSON.stringify(state.singlePrediction) !== JSON.stringify(newPrediction)) {
+          commit('SET_SINGLE_PREDICTION', newPrediction);
+        }
+    
+        return newPrediction; // Return the response for use in the component
+      } catch (error) {
+        console.error('Error generating prediction:', error); // Log the error
+        throw error; // Re-throw the error to handle it in the component if needed
+      } finally {
+        commit('SET_CHAT_LOADING', false); // Commit chat-specific loading state
       }
     },
   },

@@ -1,23 +1,31 @@
 <template>
   <div>
     <button class="chat-button" @click="toggleChat">
-      Predict with AI
+      <span>AI Insights</span>
     </button>
 
     <div v-if="isChatOpen" class="admin-modal">
       <div class="admin-modal-content">
-        <h1>Market forecasts with AI!</h1>
+        <h1>Market Analysis & Forecasts</h1>
         <div class="modal-scroll-container">
           <div class="messageBox">
             <template v-for="(message, index) in messages" :key="index">
               <div :class="message.from === 'user' ? 'messageFromUser ' : 'messageFromAI'">
-                <span v-html="message.data"></span>
+                <span v-html="formatMessage(message.data)"></span>
               </div>
             </template>
           </div>
-          <input v-model="currentMessage" type="text" placeholder="Type your message..." @keyup.enter="sendMessage(currentMessage)" />
+          <div v-if="isTyping" class="typing-indicator">AI is analyzing...</div>
+          <input 
+            v-model="currentMessage" 
+            type="text" 
+            placeholder="Ask about company performance, forecasts, or market analysis..." 
+            @keyup.enter="sendMessage(currentMessage)"
+          />
           <div class="button-group">
-            <button @click="sendMessage(currentMessage)" class="save-button">Send</button>
+            <button @click="sendMessage(currentMessage)" class="save-button" :disabled="isTyping">
+              Send
+            </button>
           </div>
         </div>
         <button class="close-button" @click="toggleChat">&times;</button>
@@ -27,53 +35,99 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
-  data() {
-    return {
-      currentMessage: '',
-      messages: [],
-      isChatOpen: false,
-      witAiToken: process.env.VUE_APP_WIT_AI_TOKEN,
-      witAiAppId: process.env.VUE_APP_WIT_AI_APP_ID,
+  setup() {
+    const store = useStore();
+    const currentMessage = ref('');
+    const messages = ref([]);
+    const isChatOpen = ref(false);
+    const isTyping = ref(false);
+
+    const predictionData = computed(() => store.getters.singlePrediction);
+    const currentUser  = computed(() => store.getters.current); // Get the current user
+
+    const formatMessage = (text) => {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
     };
-  },
-  methods: {
-    toggleChat() {
-      this.isChatOpen = !this.isChatOpen;
-    },
-    async sendMessage(message) {
-      if (!message) return;
-      this.messages.push({ from: 'user', data: message });
-      this.currentMessage = '';
 
-      try {
-        const response = await axios.get(`https://api.wit.ai/speech?v=${message}`, {
-          headers: {
-            Authorization: `Bearer ${this.witAiToken}`,
-          },
-          params: {
-            app: this.witAiAppId,
-          },
+    const toggleChat = () => {
+      isChatOpen.value = !isChatOpen.value;
+      if (isChatOpen.value && messages.value.length === 0) {
+        const firstName = currentUser.value?.firstName || 'there';
+        messages.value.push({
+          from: 'AI',
+          data: `Welcome ${firstName}! I can help you analyze ${predictionData.value?.Name || 'this company'}'s performance and provide market insights. What would you like to know?`
         });
-
-        const witAiResponse = response.data;
-        const intent = witAiResponse._text;
-        const entities = witAiResponse.entities;
-
-        const aiResponse = `You asked about ${intent}. Here are some insights: ${JSON.stringify(entities)}`;
-        this.messages.push({ from: 'AI', data: aiResponse });
-      } catch (error) {
-        console.error('Error:', error);
-        this.messages.push({ from: 'AI', data: 'Sorry, I encountered an error.' });
       }
-    },
-  },
+    };
+
+    const sendMessage = async (message) => {
+  if (!message.trim()) return;
+
+  messages.value.push({ from: 'user', data: message });
+  currentMessage.value = '';
+  isTyping.value = true;
+
+  try {
+    const response = await store.dispatch('generatePrediction', {
+      message,
+      companyData: predictionData.value
+    });
+
+    messages.value.push({
+      from: 'AI',
+      data: response
+    });
+  } catch (error) {
+    // Handle error as an AI message
+    let errorMessage = 'I apologize, but I encountered an error processing your request.';
+    if (error.response?.data?.message) {
+      errorMessage += ` Details: ${error.response.data.message}`;
+    }
+    
+    messages.value.push({
+      from: 'AI',
+      data: errorMessage
+    });
+  } finally {
+    isTyping.value = false;
+  }
+};
+
+    return {
+      currentMessage,
+      messages,
+      isChatOpen,
+      isTyping,
+      toggleChat,
+      sendMessage,
+      formatMessage
+    };
+  }
 };
 </script>
 
 <style scoped>
+@keyframes bounce-animation {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.chat-button {
+  animation: bounce-animation 2s ease infinite;
+  animation-delay: 0s;
+}
+
+.chat-button:hover {
+  animation-play-state: paused;
+}
+
 .chat-button {
   background-color: #2196F3;
   color: white;
@@ -87,6 +141,10 @@ export default {
   bottom: 20px;
   right: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.chat-button:hover {
+  background-color: #1A73B5!important;
 }
 
 .admin-modal {
@@ -147,20 +205,31 @@ export default {
   margin-bottom: 10px;
 }
 
-.messageFromUser {
-  text-align: right;
-  background-color: #175e7f;
-  border-radius: 10px;
+.typing-indicator {
   padding: 10px;
-  margin-top: 10px;
+  color: #ffffff;
+  font-style: italic;
+  text-align: center;
+}
+
+.messageFromUser , .messageFromAI {
+  margin: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.messageFromUser  {
+  background-color: #2196F3;
+  color: white;
+  margin-left: auto;
 }
 
 .messageFromAI {
-  text-align: left;
-  background-color: #072c67;
-  border-radius: 10px;
-  padding: 10px;
-  margin-top: 10px;
+  background-color: #333;
+  color: white;
+  margin-right: auto;
 }
 
 input {
@@ -244,21 +313,13 @@ h1 {
 }
 
 @media (max-width: 450px) {
-  .admin-modal-content {
-    width: 90vw;
-    height: auto;
-    padding: 15px;
-    max-height: 85vh;
-  }
-
   .form-group input,
   .form-group select {
     padding: 8px;
   }
 
   h1 {
-    font-size: 20px;
-  }
+    font-size: 20px }
 }
 
 @media (max-width: 300px) {

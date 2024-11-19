@@ -138,10 +138,10 @@ footer {
 }
 
 /* Styling for SweetAlert2 on smaller screens */
-.inactivity-modal {
-  font-size: 16px; /* Adjust font size for mobile readability */
-  max-width: 90%; /* Limit modal width on small screens */
-}
+/* .inactivity-modal {
+  font-size: 16px;
+  max-width: 90%; 
+} */
 
 @media (max-width: 768px) {
   /* Adjustments for mobile devices */
