@@ -8,7 +8,13 @@
       <div class="admin-modal-content">
         <h1>Market Analysis & Forecasts</h1>
         <div class="modal-scroll-container">
-          <div class="messageBox">
+          <div class="messageBox" :class="{ 'expanded-messagebox': isFullScreen }">
+            <button 
+              class="full-screen-toggle" 
+              @click="toggleFullScreen"
+            >
+              {{ isFullScreen ? '↙ Collapse' : '↗ Expand' }}
+            </button>
             <template v-for="(message, index) in messages" :key="index">
               <div :class="message.from === 'user' ? 'messageFromUser ' : 'messageFromAI'">
                 <span v-html="formatMessage(message.data)"></span>
@@ -17,12 +23,13 @@
           </div>
           <div v-if="isTyping" class="typing-indicator">AI is analyzing...</div>
           <input 
+            v-if="!isFullScreen"
             v-model="currentMessage" 
             type="text" 
             placeholder="Ask about company performance, forecasts, or market analysis..." 
             @keyup.enter="sendMessage(currentMessage)"
           />
-          <div class="button-group">
+          <div v-if="!isFullScreen" class="button-group">
             <button @click="sendMessage(currentMessage)" class="save-button" :disabled="isTyping">
               Send
             </button>
@@ -45,9 +52,10 @@ export default {
     const messages = ref([]);
     const isChatOpen = ref(false);
     const isTyping = ref(false);
+    const isFullScreen = ref(false);
 
     const predictionData = computed(() => store.getters.singlePrediction);
-    const currentUser  = computed(() => store.getters.current); // Get the current user
+    const currentUser = computed(() => store.getters.current);
 
     const formatMessage = (text) => {
       return text
@@ -67,47 +75,52 @@ export default {
       }
     };
 
+    const toggleFullScreen = () => {
+      isFullScreen.value = !isFullScreen.value;
+    };
+
     const sendMessage = async (message) => {
-  if (!message.trim()) return;
+      if (!message.trim()) return;
 
-  messages.value.push({ from: 'user', data: message });
-  currentMessage.value = '';
-  isTyping.value = true;
+      messages.value.push({ from: 'user', data: message });
+      currentMessage.value = '';
+      isTyping.value = true;
 
-  try {
-    const response = await store.dispatch('generatePrediction', {
-      message,
-      companyData: predictionData.value
-    });
+      try {
+        const response = await store.dispatch('generatePrediction', {
+          message,
+          companyData: predictionData.value
+        });
 
-    messages.value.push({
-      from: 'AI',
-      data: response
-    });
-  } catch (error) {
-    // Handle error as an AI message
-    let errorMessage = 'I apologize, but I encountered an error processing your request.';
-    if (error.response?.data?.message) {
-      errorMessage += ` Details: ${error.response.data.message}`;
-    }
-    
-    messages.value.push({
-      from: 'AI',
-      data: errorMessage
-    });
-  } finally {
-    isTyping.value = false;
-  }
-};
+        messages.value.push({
+          from: 'AI',
+          data: response
+        });
+      } catch (error) {
+        let errorMessage = 'I apologize, but I encountered an error processing your request.';
+        if (error.response?.data?.message) {
+          errorMessage += ` Details: ${error.response.data.message}`;
+        }
+        
+        messages.value.push({
+          from: 'AI',
+          data: errorMessage
+        });
+      } finally {
+        isTyping.value = false;
+      }
+    };
 
     return {
       currentMessage,
       messages,
       isChatOpen,
       isTyping,
+      isFullScreen,
       toggleChat,
       sendMessage,
-      formatMessage
+      formatMessage,
+      toggleFullScreen
     };
   }
 };
@@ -293,7 +306,34 @@ h1 {
   font-size: 24px;
 }
 
-/* Media Queries */
+.full-screen-toggle {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 12px;
+}
+
+.full-screen-toggle:hover {
+  background-color: #1A73B5;
+}
+
+.expanded-messagebox {
+  height: calc(100% - 40px) !important;
+  max-height: none !important;
+  overflow-y: auto;
+}
+
+.modal-scroll-container .expanded-messagebox {
+  margin-bottom: 0;
+}
+
 @media (max-width: 800px) {
   .admin-modal-content {
     width: 90vw;

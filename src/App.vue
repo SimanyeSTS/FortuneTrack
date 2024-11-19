@@ -21,12 +21,16 @@ export default {
     ...mapGetters(['current']), // Get the current user from Vuex
   },
   mounted() {
+    if (this.current) {
     this.setupInactivityTimer();
     window.addEventListener('visibilitychange', this.handleVisibilityChange);
+    }
   },
   beforeUnmount() {
+    if (this.current) {
     this.clearInactivityTimer();
     window.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    }
   },
   methods: {
     setupInactivityTimer() {
