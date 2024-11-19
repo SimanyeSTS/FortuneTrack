@@ -32,6 +32,8 @@ app.use('/to/db', router) //this is for posting to db only
 app.use('/from/db/all-predictions', allSectorsRouter) //this is for fetching all predictions from db only
 app.use('/from/db/all-predictions/:symbol', allSectorsRouter)
 
+app.use('/chatbot', router) //this is for chatbot only
+
 
 
 app.get('^/$|FortuneTrack', (req, res) => {
