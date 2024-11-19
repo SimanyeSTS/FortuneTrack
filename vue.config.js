@@ -5,3 +5,4 @@ module.exports = defineConfig({
     config.plugins.delete('case-sensitive-paths');
   },
 });
+  
