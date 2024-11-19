@@ -43,4 +43,6 @@ const generatePrediction = async (req, res) => {
   }
 };
 
-export default generatePrediction; // Default export
+export default { generatePrediction 
+
+}

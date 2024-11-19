@@ -5,7 +5,7 @@ import technologyController from '../controller/technologyController.js';
 import foodAndBeveragesController from '../controller/foodAndBeveragesController.js';
 import healthcareController from '../controller/healthcareController.js';
 import { allSectorsRouter } from "../controller/allSectorsController.js";
-import { geminiController } from '../controller/geminiController.js';
+import geminiController from '../controller/geminiController.js';
 
 const router = express.Router()
 
