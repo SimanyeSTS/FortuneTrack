@@ -69,18 +69,21 @@ class SectorGuideController {
         - Keep responses concise and easy to understand.`,
       },
     ];
-
+  
     try {
       const completion = await openai.chat.completions.create({
-        model: 'gpt-4', // or 'gpt-3.5-turbo'
+        model: 'gpt-3.5-turbo', // Use gpt-3.5-turbo for broader compatibility
         messages,
         max_tokens: 500,
         temperature: 0.7,
       });
-
+  
       return completion.choices[0]?.message?.content?.trim();
     } catch (error) {
-      console.error('OpenAI API Error:', error);
+      console.error('OpenAI API Error:', error.message);
+      if (error.response?.data?.error?.code === 'model_not_found') {
+        throw new Error('The requested model is not available for your API key. Please check your OpenAI subscription.');
+      }
       throw new Error('Failed to generate response from OpenAI.');
     }
   }
