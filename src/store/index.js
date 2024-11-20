@@ -798,11 +798,11 @@ export default createStore({
         commit('SET_CHAT_LOADING', false);
       }
     },
+    
     async getSectorInsights({ commit }, { message, sectors }) {
-      // Simulate fetching data based on message and sector context
-      commit('SET_LOADING', true); // Set loading to true before the fetch
+      commit('SET_LOADING', true);
       try {
-        // Example API request (replace with your actual API endpoint)
+        console.log('Sending Payload:', { message, sectors });
         const response = await fetch(`${hostedData}chatbot/openAI`, {
           method: 'POST',
           headers: {
@@ -810,28 +810,31 @@ export default createStore({
           },
           body: JSON.stringify({
             message,
-            sectors, // You can adjust this based on how your API expects it
+            sectors,
           }),
         });
-
-        if (!response.ok) throw new Error('Failed to fetch data');
-
-        const data = await response.json();
-
-        // Here, dynamically commit insights based on the sectors
-        for (let sector in sectors) {
-          if (data[sector]) {
-            commit('SET_SECTOR_INSIGHTS', { sector, insights: data[sector] });
-          }
+    
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Response Error:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
-
-        // Return the response or a combined message
-        return `Insights received: ${data.summary || 'No insights available'}`;
+    
+        const data = await response.json();
+        console.log('Received Data:', data);
+    
+        // More robust data handling
+        if (!data || (!data.summary && !data.response)) {
+          throw new Error('No meaningful data returned');
+        }
+    
+        return data.summary || data.response || "Insights received successfully";
       } catch (error) {
-        commit('SET_ERROR', error.message); // Set error if any
-        return "Oops! Something went wrong. Please try again.";
+        console.error('Sector Insights Error:', error);
+        commit('SET_ERROR', error.message);
+        return `Error: ${error.message}`;
       } finally {
-        commit('SET_LOADING', false); // Set loading to false after the fetch is done
+        commit('SET_LOADING', false);
       }
     },
   },

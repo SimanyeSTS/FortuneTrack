@@ -27,9 +27,10 @@
             </div>
             <input 
               v-if="!isFullScreen"
-              v-model="currentMessage" 
+              :value="currentMessage" 
               type="text" 
               placeholder="Ask about sectors, trends, or click Predict for detailed analysis..." 
+              @input="updateCurrentMessage"
               @keyup.enter="sendMessage"
             />
             <div v-if="!isFullScreen" class="button-container">
@@ -45,7 +46,7 @@
   </template>
   
   <script>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted, onUnmounted } from 'vue';
   import { useStore } from 'vuex';
   
   export default {
@@ -57,8 +58,9 @@
       const isChatOpen = ref(false);
       const isTyping = ref(false);
       const isFullScreen = ref(false);
+      const isLoading = ref(false);
   
-      // Get sector data from store
+      // Compute sectors from store to avoid direct state mutation
       const sectors = computed(() => ({
         retail: store.state.retail,
         technology: store.state.technology,
@@ -69,7 +71,7 @@
       const welcomeMessages = [
         "Hi there! Want to explore market sectors? I can help you understand what's happening!",
         "Looking for sector insights? I'm your friendly guide! What would you like to know?",
-        "Need help understanding market sectors? Let's explore together!"
+        "Need help understanding the market sectors? Let's explore together!"
       ];
   
       const formatMessage = (text) => {
@@ -94,6 +96,10 @@
         isFullScreen.value = !isFullScreen.value;
       };
   
+      const updateCurrentMessage = (event) => {
+        currentMessage.value = event.target.value;
+      };
+  
       const sendMessage = async () => {
         if (!currentMessage.value.trim()) return;
   
@@ -102,9 +108,10 @@
           from: 'user', 
           content: message 
         });
-        
+  
         currentMessage.value = '';
         isTyping.value = true;
+        isLoading.value = true;
   
         try {
           const response = await store.dispatch('getSectorInsights', {
@@ -123,8 +130,30 @@
           });
         } finally {
           isTyping.value = false;
+          isLoading.value = false;
         }
       };
+  
+      const handleOutsideClick = (event) => {
+        const chatButton = document.querySelector('.chat-button');
+        const chatModal = document.querySelector('.chat-modal');
+  
+        if (isChatOpen.value && 
+            chatButton && 
+            chatModal && 
+            !chatButton.contains(event.target) && 
+            !chatModal.contains(event.target)) {
+          toggleChat();
+        }
+      };
+  
+      onMounted(() => {
+        document.addEventListener('click', handleOutsideClick);
+      });
+  
+      onUnmounted(() => {
+        document.removeEventListener('click', handleOutsideClick);
+      });
   
       return {
         currentMessage,
@@ -135,7 +164,9 @@
         toggleChat,
         sendMessage,
         formatMessage,
-        toggleFullScreen
+        toggleFullScreen,
+        updateCurrentMessage,
+        isLoading
       };
     }
   };
