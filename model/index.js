@@ -6,6 +6,7 @@ import foodAndBeveragesController from '../controller/foodAndBeveragesController
 import healthcareController from '../controller/healthcareController.js';
 import { allSectorsRouter } from "../controller/allSectorsController.js";
 import geminiController from '../controller/geminiController.js';
+import sectorGuideController from '../controller/sectorGuideController.js';
 
 const router = express.Router()
 
@@ -54,6 +55,8 @@ router.delete('/healthcare/:id', healthcareController.deleteHealthcareData)
 router.post('/healthcare-data', healthcareController.addHealthcareData)
 
 router.post('/gemini', geminiController.generatePrediction); // Gemini predictions
+
+router.post('/openAI', sectorGuideController.getInsights.bind(sectorGuideController)); // Open AI insights
 
 const users = new Users()
 
