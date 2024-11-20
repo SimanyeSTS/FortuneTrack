@@ -52,29 +52,33 @@ class SectorGuideController {
   }
 
   async generateResponse(message, sectorSummaries) {
-    const prompt = `Generate a friendly, conversational response about market sectors. Don't make specific predictions or give financial advice.
-    Question: ${message}
-    
-    Available sector information:
-    ${JSON.stringify(sectorSummaries, null, 2)}
-    
-    Remember:
-    - Keep the tone light and engaging.
-    - Compare sectors when relevant.
-    - Encourage using the Predict button for detailed analysis.
-    - Don't make specific predictions or give financial advice.
-    - Keep responses concise and easy to understand.
-    `;
+    const messages = [
+      {
+        role: 'system',
+        content:
+          'You are a helpful assistant that provides friendly, conversational insights about market sectors. Do not make specific predictions or give financial advice. Keep the tone light, engaging, and concise.',
+      },
+      {
+        role: 'user',
+        content: `Generate a friendly, conversational response about market sectors. Here is the user question and the available sector information:\n
+        Question: ${message}\n\n
+        Available sector information:\n${JSON.stringify(sectorSummaries, null, 2)}\n\n
+        Remember:
+        - Compare sectors when relevant.
+        - Encourage using the Predict button for detailed analysis.
+        - Keep responses concise and easy to understand.`,
+      },
+    ];
 
     try {
-      const completion = await openai.completions.create({
-        model: 'text-davinci-003',
-        prompt: prompt,
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4', // or 'gpt-3.5-turbo'
+        messages,
         max_tokens: 500,
         temperature: 0.7,
       });
 
-      return completion.choices[0]?.text?.trim();
+      return completion.choices[0]?.message?.content?.trim();
     } catch (error) {
       console.error('OpenAI API Error:', error);
       throw new Error('Failed to generate response from OpenAI.');
