@@ -17,102 +17,153 @@ export default {
     NavBar,
     FooterComp
   },
+  data() {
+    return {
+      inactivityTimeout: null,
+      warningInterval: null,
+      INACTIVITY_DURATION: 600000, // 10 minutes
+      WARNING_DURATION: 30000, // 30 seconds warning
+    }
+  },
   computed: {
     ...mapGetters(['current']), // Get the current user from Vuex
   },
   mounted() {
+    // Only set up listeners if a user is logged in
     if (this.current) {
-    this.setupInactivityTimer();
-    window.addEventListener('visibilitychange', this.handleVisibilityChange);
+      this.setupInactivityTracking();
     }
   },
   beforeUnmount() {
-    if (this.current) {
-    this.clearInactivityTimer();
-    window.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    }
+    this.removeInactivityTracking();
   },
   methods: {
-    setupInactivityTimer() {
-      // Only set up the timer if there is a logged-in user
-      if (this.current) {
-        this.clearInactivityTimer();
-        this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
+    setupInactivityTracking() {
+      // Remove any existing listeners to prevent duplicates
+      this.removeInactivityTracking();
 
-        // Event listeners for desktop and mobile interaction
-        window.addEventListener('mousemove', this.resetTimer);
-        window.addEventListener('keypress', this.resetTimer);
-        window.addEventListener('touchstart', this.resetTimer);
-        window.addEventListener('touchmove', this.resetTimer);
-        window.addEventListener('scroll', this.resetTimer);
+      // List of events that reset the inactivity timer
+      const resetEvents = [
+        'mousedown', 'mousemove', 'keydown', 
+        'scroll', 'touchstart', 'touchmove', 
+        'wheel', 'click'
+      ];
+
+      // Add event listeners for each reset event
+      resetEvents.forEach(eventName => {
+        window.addEventListener(eventName, this.resetInactivityTimer, { passive: true });
+      });
+
+      // Set initial inactivity timeout
+      this.resetInactivityTimer();
+    },
+
+    removeInactivityTracking() {
+      // Clear existing timers
+      if (this.inactivityTimeout) {
+        clearTimeout(this.inactivityTimeout);
       }
+      if (this.warningInterval) {
+        clearInterval(this.warningInterval);
+      }
+
+      // Remove all event listeners
+      const resetEvents = [
+        'mousedown', 'mousemove', 'keydown', 
+        'scroll', 'touchstart', 'touchmove', 
+        'wheel', 'click'
+      ];
+
+      resetEvents.forEach(eventName => {
+        window.removeEventListener(eventName, this.resetInactivityTimer);
+      });
     },
 
-    resetTimer() {
-      this.clearInactivityTimer();
-      this.timeout = setTimeout(() => this.showLogoutWarning(), 600000);
-    },
+    resetInactivityTimer() {
+      // Clear existing timeout
+      if (this.inactivityTimeout) {
+        clearTimeout(this.inactivityTimeout);
+      }
 
-    clearInactivityTimer() {
-      clearTimeout(this.timeout);
+      // If no logged-in user, do nothing
+      if (!this.current) {
+        return;
+      }
+
+      // Set new timeout for inactivity
+      this.inactivityTimeout = setTimeout(() => {
+        this.showLogoutWarning();
+      }, this.INACTIVITY_DURATION);
     },
 
     showLogoutWarning() {
-      let countdown = 30;
+      // Ensure user is still logged in
+      if (!this.current) return;
+
+      let countdown = this.WARNING_DURATION / 1000; // Convert to seconds
+
+      // Show SweetAlert warning
       Swal.fire({
         title: 'Inactivity Warning',
         html: `<p>You will be logged out in <strong>${countdown}</strong> seconds due to inactivity.</p>`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Logout',
-        cancelButtonText: 'Stay Logged In',
+        confirmButtonText: 'Stay Logged In',
+        cancelButtonText: 'Logout',
         allowOutsideClick: false,
+        timer: this.WARNING_DURATION,
+        timerProgressBar: true,
         didOpen: () => {
-          const interval = setInterval(() => {
+          // Countdown interval
+          this.warningInterval = setInterval(() => {
             countdown--;
             const content = Swal.getHtmlContainer();
             if (content && countdown > 0) {
               content.querySelector('strong').textContent = countdown.toString();
-            } else if (countdown <= 0) {
-              clearInterval(interval);
+            } else {
+              // Stop interval and logout
+              clearInterval(this.warningInterval);
               this.handleLogout();
-              Swal.close();
             }
           }, 1000);
-          this.countdownInterval = interval;
         },
         willClose: () => {
-          clearInterval(this.countdownInterval);
+          // Clear interval on modal close
+          clearInterval(this.warningInterval);
+        },
+        preConfirm: () => {
+          // Reset timer if 'Stay Logged In' is clicked
+          this.resetInactivityTimer();
         },
         customClass: {
           popup: 'inactivity-modal'
         }
       }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.dismiss === Swal.DismissReason.timer || result.isDenied) {
+          // Automatically logout if timer expires or user chooses to logout
           this.handleLogout();
-        } else {
-          this.resetTimer();
+        } else if (result.isConfirmed) {
+          // User wants to stay logged in
+          this.resetInactivityTimer();
         }
       });
     },
 
     handleLogout() {
-      this.$store.dispatch('logoutUser')
-        .then(() => {
-          this.$router.push('/');
-        })
-        .catch((error) => {
-          console.error("Logout failed:", error);
-        });
-    },
-
-    handleVisibilityChange() {
-      if (document.visibilityState === 'hidden') {
-        // User has switched tabs/apps (consider starting the timer)
-        this.resetTimer();
-      } else {
-        // User has returned to the app (reset the timer)
-        this.resetTimer();
+      // Ensure we have a logged-in user before attempting logout
+      if (this.current) {
+        this.$store.dispatch('logoutUser')
+          .then(() => {
+            // Clear any remaining tracking
+            this.removeInactivityTracking();
+            // Redirect to home/login page
+            this.$router.push('/');
+          })
+          .catch((error) => {
+            console.error("Logout failed:", error);
+            // Fallback redirect even if logout fails
+            this.$router.push('/');
+          });
       }
     }
   }
@@ -120,17 +171,17 @@ export default {
 </script>
 
 <style>
-/* Basic styling for the layout */
-html, body {
-  height: 100%;
-  margin: 0; 
-}
-
+/* Keep existing styles */
 .wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #000080; 
+}
+
+html, body {
+  height: 100%;
+  margin: 0; 
 }
 
 body {
@@ -141,25 +192,9 @@ footer {
   margin-top: auto;
 }
 
-/* Styling for SweetAlert2 on smaller screens */
-/* .inactivity-modal {
-  font-size: 16px;
-  max-width: 90%; 
-} */
-
+/* Responsive modal styling */
 @media (max-width: 768px) {
-  /* Adjustments for mobile devices */
-  /* .wrapper {
-    padding: 0 10px;
-  } */
-
-  /* .inactivity-modal {
-    font-size: 14px; Slightly smaller font size for better fit 
-  } */
-
-  /* footer {
-    padding-bottom: 20px;
-  } */
+  /* Mobile-specific adjustments can be added here */
 }
 </style>
 
