@@ -16,12 +16,18 @@
               {{ isFullScreen ? '↙ Collapse' : '↗ Expand' }}
             </button>
             <template v-for="(message, index) in messages" :key="index">
-              <div :class="message.from === 'user' ? 'messageFromUser ' : 'messageFromAI'">
+              <div :class="message.from === 'user' ? 'messageFromUser' : 'messageFromAI'">
                 <span v-html="formatMessage(message.data)"></span>
               </div>
             </template>
+            <div v-if="isTyping" class="messageFromAI typing-indicator">
+              <span class="typing-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </span>
+            </div>
           </div>
-          <div v-if="isTyping" class="typing-indicator">AI is analyzing...</div>
           <input 
             v-if="!isFullScreen"
             v-model="currentMessage" 
@@ -219,10 +225,34 @@ export default {
 }
 
 .typing-indicator {
-  padding: 10px;
-  color: #ffffff;
-  font-style: italic;
-  text-align: center;
+  padding: 8px 12px !important;
+  min-width: 60px;
+  max-width: fit-content;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
 }
 
 .messageFromUser , .messageFromAI {

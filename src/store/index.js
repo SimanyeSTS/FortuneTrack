@@ -178,7 +178,10 @@ export default createStore({
     },
     SET_CHAT_LOADING(state, value) {
       state.chatLoading = value;
-    }
+    },
+    SET_SECTOR_INSIGHTS(state, { sector, insights }) {
+      state[sector] = insights; // Set insights for the corresponding sector
+    },
   },
   actions: {
     async fetchUsers({ commit }) {
@@ -793,6 +796,42 @@ export default createStore({
         throw error;
       } finally {
         commit('SET_CHAT_LOADING', false);
+      }
+    },
+    async getSectorInsights({ commit }, { message, sectors }) {
+      // Simulate fetching data based on message and sector context
+      commit('SET_LOADING', true); // Set loading to true before the fetch
+      try {
+        // Example API request (replace with your actual API endpoint)
+        const response = await fetch(`${hostedData}chatbot/openAI`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message,
+            sectors, // You can adjust this based on how your API expects it
+          }),
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch data');
+
+        const data = await response.json();
+
+        // Here, dynamically commit insights based on the sectors
+        for (let sector in sectors) {
+          if (data[sector]) {
+            commit('SET_SECTOR_INSIGHTS', { sector, insights: data[sector] });
+          }
+        }
+
+        // Return the response or a combined message
+        return `Insights received: ${data.summary || 'No insights available'}`;
+      } catch (error) {
+        commit('SET_ERROR', error.message); // Set error if any
+        return "Oops! Something went wrong. Please try again.";
+      } finally {
+        commit('SET_LOADING', false); // Set loading to false after the fetch is done
       }
     },
   },

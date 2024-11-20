@@ -39,6 +39,8 @@
       </div>
     </div>
 
+    <ChatBot2 />
+
     <!-- Login Modal -->
     <div v-if="showLoginModal" class="modal">
       <div class="modal-content">
@@ -177,6 +179,7 @@ import MainLineChart from '@/components/MainLineChart.vue'
 import MainSideWindow from '@/components/MainSideWindow.vue'
 import SpinnerComp from '@/components/SpinnerComp.vue'
 import PredictionFilters from '@/components/PredictionFilters.vue'
+import ChatBot2 from '@/components/ChatBot2.vue';
 import Swal from 'sweetalert2'
 
 export default defineComponent({
@@ -185,7 +188,8 @@ export default defineComponent({
     MainLineChart,
     MainSideWindow,
     SpinnerComp,
-    PredictionFilters
+    PredictionFilters,
+    ChatBot2
   },
   data() {
     return {
@@ -448,7 +452,7 @@ export default defineComponent({
           parseFloat(data.QuarterlyEarningsGrowthYOY) * 100,
           parseFloat(data.RevenueTTM) / 1e9,
           parseFloat(data.AnalystTargetPrice),
-          parseFloat(Week52High) // Use the determined property here
+          parseFloat(Week52High)
         ],
         backgroundColor: [
           'rgba(255, 99, 132, 0.7)',

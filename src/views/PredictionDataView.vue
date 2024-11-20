@@ -301,11 +301,11 @@ const prepareAnalystTargetPriceData = () => {
 };
 
 
-onMounted(() => {
-  if (symbol.value && !predictionData.value) {
-    store.dispatch('fetchPredictionBySymbol', symbol.value);
-  }
-});
+    onMounted(() => {
+      if (symbol.value) {
+        store.dispatch('fetchPredictionBySymbol', symbol.value);
+      }
+    });
 
     return {
       symbol,
