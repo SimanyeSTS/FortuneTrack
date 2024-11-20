@@ -1,14 +1,17 @@
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Ensure this is set in your environment variables
-});
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 class SectorGuideController {
+  constructor() {
+    // Ensure you have set GEMINI_API_KEY in your environment variables
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY must be set in environment variables');
+    }
+    this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  }
+
   async getInsights(req, res) {
     try {
       const { message, sectors } = req.body;
-
       // Prepare sector summary data
       const sectorSummaries = {
         retail: this.summarizeSector(sectors.retail),
@@ -16,7 +19,6 @@ class SectorGuideController {
         foodAndBeverages: this.summarizeSector(sectors.foodAndBeverages),
         healthcare: this.summarizeSector(sectors.healthcare),
       };
-
       const response = await this.generateResponse(message, sectorSummaries);
       res.json({ response });
     } catch (error) {
@@ -27,13 +29,11 @@ class SectorGuideController {
 
   summarizeSector(companies) {
     if (!companies || companies.length === 0) return null;
-
     const avgGrowth =
       companies.reduce(
         (sum, company) => sum + (parseFloat(company.QuarterlyEarningsGrowthYOY) || 0),
         0
       ) / companies.length;
-
     const topPerformer = companies.reduce(
       (top, company) =>
         (parseFloat(company.QuarterlyEarningsGrowthYOY) || 0) >
@@ -42,7 +42,6 @@ class SectorGuideController {
           : top,
       companies[0]
     );
-
     return {
       companyCount: companies.length,
       averageGrowth: avgGrowth.toFixed(2),
@@ -52,39 +51,30 @@ class SectorGuideController {
   }
 
   async generateResponse(message, sectorSummaries) {
-    const messages = [
-      {
-        role: 'system',
-        content:
-          'You are a helpful assistant that provides friendly, conversational insights about market sectors. Do not make specific predictions or give financial advice. Keep the tone light, engaging, and concise.',
-      },
-      {
-        role: 'user',
-        content: `Generate a friendly, conversational response about market sectors. Here is the user question and the available sector information:\n
-        Question: ${message}\n\n
-        Available sector information:\n${JSON.stringify(sectorSummaries, null, 2)}\n\n
-        Remember:
-        - Compare sectors when relevant.
-        - Encourage using the Predict button for detailed analysis.
-        - Keep responses concise and easy to understand.`,
-      },
-    ];
-  
+    const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    const prompt = `You are a helpful assistant that provides friendly, conversational insights about market sectors. 
+    Do not make specific predictions or give financial advice. Keep the tone light, engaging, and concise.
+
+    Generate a friendly, conversational response about market sectors. Here is the user question and the available sector information:
+
+    Question: ${message}
+
+    Available sector information:
+    ${JSON.stringify(sectorSummaries, null, 2)}
+
+    Remember:
+    - Compare sectors when relevant.
+    - Encourage using the Predict button for detailed analysis.
+    - Keep responses concise and easy to understand.`;
+
     try {
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo', // Use gpt-3.5-turbo for broader compatibility
-        messages,
-        max_tokens: 500,
-        temperature: 0.7,
-      });
-  
-      return completion.choices[0]?.message?.content?.trim();
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text().trim();
     } catch (error) {
-      console.error('OpenAI API Error:', error.message);
-      if (error.response?.data?.error?.code === 'model_not_found') {
-        throw new Error('The requested model is not available for your API key. Please check your OpenAI subscription.');
-      }
-      throw new Error('Failed to generate response from OpenAI.');
+      console.error('Gemini AI API Error:', error.message);
+      throw new Error('Failed to generate response from Gemini AI.');
     }
   }
 }
