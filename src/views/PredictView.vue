@@ -1,45 +1,49 @@
 <template>
   <div class="predict-view">
-    <SpinnerComp v-if="isLoading" />
-    <div v-else>
-      <h1>Predict</h1>
-      <div class="button-container">
-        <button class="acc" @click="redirectToAccount">
-          <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
-          <span v-if="currentUser">{{ currentUser.firstName }}</span>
-          <span v-else>Account</span>
-        </button>
-        <button class="logout" @click="handleLogoutOrLogin">
-          <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
-          {{ currentUser ? 'Logout' : 'Login' }}
-        </button>
-      </div>
+    <!-- Always visible header -->
+    <h1>Predict</h1>
 
-      <!-- Add PredictionFilters component -->
-      <PredictionFilters 
-        :sectors="sectors"
-        @filter-change="handleFilterChange"
-      />
+    <!-- Always visible account/logout buttons -->
+    <div class="button-container">
+      <button class="acc" @click="redirectToAccount">
+        <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
+        <span v-if="currentUser">{{ currentUser.firstName }}</span>
+        <span v-else>Account</span>
+      </button>
+      <button class="logout" @click="handleLogoutOrLogin">
+        <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
+        {{ currentUser ? 'Logout' : 'Login' }}
+      </button>
+    </div>
 
-      <div class="all-charts">
-        <template v-if="sortedAndFilteredData.length > 0">
-          <div v-for="(group, index) in groupedData" :key="index" class="sector-group">
-            <h2 v-if="group.items.length > 0">{{ group.sector }}</h2>
-            <div v-for="data in group.items" :key="data.Symbol" class="chart-container-wrapper">
-              <div class="chart-container">
-                <MainLineChart :chartData="prepareChartData(data)" />
-              </div>
-              <MainSideWindow :data="data" :sector="group.sector" />
+    <!-- Always visible PredictionFilters -->
+    <PredictionFilters 
+      :sectors="sectors"
+      @filter-change="handleFilterChange"
+    />
+
+    <!-- Conditionally rendered content -->
+    <div v-if="isLoading">
+      <SpinnerComp />
+    </div>
+    <div v-else class="all-charts">
+      <template v-if="sortedAndFilteredData.length > 0">
+        <div v-for="(group, index) in groupedData" :key="index" class="sector-group">
+          <h2 v-if="group.items.length > 0">{{ group.sector }}</h2>
+          <div v-for="data in group.items" :key="data.Symbol" class="chart-container-wrapper">
+            <div class="chart-container">
+              <MainLineChart :chartData="prepareChartData(data)" />
             </div>
+            <MainSideWindow :data="data" :sector="group.sector" />
           </div>
-        </template>
-        <div v-else class="no-results">
-          No results found for your search criteria
         </div>
+        <ChatBot2 />
+      </template>
+      <div v-else class="no-results">
+        No results found for your search criteria
       </div>
     </div>
 
-    <ChatBot2 />
 
     <!-- Login Modal -->
     <div v-if="showLoginModal" class="modal">

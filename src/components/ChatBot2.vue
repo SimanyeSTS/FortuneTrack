@@ -101,38 +101,28 @@
       };
   
       const sendMessage = async () => {
-        if (!currentMessage.value.trim()) return;
-  
-        const message = currentMessage.value;
-        messages.value.push({ 
-          from: 'user', 
-          content: message 
-        });
-  
-        currentMessage.value = '';
-        isTyping.value = true;
-        isLoading.value = true;
-  
-        try {
-          const response = await store.dispatch('getSectorInsights', {
-            message,
-            sectors: sectors.value
-          });
-  
-          messages.value.push({
-            from: 'guide',
-            content: response
-          });
-        } catch (error) {
-          messages.value.push({
-            from: 'guide',
-            content: "Oops! I had trouble processing that. Let's try again!"
-          });
-        } finally {
-          isTyping.value = false;
-          isLoading.value = false;
-        }
-      };
+  if (!currentMessage.value.trim()) return;
+  messages.value.push({ from: 'user', content: currentMessage.value });
+  const userMessage = currentMessage.value.trim();
+  currentMessage.value = '';
+  isTyping.value = true;
+  isLoading.value = true;
+  try {
+    const guideMessage = await store.dispatch('getSectorInsights', {
+      message: userMessage,
+      sectors: sectors.value
+    });
+    messages.value.push({ from: 'guide', content: guideMessage });
+  } catch {
+    messages.value.push({
+      from: 'guide',
+      content: "Sorry, I couldn't process your request. Please try again."
+    });
+  } finally {
+    isTyping.value = false;
+    isLoading.value = false;
+  }
+};
   
       const handleOutsideClick = (event) => {
         const chatButton = document.querySelector('.chat-button');

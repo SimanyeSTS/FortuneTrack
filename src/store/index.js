@@ -33,7 +33,8 @@ export default createStore({
     token: null,
     filteredSectors: [],
     sectors: [],
-    chatLoading: false
+    chatLoading: false,
+    sectorInsights: null
   },
   getters: {
     allUsers: (state) => state.users,
@@ -182,6 +183,7 @@ export default createStore({
     SET_SECTOR_INSIGHTS(state, { sector, insights }) {
       state[sector] = insights; // Set insights for the corresponding sector
     },
+    
   },
   actions: {
     async fetchUsers({ commit }) {
@@ -740,14 +742,20 @@ export default createStore({
       }
     },
 
-    async logoutUser ({ commit }) {
+    async logoutUser({ commit }) {
       commit('SET_LOADING', true);
       try {
-        await axios.post(`${hostedData}user/logout`);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        commit('LOGOUT_USER');
-        delete axios.defaults.headers.common['Authorization'];
+        // Ensure this returns a Promise
+        await new Promise((resolve) => {
+          axios.post(`${hostedData}user/logout`)
+            .then(() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              commit('LOGOUT_USER');
+              delete axios.defaults.headers.common['Authorization'];
+              resolve();
+            });
+        });
         toast.success('Logged out successfully', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
@@ -757,6 +765,8 @@ export default createStore({
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
         });
+        console.error('Logout error:', error);
+        throw error;
       } finally {
         commit('SET_LOADING', false);
       }
@@ -798,45 +808,75 @@ export default createStore({
         commit('SET_CHAT_LOADING', false);
       }
     },
-    
+
     async getSectorInsights({ commit }, { message, sectors }) {
-      commit('SET_LOADING', true);
-      try {
-        console.log('Sending Payload:', { message, sectors });
-        const response = await fetch(`${hostedData}chatbot/openAI`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message,
-            sectors,
-          }),
-        });
-    
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Response Error:', errorText);
-          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-        }
-    
-        const data = await response.json();
-        console.log('Received Data:', data);
-    
-        // More robust data handling
-        if (!data || (!data.summary && !data.response)) {
-          throw new Error('No meaningful data returned');
-        }
-    
-        return data.summary || data.response || "Insights received successfully";
-      } catch (error) {
-        console.error('Sector Insights Error:', error);
-        commit('SET_ERROR', error.message);
-        return `Error: ${error.message}`;
-      } finally {
-        commit('SET_LOADING', false);
+    try {
+      const response = await axios.post(`${hostedData}chatbot/openAI`, { message, sectors });
+      const data = response.data;
+      if (data.summary || data.response) {
+        commit('SET_SECTOR_INSIGHTS', data.summary || data.response);
+        return data.summary || data.response; // Return for the component
       }
-    },
+      throw new Error('Invalid response format');
+    } catch (error) {
+      console.error('Error fetching sector insights:', error);
+      throw error; // Allow the component to handle the error
+    }
+  },
+
+  checkTokenExpiration({ commit }) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // No token exists, user is not logged in
+      return false;
+    }
+
+    try {
+      // Decode the token to check expiration (assumes JWT token)
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+
+      if (tokenPayload.exp && currentTime >= tokenPayload.exp) {
+        // Token has expired, perform logout
+        commit('LOGOUT_USER');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        delete axios.defaults.headers.common['Authorization'];
+        
+        // Optional: Show a toast notification about session expiration
+        toast.error('Your session has expired. Please log in again.', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000
+        });
+
+        return true; // Indicates token has expired
+      }
+
+      return false; // Token is still valid
+    } catch (error) {
+      console.error('Error checking token expiration:', error);
+      return false;
+    }
+  },
+
+  async autoLogout({ dispatch, commit }) {
+    try {
+      await dispatch('logoutUser');
+      toast.success('Logged out due to inactivity. Please log in again.', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000
+      });
+      // Optional: Redirect to login page or home
+      // this.$router.push('/');
+    } catch (error) {
+      console.error('Auto logout failed:', error);
+      // Fallback logout method
+      commit('LOGOUT_USER');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  },
   },
   modules: {}
 })
