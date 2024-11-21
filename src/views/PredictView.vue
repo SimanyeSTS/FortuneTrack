@@ -6,13 +6,13 @@
     <!-- Always visible account/logout buttons -->
     <div class="button-container">
       <button class="acc" @click="redirectToAccount">
-        <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
-        <span v-if="currentUser">{{ currentUser.firstName }}</span>
+        <img v-if="currentUser  && currentUser .userProfile" :src="currentUser .userProfile" class="profile-picture" alt="Profile">
+        <span v-if="currentUser ">{{ currentUser .firstName }}</span>
         <span v-else>Account</span>
       </button>
       <button class="logout" @click="handleLogoutOrLogin">
-        <img v-if="currentUser && currentUser.userProfile" :src="currentUser.userProfile" class="profile-picture" alt="Profile">
-        {{ currentUser ? 'Logout' : 'Login' }}
+        <img v-if="currentUser  && currentUser .userProfile" :src="currentUser .userProfile" class="profile-picture" alt="Profile">
+        {{ currentUser  ? 'Logout' : 'Login' }}
       </button>
     </div>
 
@@ -22,25 +22,30 @@
       @filter-change="handleFilterChange"
     />
 
-    <!-- Conditionally rendered content -->
-    <div v-if="isLoading">
-      <SpinnerComp />
-    </div>
-    <div v-else class="all-charts">
-      <template v-if="sortedAndFilteredData.length > 0">
-        <div v-for="(group, index) in groupedData" :key="index" class="sector-group">
-          <h2 v-if="group.items.length > 0">{{ group.sector }}</h2>
-          <div v-for="data in group.items" :key="data.Symbol" class="chart-container-wrapper">
-            <div class="chart-container">
-              <MainLineChart :chartData="prepareChartData(data)" />
+    <!-- Content Container -->
+    <div class="content-container">
+      <!-- Spinner -->
+      <div v-if="isLoading" class="spinner-container">
+        <SpinnerComp2 />
+      </div>
+
+      <!-- Main Content -->
+      <div v-else class="all-charts">
+        <template v-if="sortedAndFilteredData.length > 0">
+          <div v-for="(group, index) in groupedData" :key="index" class="sector-group">
+            <h2 v-if="group.items.length > 0">{{ group.sector }}</h2>
+            <div v-for="data in group.items" :key="data.Symbol" class="chart-container-wrapper">
+              <div class="chart-container">
+                <MainLineChart :chartData="prepareChartData(data)" />
+              </div>
+              <MainSideWindow :data="data" :sector="group.sector" />
             </div>
-            <MainSideWindow :data="data" :sector="group.sector" />
           </div>
+          <ChatBot2 />
+        </template>
+        <div v-else class="no-results">
+          No results found for your search criteria
         </div>
-        <ChatBot2 />
-      </template>
-      <div v-else class="no-results">
-        No results found for your search criteria
       </div>
     </div>
 
@@ -181,7 +186,7 @@ import { defineComponent, computed, ref, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import MainLineChart from '@/components/MainLineChart.vue'
 import MainSideWindow from '@/components/MainSideWindow.vue'
-import SpinnerComp from '@/components/SpinnerComp.vue'
+import SpinnerComp2 from '@/components/SpinnerComp2.vue'
 import PredictionFilters from '@/components/PredictionFilters.vue'
 import ChatBot2 from '@/components/ChatBot2.vue';
 import Swal from 'sweetalert2'
@@ -191,7 +196,7 @@ export default defineComponent({
   components: {
     MainLineChart,
     MainSideWindow,
-    SpinnerComp,
+    SpinnerComp2,
     PredictionFilters,
     ChatBot2
   },
@@ -491,6 +496,25 @@ export default defineComponent({
 
 
 <style scoped>
+.content-container {
+  margin-top: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; 
+  margin-top: 100px;
+}
+
+.predict-view {
+  padding: 20px;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 .no-results {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;

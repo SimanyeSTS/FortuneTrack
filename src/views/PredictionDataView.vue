@@ -1,7 +1,7 @@
 <template>
   <h1 class="heading">Prediction Data</h1>
   <div class="prediction-data-view">
-    <SpinnerComp v-if="isLoading" />
+    <SpinnerComp2 v-if="isLoading" />
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else-if="predictionData">
       <h1>{{ predictionData.Name }} ({{ predictionData.Symbol }})</h1>
@@ -78,7 +78,7 @@ import RadarChart from '@/components/RadarChart.vue';
 import BarChart from '@/components/BarChart.vue';
 import ScatterChart from '@/components/ScatterChart.vue';
 import GaugeChart from '@/components/GaugeChart.vue';
-import SpinnerComp from '@/components/SpinnerComp.vue';
+import SpinnerComp2 from '@/components/SpinnerComp2.vue';
 import ChatBot from '@/components/ChatBot.vue';
 
 export default defineComponent({
@@ -89,7 +89,7 @@ export default defineComponent({
     BarChart,
     ScatterChart,
     GaugeChart,
-    SpinnerComp,
+    SpinnerComp2,
     ChatBot
   },
   mounted() {

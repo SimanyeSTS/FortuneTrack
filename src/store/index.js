@@ -862,7 +862,7 @@ export default createStore({
   async autoLogout({ dispatch, commit }) {
     try {
       await dispatch('logoutUser');
-      toast.success('Logged out due to inactivity. Please log in again.', {
+      toast.success('Automatically logged out due to inactivity. Please log in again.', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000
       });
