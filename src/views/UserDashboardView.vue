@@ -4,8 +4,8 @@
     <p v-if="current">Welcome, {{ current.firstName }}! <br> Feel free to make adjustments.</p>
     
     <div v-if="loading" class="text-center">
-      Loading profile data...
-    </div>
+  <SpinnerComp /> <!-- Use the spinner component instead of the loading text -->
+</div>
     
     <div v-if="error" class="error-message">
       {{ error }}
@@ -107,10 +107,14 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
+import SpinnerComp from '@/components/SpinnerComp.vue';
 
 export default {
-  name: 'User  DashboardView',
+  name: 'UserDashboardView', // Removed extra space
+  components: {
+    SpinnerComp
+  },
   
   data() {
     return {
