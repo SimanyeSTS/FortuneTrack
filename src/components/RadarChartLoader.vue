@@ -1,8 +1,26 @@
 <template>
     <svg class="radar-chart-loader" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle cx="50" cy="50" r="15" fill="none" stroke="#3B82F6" stroke-width="3" :style="{ opacity: showBlue }"/>
-      <circle cx="50" cy="50" r="25" fill="none" stroke="#EF4444" stroke-width="3" :style="{ opacity: showRed }"/>
-      <circle cx="50" cy="50" r="35" fill="none" stroke="#10B981" stroke-width="3" :style="{ opacity: showGreen }"/>
+      <path
+        :d="getDiamondPath(15)"
+        fill="none"
+        stroke="#3B82F6"
+        stroke-width="3"
+        :style="{ opacity: showBlue }"
+      />
+      <path
+        :d="getDiamondPath(25)"
+        fill="none"
+        stroke="#EF4444"
+        stroke-width="3"
+        :style="{ opacity: showRed }"
+      />
+      <path
+        :d="getDiamondPath(35)"
+        fill="none"
+        stroke="#10B981"
+        stroke-width="3"
+        :style="{ opacity: showGreen }"
+      />
     </svg>
   </template>
     
@@ -25,6 +43,14 @@
         setTimeout(() => {
           this[`show${color}`] = 1;
         }, delay);
+      },
+      getDiamondPath(size) {
+        const center = 50;
+        return `M ${center} ${center - size} 
+                L ${center + size} ${center} 
+                L ${center} ${center + size} 
+                L ${center - size} ${center} 
+                Z`;
       }
     }
   };
@@ -37,7 +63,7 @@
     padding: 10px;
   }
   
-  .radar-chart-loader circle {
+  .radar-chart-loader path {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     animation: pulse 2s infinite ease-in-out alternate;
     stroke-dasharray: 10;

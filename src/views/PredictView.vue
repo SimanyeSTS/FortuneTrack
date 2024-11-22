@@ -51,132 +51,22 @@
 
 
     <!-- Login Modal -->
-    <div v-if="showLoginModal" class="modal">
-      <div class="modal-content">
-        <h1>You are not logged in, please login to continue!</h1>
-        <form @submit.prevent="() => handleLogin('login')">
-          <div class="form-group">
-            <label for="emailAdd">Email:</label>
-            <input 
-              type="email" 
-              id="emailAdd" 
-              v-model="emailAdd" 
-              required
-              :disabled="isLoading"
-            >
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input 
-              type="password" 
-              id="userPass" 
-              v-model="userPass" 
-              required
-              :disabled="isLoading"
-            >
-          </div>
-          <div class="button-group">
-            <button 
-              type="submit" 
-              class="login-button"
-              :disabled="isLoading"
-            >
-              {{ isLoading ? 'Signing in...' : 'Sign In' }}
-            </button>
-            <div class="links">
-              <button 
-                type="button" 
-                class="forgot-password" 
-                @click="handleForgotPassword"
-                :disabled="isLoading"
-              >
-                Forgot Password?
-              </button>
-              <br>
-              <button 
-                type="button" 
-                class="register-button" 
-                @click="goToRegistration"
-                :disabled="isLoading"
-              >
-                Create Account
-              </button>
-            </div>
-          </div>
-        </form>
-        <button 
-          class="close-button" 
-          @click="closeModal"
-          :disabled="isLoading"
-        >
-          &times;
-        </button>
-      </div>
-    </div>
+    <LoginModal
+  v-model="showLoginModal"
+  :is-loading="isLoading"
+  @login="handleLogin"
+  @forgot-password="handleForgotPassword"
+  @register="goToRegistration"
+/>
 
     <!-- Welcome Modal -->
-    <div v-if="showWelcomeModal" class="modal">
-      <div class="modal-content">
-        <h1>Wonderful to have you here!</h1>
-        <form @submit.prevent="() => handleLogin('welcome')">
-          <div class="form-group">
-            <label for="emailAdd">Email:</label>
-            <input 
-              type="email" 
-              id="emailAdd" 
-              v-model="emailAdd" 
-              required
-              :disabled="isLoading"
-            >
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input 
-              type="password" 
-              id="userPass" 
-              v-model="userPass" 
-              required
-              :disabled="isLoading"
-            >
-          </div>
-          <div class="button-group">
-            <button 
-              type="submit" 
-              class="login-button"
-              :disabled="isLoading"
-            >
-              {{ isLoading ? 'Signing in...' : 'Sign In' }}
-            </button>
-            <div class="links">
-              <button 
-                type="button" 
-                class="forgot-password" 
-                @click="handleForgotPassword"
-                :disabled="isLoading"
-              >
-                Forgot Password?
-              </button>
-              <br>
-              <button 
-                type="button" 
-                class="register-button" 
-                @click="goToRegistration"
-                :disabled="isLoading"
-              >
-                Create Account
-              </button>
-            </div>
-          </div>
-        </form>
-        <button 
-          class="close-button" 
-          @click="closeModal"
-          :disabled="isLoading"
-        >
-          &times;
-        </button>
-      </div>
-    </div>
+    <WelcomeModal
+  v-model="showWelcomeModal"
+  :is-loading="isLoading"
+  @login="handleLogin"
+  @forgot-password="handleForgotPassword"
+  @register="goToRegistration"
+/>
   </div>
 </template>
 
@@ -189,7 +79,9 @@ import MainSideWindow from '@/components/MainSideWindow.vue'
 import SpinnerComp2 from '@/components/SpinnerComp2.vue'
 import PredictionFilters from '@/components/PredictionFilters.vue'
 import ChatBot2 from '@/components/ChatBot2.vue';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import LoginModal from '@/components/LoginModal.vue'
+import WelcomeModal from '@/components/WelcomeModal.vue'
 
 export default defineComponent({
   name: 'PredictView',
@@ -198,7 +90,9 @@ export default defineComponent({
     MainSideWindow,
     SpinnerComp2,
     PredictionFilters,
-    ChatBot2
+    ChatBot2,
+    LoginModal,
+    WelcomeModal
   },
   data() {
     return {
@@ -238,43 +132,43 @@ export default defineComponent({
       }
     },
 
-    async handleLogin(modalType) {
-      try {
-        this.$store.commit('SET_LOADING', true);
-        await this.$store.dispatch('loginUser', {
-          emailAdd: this.emailAdd,
-          userPass: this.userPass
-        });
+    async handleLogin(data) {
+  try {
+    this.$store.commit('SET_LOADING', true);
+    await this.$store.dispatch('loginUser', {
+      emailAdd: data.emailAdd,
+      userPass: data.userPass
+    });
 
-        await Swal.fire({
-          title: 'Success!',
-          text: 'You have successfully logged in.',
-          icon: 'success',
-          timer: 1500
-        });
+    await Swal.fire({
+      title: 'Success!',
+      text: 'You have successfully logged in.',
+      icon: 'success',
+      timer: 1500
+    });
 
-        this.closeModal();
+    this.closeModal();
 
-        if (modalType === 'welcome') {
-          return;
-        } else {
-          if (this.currentUser.userRole.toLowerCase() === 'admin') {
-            this.$router.push({ name: 'admin-dashboard' });
-          } else {
-            this.$router.push({ name: 'user-dashboard' });
-          }
-        }
-      } catch (error) {
-        console.error('Login failed:', error);
-        await Swal.fire({
-          title: 'Error',
-          text: error.message || 'Failed to log in. Please try again.',
-          icon: 'error'
-        });
-      } finally {
-        this.$store.commit('SET_LOADING', false);
+    if (data.type === 'welcome') {
+      return;
+    } else {
+      if (this.currentUser.userRole.toLowerCase() === 'admin') {
+        this.$router.push({ name: 'admin-dashboard' });
+      } else {
+        this.$router.push({ name: 'user-dashboard' });
       }
-    },
+    }
+  } catch (error) {
+    console.error('Login failed:', error);
+    await Swal.fire({
+      title: 'Error',
+      text: error.message || 'Failed to log in. Please try again.',
+      icon: 'error'
+    });
+  } finally {
+    this.$store.commit('SET_LOADING', false);
+  }
+},
 
     async confirmLogout() {
       try {
