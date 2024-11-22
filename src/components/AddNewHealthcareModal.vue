@@ -528,6 +528,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
   props: {
@@ -653,79 +654,90 @@ methods: {
     isValidDate(date) {
     return !isNaN(new Date(date).getTime()); // Check if the date is valid
   },
-    async createHealthcare() {
-  console.log('createHealthcare called'); // Log to confirm the method is called
+  async createHealthcare() {
   if (!this.isFormValid) {
-    console.log('Form is not valid'); // Log if the form is not valid
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please fill in all required fields correctly.',
+    });
     return;
   }
 
-      try {
-        const HealthcareData = {
-          Symbol: this.Symbol.trim(),
-          AssetType: this.AssetType.trim(),
-          Name: this.Name.trim(),
-          Description: this.Description.trim(),
-          CIK: this.CIK.trim(),
-          Exchange: this.Exchange.trim(),
-          Currency: this.Currency.trim(),
-          Country: this.Country.trim(),
-          Sector: this.Sector.trim(),
-          Industry: this.Industry.trim(),
-          Address: this.Address.trim(),
-          OfficialSite: this.OfficialSite.trim(),
-          FiscalYearEnd: this.FiscalYearEnd.trim(),
-          LatestQuarter: this.LatestQuarter.trim(),
-          MarketCapitalization: this.MarketCapitalization,
-          EBITDA: this.EBITDA,
-          PERatio: this.PERatio,
-          PEGRatio: this.PEGRatio,
-          BookValue: this.BookValue,
-          DividendPerShare: this.DividendPerShare,
-          DividendYield: this.DividendYield,
-          EPS: this.EPS,
-          RevenuePerShareTTM: this.RevenuePerShareTTM,
-          ProfitMargin: this.ProfitMargin,
-          OperatingMarginTTM: this.OperatingMarginTTM,
-          ReturnOnAssetsTTM: this.ReturnOnAssetsTTM,
-          ReturnOnEquityTTM: this.ReturnOnEquityTTM,
-          RevenueTTM: this.RevenueTTM,
-          GrossProfitTTM: this.GrossProfitTTM,
-          DilutedEPSTTM: this.DilutedEPSTTM,
-          QuarterlyEarningsGrowthYOY: this.QuarterlyEarningsGrowthYOY,
-          QuarterlyRevenueGrowthYOY: this.QuarterlyRevenueGrowthYOY,
-          AnalystTargetPrice: this.AnalystTargetPrice,
-          AnalystRatingStrongBuy: this.AnalystRatingStrongBuy,
-          AnalystRatingBuy: this.AnalystRatingBuy,
-          AnalystRatingHold: this.AnalystRatingHold,
-          AnalystRatingSell: this.AnalystRatingSell,
-          AnalystRatingStrongSell: this.AnalystRatingStrongSell,
-          TrailingPE: this.TrailingPE,
-          ForwardPE: this.ForwardPE,
-          PriceToSalesRatioTTM: this.PriceToSalesRatioTTM,
-          PriceToBookRatio: this.PriceToBookRatio,
-          EVToRevenue: this.EVToRevenue,
-          EVToEBITDA: this.EVToEBITDA,
-          Beta: this.Beta,
-          Week52High: this.Week52High,
-          Week52Low: this.Week52Low,
-          Day50MovingAverage: this.Day50MovingAverage,
-          Day200MovingAverage: this.Day200MovingAverage,
-          SharesOutstanding: this.SharesOutstanding,
-          DividendDate: this.DividendDate,
-          ExDividendDate: this.ExDividendDate
-        };
+  try {
+    const HealthcareData = {
+      Symbol: this.Symbol.trim(),
+      AssetType: this.AssetType.trim(),
+      Name: this.Name.trim(),
+      Description: this.Description.trim(),
+      CIK: this.CIK.trim(),
+      Exchange: this.Exchange.trim(),
+      Currency: this.Currency.trim(),
+      Country: this.Country.trim(),
+      Sector: this.Sector.trim(),
+      Industry: this.Industry.trim(),
+      Address: this.Address.trim(),
+      OfficialSite: this.OfficialSite.trim(),
+      FiscalYearEnd: this.FiscalYearEnd.trim(),
+      LatestQuarter: this.LatestQuarter.trim(),
+      MarketCapitalization: this.MarketCapitalization,
+      EBITDA: this.EBITDA,
+      PERatio: this.PERatio,
+      PEGRatio: this.PEGRatio,
+      BookValue: this.BookValue,
+      DividendPerShare: this.DividendPerShare,
+      DividendYield: this.DividendYield,
+      EPS: this.EPS,
+      RevenuePerShareTTM: this.RevenuePerShareTTM,
+      ProfitMargin: this.ProfitMargin,
+      OperatingMarginTTM: this.OperatingMarginTTM,
+      ReturnOnAssetsTTM: this.ReturnOnAssetsTTM,
+      ReturnOnEquityTTM: this.ReturnOnEquityTTM,
+      RevenueTTM: this.RevenueTTM,
+      GrossProfitTTM: this.GrossProfitTTM,
+      DilutedEPSTTM: this.DilutedEPSTTM,
+      QuarterlyEarningsGrowthYOY: this.QuarterlyEarningsGrowthYOY,
+      QuarterlyRevenueGrowthYOY: this.QuarterlyRevenueGrowthYOY,
+      AnalystTargetPrice: this.AnalystTargetPrice,
+      AnalystRatingStrongBuy: this.AnalystRatingStrongBuy,
+      AnalystRatingBuy: this.AnalystRatingBuy,
+      AnalystRatingHold: this.AnalystRatingHold,
+      AnalystRatingSell: this.AnalystRatingSell,
+      AnalystRatingStrongSell: this.AnalystRatingStrongSell,
+      TrailingPE: this.TrailingPE,
+      ForwardPE: this.ForwardPE,
+      PriceToSalesRatioTTM: this.PriceToSalesRatioTTM,
+      PriceToBookRatio: this.PriceToBookRatio,
+      EVToRevenue: this.EVToRevenue,
+      EVToEBITDA: this.EVToEBITDA,
+      Beta: this.Beta,
+      Week52High: this.Week52High,
+      Week52Low: this.Week52Low,
+      Day50MovingAverage: this.Day50MovingAverage,
+      Day200MovingAverage: this.Day200MovingAverage,
+      SharesOutstanding: this.SharesOutstanding,
+      DividendDate: this.DividendDate,
+      ExDividendDate: this.ExDividendDate
+    };
 
-        await this.$store.dispatch('createHealthcare', HealthcareData);
-        
-        // Reset form
-        this.resetForm();
-        
-        this.$emit('close'); // Close the modal after submission
-      } catch (error) {
-        console.error('Error adding healthcare prediction:', error);
-      }
-    },
+    await this.$store.dispatch('createHealthcare', HealthcareData);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'Healthcare prediction added successfully.',
+    });
+
+    this.resetForm();
+    this.$emit('close');
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'There was an error adding the healthcare prediction. Please try again later.',
+    });
+  }
+},
     resetForm() {
       this.Symbol = '';
       this.AssetType = '';

@@ -142,7 +142,6 @@ export default {
     },
 
     showLogoutWarning() {
-      // Ensure user is still logged in
       if (!this.isLoggedIn) return;
 
       let countdown = this.WARNING_DURATION / 1000; // Convert to seconds
@@ -159,7 +158,6 @@ export default {
         timer: this.WARNING_DURATION,
         timerProgressBar: true,
         didOpen: () => {
-          // Countdown interval
           this.warningInterval = setInterval(() => {
             countdown--;
             const content = Swal.getHtmlContainer();
@@ -235,11 +233,6 @@ body {
 
 footer {
   margin-top: auto;
-}
-
-/* Responsive modal styling */
-@media (max-width: 768px) {
-  /* Mobile-specific adjustments can be added here */
 }
 </style>
 

@@ -528,6 +528,7 @@
   
   <script>
   import { mapActions } from 'vuex';
+  import Swal from 'sweetalert2';
   
   export default {
     props: {
@@ -662,8 +663,11 @@
   const retailId = this.retail.id;
 
   if (!retailId) {
-    console.error('Retail ID is undefined');
-    this.$emit('error', 'Retail ID is undefined');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Retail ID is undefined.',
+    });
     return;
   }
 
@@ -720,15 +724,23 @@
     DividendDate: (this.DividendDate || '').trim(),
     ExDividendDate: (this.ExDividendDate || '').trim()
   };
-  console.log('Retail data to be sent:', retailData); // Log the data being sent
-
 
   try {
     await this.$store.dispatch('updateRetail', { id: retailId, retailData });
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'Retail prediction updated successfully.',
+    });
+
     this.$emit('close');
   } catch (error) {
-    console.error('Update error:', error);
-    this.$emit('error', 'Failed to update retail data. Please try again.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Failed to update retail data. Please try again.',
+    });
   }
 }
     }

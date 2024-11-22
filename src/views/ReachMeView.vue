@@ -247,7 +247,6 @@ textarea:hover {
   border: solid #688eff;
 }
 
-/* Media Query for Responsiveness */
 @media (max-width: 600px) {
   .contact-section {
     flex-direction: column;

@@ -106,6 +106,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
 props: {
@@ -143,32 +144,45 @@ computed: {
 },
 methods: {
   async registerAccount() {
-    if (!this.isFormValid) {
-      return;
-    }
+  if (!this.isFormValid) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please fill in all required fields correctly.',
+    });
+    return;
+  }
 
-    try {
-      const userData = {
-        firstName: this.firstName.trim(),
-        lastName: this.lastName.trim(),
-        userAge: parseInt(this.userAge),
-        gender: this.gender,
-        emailAdd: this.emailAdd.toLowerCase().trim(),
-        userPass: this.userPass,
-        userProfile: this.userProfile.trim() || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
-        userRole: this.userRole
-      };
+  try {
+    const userData = {
+      firstName: this.firstName.trim(),
+      lastName: this.lastName.trim(),
+      userAge: parseInt(this.userAge),
+      gender: this.gender,
+      emailAdd: this.emailAdd.toLowerCase().trim(),
+      userPass: this.userPass,
+      userProfile: this.userProfile.trim() || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+      userRole: this.userRole
+    };
 
-      await this.$store.dispatch('registerUser', userData);
-      
-      // Reset form
-      this.resetForm();
+    await this.$store.dispatch('registerUser ', userData);
 
-      this.$emit('close'); // Close the modal after submission
-    } catch (error) {
-      console.error('Registration error:', error);
-    }
-  },
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'User  registered successfully.',
+    });
+
+    this.resetForm();
+    this.$emit('close');
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'There was an error registering the user. Please try again later.',
+    });
+  }
+},
   resetForm() {
     this.firstName = '';
     this.lastName = '';

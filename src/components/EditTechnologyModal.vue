@@ -528,6 +528,7 @@
   
   <script>
   import { mapActions } from 'vuex';
+  import Swal from 'sweetalert2';
   
   export default {
     props: {
@@ -659,80 +660,89 @@
       },
       
       async updateTechnology() {
-    const technologylId = this.technology.id;
-    console.log('tech  object:', this.technology);
-    console.log('tech  ID:', technologylId);
-  
-    if (!technologylId) {
-      console.error('tech  ID is undefined');
-      return;
-    }
-  
-    console.log('Updating tech with ID:', technologylId);
-  
-    const technologyData = {
-  Symbol: (this.Symbol || '').trim(),
-  AssetType: (this.AssetType || '').trim(),
-  Name: (this.Name || '').trim(),
-  Description: (this.Description || '').trim(),
-  CIK: (this.CIK || '').trim(),
-  Exchange: (this.Exchange || '').trim(),
-  Currency: (this.Currency || '').trim(),
-  Country: (this.Country || '').trim(),
-  Sector: (this.Sector || '').trim(),
-  Industry: (this.Industry || '').trim(),
-  Address: (this.Address || '').trim(),
-  OfficialSite: (this.OfficialSite || '').trim(),
-  FiscalYearEnd: (this.FiscalYearEnd || '').trim(),
-  LatestQuarter: (this.LatestQuarter || '').trim(),
-  MarketCapitalization: this.MarketCapitalization || null,
-  EBITDA: this.EBITDA || null,
-  PERatio: this.PERatio || null,
-  PEGRatio: this.PEGRatio || null,
-  BookValue: this.BookValue || null,
-  DividendYield: this.DividendYield || null,
-  EPS: this.EPS || null,
-  RevenuePerShareTTM: this.RevenuePerShareTTM || null,
-  ProfitMargin: this.ProfitMargin || null,
-  OperatingMarginTTM: this.OperatingMarginTTM || null,
-  ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
-  ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
-  RevenueTTM: this.RevenueTTM || null,
-  GrossProfitTTM: this.GrossProfitTTM || null,
-  DilutedEPSTTM: this.DilutedEPSTTM || null,
-  QuarterlyEarningsGrowthYOY: this.QuarterlyEarningsGrowthYOY || null,
-  QuarterlyRevenueGrowthYOY: this.QuarterlyRevenueGrowthYOY || null,
-  AnalystTargetPrice: this.AnalystTargetPrice || null,
-  AnalystRatingStrongBuy: this.AnalystRatingStrongBuy || null,
-  AnalystRatingBuy: this.AnalystRatingBuy || null,
-  AnalystRatingHold: this.AnalystRatingHold || null,
-  AnalystRatingSell: this.AnalystRatingSell || null,
-  AnalystRatingStrongSell: this.AnalystRatingStrongSell || null,
-  TrailingPE: this.TrailingPE || null,
-  ForwardPE: this.ForwardPE || null,
-  PriceToSalesRatioTTM: this.PriceToSalesRatioTTM || null,
-  PriceToBookRatio: this.PriceToBookRatio || null,
-  EVToRevenue: this.EVToRevenue || null,
-  EVToEBITDA: this.EVToEBITDA || null,
-  Beta: this.Beta || null,
-  Week52High: this.Week52High || null,
-  Week52Low: this.Week52Low || null,
-  Day50MovingAverage: this.Day50MovingAverage || null,
-  Day200MovingAverage: this.Day200MovingAverage || null,
-  SharesOutstanding: this.SharesOutstanding || null,
-  DividendDate: (this.DividendDate || '').trim(),
-  ExDividendDate: (this.ExDividendDate || '').trim()
-};
-  
-    console.log('tech  data to be sent:', technologyData);
-    try {
-      await this.$store.dispatch('updateTechnology', { id: technologylId, technologyData });
-      this.$emit('close'); // Close the modal after updating
-    } catch (error) {
-      console.error('Update error:', error);
-      this.$emit('error', 'Failed to update technology data. Please try again.');
-    }
+  const technologyId = this.technology.id;
+
+  if (!technologyId) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Technology ID is undefined.',
+    });
+    return;
   }
+
+  const technologyData = {
+    Symbol: (this.Symbol || '').trim(),
+    AssetType: (this.AssetType || '').trim(),
+    Name: (this.Name || '').trim(),
+    Description: (this.Description || '').trim(),
+    CIK: (this.CIK || '').trim(),
+    Exchange: (this.Exchange || '').trim(),
+    Currency: (this.Currency || '').trim(),
+    Country: (this.Country || '').trim(),
+    Sector: (this.Sector || '').trim(),
+    Industry: (this.Industry || '').trim(),
+    Address: (this.Address || '').trim(),
+    OfficialSite: (this.OfficialSite || '').trim(),
+    FiscalYearEnd: (this.FiscalYearEnd || '').trim(),
+    LatestQuarter: (this.LatestQuarter || '').trim(),
+    MarketCapitalization: this.MarketCapitalization || null,
+    EBITDA: this.EBITDA || null,
+    PERatio: this.PERatio || null,
+    PEGRatio: this.PEGRatio || null,
+    BookValue: this.BookValue || null,
+    DividendYield: this.DividendYield || null,
+    EPS: this.EPS || null,
+    RevenuePerShareTTM: this.RevenuePerShareTTM || null,
+    ProfitMargin: this.ProfitMargin || null,
+    OperatingMarginTTM: this.OperatingMarginTTM || null,
+    ReturnOnAssetsTTM: this.ReturnOnAssetsTTM || null,
+    ReturnOnEquityTTM: this.ReturnOnEquityTTM || null,
+    RevenueTTM: this.RevenueTTM || null,
+    GrossProfitTTM: this.GrossProfitTTM || null,
+    DilutedEPSTTM: this.DilutedEPSTTM || null,
+    QuarterlyEarningsGrowthYOY: this.QuarterlyEarningsGrowthYOY || null,
+    QuarterlyRevenueGrowthYOY: this.QuarterlyRevenueGrowthYOY || null,
+    AnalystTargetPrice: this.AnalystTargetPrice || null,
+    AnalystRatingStrongBuy: this.AnalystRatingStrongBuy || null,
+    AnalystRatingBuy: this.AnalystRatingBuy || null,
+    AnalystRatingHold: this.AnalystRatingHold || null,
+    AnalystRatingSell: this.AnalystRatingSell || null,
+    AnalystRatingStrongSell: this.AnalystRatingStrongSell || null,
+    TrailingPE: this.TrailingPE || null,
+    ForwardPE: this.ForwardPE || null,
+    PriceToSalesRatioTTM: this.PriceToSalesRatioTTM || null,
+    PriceToBookRatio: this.PriceToBookRatio || null,
+    EVToRevenue: this.EVToRevenue || null,
+    EVToEBITDA: this.EVToEBITDA || null,
+    Beta: this.Beta || null,
+    Week52High: this.Week52High || null,
+    Week52Low: this.Week52Low || null,
+    Day50MovingAverage: this.Day50MovingAverage || null,
+    Day200MovingAverage: this.Day200MovingAverage || null,
+    SharesOutstanding: this.SharesOutstanding || null,
+    DividendDate: (this.DividendDate || '').trim(),
+    ExDividendDate: (this.ExDividendDate || '').trim()
+  };
+
+  try {
+    await this.$store.dispatch('updateTechnology', { id: technologyId, technologyData });
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'Technology prediction updated successfully.',
+    });
+
+    this.$emit('close');
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Failed to update technology data. Please try again.',
+    });
+  }
+}
     }
   };
   </script>

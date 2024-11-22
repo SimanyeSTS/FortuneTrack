@@ -49,27 +49,25 @@
       </div>
     </div>
 
-
     <!-- Login Modal -->
     <LoginModal
-  v-model="showLoginModal"
-  :is-loading="isLoading"
-  @login="handleLogin"
-  @forgot-password="handleForgotPassword"
-  @register="goToRegistration"
-/>
+      v-model="showLoginModal"
+      :is-loading="isLoading"
+      @login="handleLogin"
+      @forgot-password="handleForgotPassword"
+      @register="goToRegistration"
+    />
 
     <!-- Welcome Modal -->
     <WelcomeModal
-  v-model="showWelcomeModal"
-  :is-loading="isLoading"
-  @login="handleLogin"
-  @forgot-password="handleForgotPassword"
-  @register="goToRegistration"
-/>
+      v-model="showWelcomeModal"
+      :is-loading="isLoading"
+      @login="handleLogin"
+      @forgot-password="handleForgotPassword"
+      @register="goToRegistration"
+    />
   </div>
 </template>
-
 
 <script>
 import { defineComponent, computed, ref, watch, onMounted } from 'vue'
@@ -103,7 +101,7 @@ export default defineComponent({
     };
   },
   computed: {
-    currentUser() {
+    currentUser () {
       return this.$store.state.user;
     }
   },
@@ -112,12 +110,12 @@ export default defineComponent({
   },
   methods: {
     redirectToAccount() {
-      if (!this.currentUser) {
+      if (!this.currentUser ) {
         this.showLoginModal = true;
         return;
       }
 
-      if (this.currentUser.userRole.toLowerCase() === 'admin') {
+      if (this.currentUser .userRole.toLowerCase() === 'admin') {
         this.$router.push({ name: 'admin-dashboard' });
       } else {
         this.$router.push({ name: 'user-dashboard' });
@@ -125,7 +123,7 @@ export default defineComponent({
     },
 
     handleLogoutOrLogin() {
-      if (!this.currentUser) {
+      if (!this.currentUser ) {
         this.showWelcomeModal = true;
       } else {
         this.confirmLogout();
@@ -133,42 +131,41 @@ export default defineComponent({
     },
 
     async handleLogin(data) {
-  try {
-    this.$store.commit('SET_LOADING', true);
-    await this.$store.dispatch('loginUser', {
-      emailAdd: data.emailAdd,
-      userPass: data.userPass
-    });
+      try {
+        this.$store.commit('SET_LOADING', true);
+        await this.$store.dispatch('loginUser', {
+          emailAdd: data.emailAdd,
+          userPass: data.userPass
+        });
 
-    await Swal.fire({
-      title: 'Success!',
-      text: 'You have successfully logged in.',
-      icon: 'success',
-      timer: 1500
-    });
+        await Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully logged in.',
+          icon: 'success',
+          timer: 1500
+        });
 
-    this.closeModal();
+        this.closeModal();
 
-    if (data.type === 'welcome') {
-      return;
-    } else {
-      if (this.currentUser.userRole.toLowerCase() === 'admin') {
-        this.$router.push({ name: 'admin-dashboard' });
-      } else {
-        this.$router.push({ name: 'user-dashboard' });
+        if (data.type === 'welcome') {
+          return;
+        } else {
+          if (this.currentUser .userRole.toLowerCase() === 'admin') {
+            this.$router.push({ name: 'admin-dashboard' });
+          } else {
+            this.$router.push({ name: 'user-dashboard' });
+          }
+        }
+      } catch (error) {
+        await Swal.fire({
+          title: 'Error',
+          text: error.message || 'Failed to log in. Please try again.',
+          icon: 'error'
+        });
+      } finally {
+        this.$store.commit('SET_LOADING', false);
       }
-    }
-  } catch (error) {
-    console.error('Login failed:', error);
-    await Swal.fire({
-      title: 'Error',
-      text: error.message || 'Failed to log in. Please try again.',
-      icon: 'error'
-    });
-  } finally {
-    this.$store.commit('SET_LOADING', false);
-  }
-},
+    },
 
     async confirmLogout() {
       try {
@@ -184,7 +181,7 @@ export default defineComponent({
         });
 
         if (result.isConfirmed) {
-          await this.logoutUser();
+          await this.logoutUser ();
           await Swal.fire(
             'Logged Out!',
             'You have been successfully logged out.',
@@ -192,7 +189,6 @@ export default defineComponent({
           );
         }
       } catch (error) {
-        console.error('Logout confirmation error:', error);
         await Swal.fire(
           'Error',
           'There was a problem logging out. Please try again.',
@@ -201,15 +197,10 @@ export default defineComponent({
       }
     },
 
-    async logoutUser() {
-      try {
-        await this.$store.dispatch('logoutUser');
-        this.$router.push({ name: 'home' });
-      } catch (error) {
-        console.error('Logout failed:', error);
-        throw error;
-      }
-    },
+    async logoutUser () {
+  await this.$store.dispatch('logoutUser');
+  this.$router.push({ name: 'home' });
+},
 
     closeModal() {
       this.showLoginModal = false;
@@ -302,7 +293,7 @@ export default defineComponent({
             result = safeParseFloat(a.AnalystTargetPrice) - safeParseFloat(b.AnalystTargetPrice);
             break;
           case 'priceDesc':
-            result = safeParseFloat(b.AnalystTargetPrice) - safeParseFloat(a.AnalystTargetPrice);
+ result = safeParseFloat(b.AnalystTargetPrice) - safeParseFloat(a.AnalystTargetPrice);
             break;
           case 'growthAsc':
             result = safeParseFloat(a.QuarterlyEarningsGrowthYOY) - safeParseFloat(b.QuarterlyEarningsGrowthYOY);
@@ -344,36 +335,36 @@ export default defineComponent({
     });
 
     const prepareChartData = (data) => {
-  const Week52High = data['52WeekHigh'] !== null ? data['52WeekHigh'] : data['Week52High'];
+      const Week52High = data['52WeekHigh'] !== null ? data['52WeekHigh'] : data['Week52High'];
 
-  return {
-    labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
-    datasets: [
-      {
-        label: data.Symbol,
-        data: [
-          parseFloat(data.QuarterlyEarningsGrowthYOY) * 100,
-          parseFloat(data.RevenueTTM) / 1e9,
-          parseFloat(data.AnalystTargetPrice),
-          parseFloat(Week52High)
-        ],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.7)',
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 206, 86, 0.7)',
-          'rgba(75, 192, 192, 0.7)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)'
-        ],
-        borderWidth: 1
-      }
-    ]
-  };
-};
+      return {
+        labels: ['Earnings Growth', 'Revenue', 'Analyst Target Price', 'Week 52 High'],
+        datasets: [
+          {
+            label: data.Symbol,
+            data: [
+              parseFloat(data.QuarterlyEarningsGrowthYOY) * 100,
+              parseFloat(data.RevenueTTM) / 1e9,
+              parseFloat(data.AnalystTargetPrice),
+              parseFloat(Week52High)
+            ],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }
+        ]
+      };
+    };
 
     return {
       isLoading,
@@ -386,8 +377,6 @@ export default defineComponent({
   }
 });
 </script>
-
-
 
 <style scoped>
 .content-container {
@@ -453,7 +442,7 @@ export default defineComponent({
 
 button:hover {
   background-color: #1249ef!important;
-  color: black!important;;
+  color: black!important;
   border: solid black!important;
 }
 
@@ -482,7 +471,7 @@ button:hover {
   color: #4169E1!important;
   border: 2px solid #002080!important;
   padding: 10px 20px!important;
-  cursor: pointer !important;
+  cursor: pointer!important;
   border-radius: 4px!important;
   transition: background-color 0.3s!important;
 }
@@ -511,13 +500,6 @@ button:hover {
   color: #000!important;
   font-size: 24px!important;
   cursor: pointer!important;
-}
-
-.predict-view {
-  padding: 20px;
-  width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
 h1 {
@@ -551,7 +533,7 @@ h2 {
 }
 
 .chart-container {
-  flex:  1;
+  flex: 1;
   height: 400px;
   margin-right: 0;
   background-color: white;
@@ -619,13 +601,13 @@ h2 {
 
 @media (max-width: 768px) {
   .modal-content {
-    width: 90%!important; /* Full width on smaller screens */
+    width: 90%!important;
   }
 }
 
 @media (max-width: 400px) {
   .modal-content {
-    padding: 15px!important; /* Less padding on smaller screens */
+    padding: 15px!important;
   }
 }
 </style>

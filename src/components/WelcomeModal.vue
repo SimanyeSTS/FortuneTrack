@@ -79,8 +79,8 @@
     emits: ['update:modelValue', 'login', 'forgot-password', 'register'],
     data() {
       return {
-        emailAdd: '', // Changed from email to emailAdd
-        userPass: ''  // Changed from password to userPass
+        emailAdd: '',
+        userPass: ''
       }
     },
     methods: {

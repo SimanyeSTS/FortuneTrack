@@ -105,6 +105,7 @@
 
   <script>
   import { mapActions } from 'vuex';
+  import Swal from 'sweetalert2';
 
   export default {
     props: {
@@ -146,16 +147,16 @@
         this.userRole = user.userRole || '';
       },
       async updateUser() {
-  const userId = this.user.UserID; // Ensure you have the user ID
-  console.log('User object:', this.user); // Log the user object to check its properties
-  console.log('User ID:', userId); // Log the user ID to confirm it's defined
+  const userId = this.user.UserID;
 
   if (!userId) {
-    console.error('User ID is undefined');
-    return; // Exit if userId is undefined
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'User ID is undefined.',
+    });
+    return;
   }
-
-  console.log('Updating user with ID:', userId); // Log the user ID
 
   const userData = {
     firstName: this.firstName.trim(),
@@ -168,20 +169,26 @@
   };
 
   if (this.userPass) {
-    userData.userPass = this.userPass; // Only include password if it's provided
+    userData.userPass = this.userPass;
   }
-
-  console.log('User data to be sent:', userData); // Log the user data
 
   try {
-    // Ensure the userId is being passed correctly
-    await this.updateUserProfile({ userId, userData }); // Use userId here
-    this.$emit('close'); // Close the modal after updating
+    await this.updateUserProfile({ userId, userData });
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'User updated successfully.',
+    });
+    this.$emit('close');
   } catch (error) {
-    console.error('Update error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'Failed to update user. Please try again.',
+    });
   }
 }
-}
+    }
   }
 
   </script>

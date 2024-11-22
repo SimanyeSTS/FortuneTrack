@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     async registerAccount() {
-      this.formErrors = []; // Reset errors
+      this.formErrors = [];
       if (!this.isFormValid) {
         if (this.firstName.length < 2) {
           this.formErrors.push('First name must be at least 2 characters long.');
@@ -131,7 +131,6 @@ export default {
 
         await this.$store.dispatch('registerUser', userData);
 
-        // Show success alert
         Swal.fire({
           title: 'Success!',
           text: 'You have been registered successfully. Please login.',
@@ -139,10 +138,8 @@ export default {
           confirmButtonText: 'OK',
         });
 
-        // Reset form
         this.resetForm();
 
-        // Redirect to login
         this.$router.push({ name: 'home' });
       } catch (error) {
         console.error('Registration error:', error);

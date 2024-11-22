@@ -528,6 +528,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
   props: {
@@ -653,10 +654,13 @@ methods: {
     isValidDate(date) {
     return !isNaN(new Date(date).getTime()); // Check if the date is valid
   },
-    async createFoodAndBeverage() {
-  console.log('create FoodAndBeverages called'); // Log to confirm the method is called
+  async createFoodAndBeverage() {
   if (!this.isFormValid) {
-    console.log('Form is not valid'); // Log if the form is not valid
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please fill in all required fields correctly.',
+    });
     return;
   }
 
@@ -717,15 +721,23 @@ methods: {
         };
 
         await this.$store.dispatch('createFoodAndBeverages', foodAndBeveragesData);
+
+        Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: 'Food and beverage prediction added successfully.',
+    });
         
-        // Reset form
         this.resetForm();
-        
-        this.$emit('close'); // Close the modal after submission
-      } catch (error) {
-        console.error('Error adding food and beverages prediction:', error);
-      }
-    },
+    this.$emit('close');
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error!',
+      text: 'There was an error adding the food and beverage prediction. Please try again later.',
+    });
+  }
+},
     resetForm() {
       this.Symbol = '';
       this.AssetType = '';
