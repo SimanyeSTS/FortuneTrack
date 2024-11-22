@@ -78,7 +78,7 @@
               <select v-model="userRole" id="userRole" required :disabled="isLoading">
                 <option value="" disabled>Select Role</option>
                 <option value="Admin">Admin</option>
-                <option value="User ">User </option>
+                <option value="User">User </option>
               </select>
             </div>
             <div class="button-group">
