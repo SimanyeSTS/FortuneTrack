@@ -1,5 +1,5 @@
 import { connection as db } from "../config/index.js";
-import { createToken } from "../middleware/UserAuth.js";
+import { createToken, createRefreshToken } from "../middleware/UserAuth.js";
 import bcrypt from 'bcryptjs';
 
 class Users {
@@ -116,11 +116,13 @@ class Users {
       }
   
       const token = createToken({
-        emailAdd: result[0].emailAdd,
-        userPass: result[0].userPass
+        UserID: result[0].UserID,
+        emailAdd: result[0].emailAdd
       });
   
-      const refreshToken = refreshToken({ userID: result[0].UserID });
+      const refreshToken = createRefreshToken({
+        UserID: result[0].UserID
+      });
   
       return {
         token,
