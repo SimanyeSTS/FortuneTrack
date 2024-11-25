@@ -65,30 +65,35 @@ export default createStore({
         localStorage.removeItem('user');
       }
     },
-    UPDATE_USER_PROFILE(state, userData) {
-      state.user = { ...state.user, ...userData };
-      localStorage.setItem('user', JSON.stringify(state.user));
+    UPDATE_USER_PROFILE(state, { userId, userData }) {
+      const userIndex = state.users.findIndex(user => user.id === userId);
+      if (userIndex !== -1) {
+        state.users[userIndex] = {
+          ...state.users[userIndex],
+          ...userData,
+        };
+      }
     },
     SET_RETAIL(state, retail) {
-      state.retail = retail; // Consider changing this to push new retail data instead
+      state.retail = retail;
     },
     SET_RETAIL_PREDICTION(state, retailPrediction) {
       state.retailPrediction = retailPrediction;
     },
     SET_TECHNOLOGY(state, technology) {
-      state.technology = technology; // Consider changing this to push new technology data instead
+      state.technology = technology;
     },
     SET_TECHNOLOGY_PREDICTION(state, technologyPrediction) {
       state.technologyPrediction = technologyPrediction;
     },
     SET_FOOD_AND_BEVERAGES(state, foodAndBeverages) {
-      state.foodAndBeverages = foodAndBeverages; // Consider changing this to push new food and beverages data instead
+      state.foodAndBeverages = foodAndBeverages;
     },
     SET_FOOD_AND_BEVERAGES_PREDICTION(state, foodAndBeveragesPrediction) {
       state.foodAndBeveragesPrediction = foodAndBeveragesPrediction;
     },
     SET_HEALTHCARE(state, healthcare) {
-      state.healthcare = healthcare; // Consider changing this to push new healthcare data instead
+      state.healthcare = healthcare;
     },
     SET_HEALTHCARE_PREDICTION(state, healthcarePrediction) {
       state .healthcarePrediction = healthcarePrediction;
@@ -409,11 +414,16 @@ export default createStore({
       try {
         const response = await axios.patch(`${hostedData}user/${userId}`, userData);
         if (response.data.status === 200) {
-          commit('UPDATE_USER_PROFILE', userData);
+          // Ensure we update the correct user data in the state
+          commit('UPDATE_USER_PROFILE', { userId, userData });
+    
+          // Notify success
           toast.success('Profile updated successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           });
+    
+          // Return the response data if needed
           return response.data;
         }
         throw new Error(response.data.message || 'Failed to update profile');
@@ -428,7 +438,7 @@ export default createStore({
         commit('SET_LOADING', false);
       }
     },
-
+    
     async deleteUser({ commit }, id) {
       commit('SET_LOADING', true);
       try {
@@ -824,38 +834,24 @@ export default createStore({
     }
   },
 
-  checkTokenExpiration({ commit }) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      // No token exists, user is not logged in
-      return false;
-    }
-
+  checkTokenExpiration({ state }) {
     try {
-      // Decode the token to check expiration (assumes JWT token)
-      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      const token = state.currentToken;
+      
+      // No token means expired
+      if (!token) return true;
+      
+      // Decode JWT payload
+      const { exp } = JSON.parse(atob(token.split('.')[1]));
+      
       const currentTime = Math.floor(Date.now() / 1000);
-
-      if (tokenPayload.exp && currentTime >= tokenPayload.exp) {
-        // Token has expired, perform logout
-        commit('LOGOUT_USER');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        delete axios.defaults.headers.common['Authorization'];
-        
-        // Optional: Show a toast notification about session expiration
-        toast.error('Your session has expired. Please log in again.', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000
-        });
-
-        return true; // Indicates token has expired
-      }
-
-      return false; // Token is still valid
+      
+      // Returns true if token is expired
+      return currentTime > exp;
     } catch (error) {
       console.error('Error checking token expiration:', error);
-      return false;
+      // You can also dispatch an error action or throw a custom error here
+      return true; // Token is considered expired if there's an error
     }
   },
 
@@ -866,17 +862,25 @@ export default createStore({
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000
       });
-      // Optional: Redirect to login page or home
-      // this.$router.push('/');
     } catch (error) {
       console.error('Auto logout failed:', error);
-      // Fallback logout method
       commit('LOGOUT_USER');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
     }
   },
+
+  async refreshAccessToken({ commit }) {
+    try {
+      const response = await axios.post(`${hostedData}user/refresh-token`);
+      const { accessToken } = response.data;
+      commit('setToken', accessToken); // Update token in state
+    } catch (error) {
+      console.error("Failed to refresh token:", error);
+      throw error;
+    }
+  }  
   },
   modules: {}
 })

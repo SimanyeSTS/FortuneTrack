@@ -1,7 +1,9 @@
 <template>
     <div>
       <button class="chat-button" @click="toggleChat">
-        <span>Market Guide</span>
+        <span class="icon-container" title="Market Guide">
+  <i class="bi bi-robot icon-large"></i>
+</span>
       </button>
   
       <div v-if="isChatOpen" class="chat-modal">
@@ -167,6 +169,14 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
   }
+
+  .icon-large {
+  font-size: 50px;
+}
+
+.icon-container {
+  display: inline-block;
+}
 
   .chat-button {
     animation: bounce-animation 2s ease infinite;

@@ -63,18 +63,23 @@ export default {
   methods: {
     ...mapActions(['checkTokenExpiration', 'autoLogout']),
 
-    setupTokenChecking() {
-      this.removeTokenChecking();
+    async setupTokenChecking() {
+  this.removeTokenChecking();
 
-      this.tokenCheckInterval = setInterval(async () => {
-        if (this.isLoggedIn) {
-          const tokenExpired = await this.$store.dispatch('checkTokenExpiration');
-          if (tokenExpired) {
-            this.handleLogout();
-          }
+  this.tokenCheckInterval = setInterval(async () => {
+    if (this.isLoggedIn) {
+      const tokenExpired = await this.$store.dispatch('checkTokenExpiration');
+      if (tokenExpired) {
+        try {
+          await this.$store.dispatch('refreshAccessToken'); // Dispatch a refresh token action
+        } catch (error) {
+          console.error("Token refresh failed:", error);
+          this.handleLogout();
         }
-      }, this.TOKEN_CHECK_INTERVAL);
-    },
+      }
+    }
+  }, this.TOKEN_CHECK_INTERVAL);
+},
 
     removeTokenChecking() {
       if (this.tokenCheckInterval) {

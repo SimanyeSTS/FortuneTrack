@@ -1,7 +1,9 @@
 <template>
   <div>
     <button class="chat-button" @click="toggleChat">
-      <span>AI Insights</span>
+      <span class="icon-container" title="AI Insights">
+        <i class="bi bi-lightbulb-fill"></i>
+</span>
     </button>
 
     <div v-if="isChatOpen" class="admin-modal">
@@ -145,6 +147,14 @@ export default {
 
 .chat-button:hover {
   animation-play-state: paused;
+}
+
+.bi {
+  font-size: 50px;
+}
+
+.icon-container {
+  display: inline-block;
 }
 
 .chat-button {
