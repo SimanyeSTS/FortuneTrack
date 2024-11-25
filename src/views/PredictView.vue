@@ -384,8 +384,8 @@ export default defineComponent({
 }
 
 .spinner-container {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
   min-height: 200px; 
   margin-top: 100px;

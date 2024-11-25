@@ -146,14 +146,14 @@
         this.userProfile = user.userProfile || '';
         this.userRole = user.userRole || '';
       },
-      async updateUser() {
+      async updateUser () {
   const userId = this.user.UserID;
 
   if (!userId) {
     Swal.fire({
       icon: 'error',
       title: 'Error!',
-      text: 'User ID is undefined.',
+      text: 'User  ID is undefined.',
     });
     return;
   }
@@ -177,8 +177,12 @@
     Swal.fire({
       icon: 'success',
       title: 'Success!',
-      text: 'User updated successfully.',
+      text: 'User  updated successfully.',
     });
+    
+    // Emit an event to notify the parent component
+    this.$emit('data-updated'); // Emit the event here
+    
     this.$emit('close');
   } catch (error) {
     Swal.fire({

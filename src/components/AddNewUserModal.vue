@@ -172,6 +172,7 @@ methods: {
       title: 'Success!',
       text: 'User  registered successfully.',
     });
+    this.$emit('data-updated');
 
     this.resetForm();
     this.$emit('close');

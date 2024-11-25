@@ -733,6 +733,7 @@
       title: 'Success!',
       text: 'Healthcare prediction updated successfully.',
     });
+    this.$emit('data-updated');
 
     this.$emit('close');
   } catch (error) {

@@ -886,11 +886,25 @@ export default createStore({
 
   async refreshAccessToken({ commit }) {
     try {
-      const response = await axios.post(`${hostedData}user/refresh-token`);
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        throw new Error('No refresh token found');
+      }
+  
+      axios.defaults.headers.post['Content-Type'] = 'application/json';
+  
+      const response = await axios.post(`${hostedData}user/refresh-token`, {
+        refreshToken
+      });
+  
       const { accessToken } = response.data;
       commit('setToken', accessToken); // Update token in state
     } catch (error) {
       console.error("Failed to refresh token:", error);
+      if (error.response && error.response.status === 401) {
+        // Handle token expiration or invalid token
+        this.handleLogout(); // Call your logout method
+      }
       throw error;
     }
   }  

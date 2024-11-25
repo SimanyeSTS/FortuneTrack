@@ -69,12 +69,14 @@
       v-if="isAddUserModalVisible"
       :isLoading="loading"
       @close="closeAddUserModal"
+      @data-updated="fetchData"
     />
     <EditUserModal 
       v-if="isEditUserModalVisible"
       :user="selectedUser "
       :isLoading="loading"
       @close="closeEditUserModal"
+      @data-updated="fetchData"
     />
 
   <template v-for="type in stockTypes" :key="type.name">
@@ -228,21 +230,25 @@
   v-if="isAddRetailModalVisible"
   :isLoading="loading"
   @close="closeAddRetailModal"
+  @data-updated="fetchData"
 />
 <AddNewTechnologyModal 
   v-if="isAddTechnologyModalVisible"
   :isLoading="loading"
   @close="closeAddTechnologyModal"
+  @data-updated="fetchData"
 />
 <AddNewFoodAndBeveragesModal 
   v-if="isAddFoodAndBeveragesModalVisible"
   :isLoading="loading"
   @close="closeAddFoodAndBeveragesModal"
+  @data-updated="fetchData"
 />
 <AddNewHealthcareModal 
   v-if="isAddHealthcareModalVisible"
   :isLoading="loading"
   @close="closeAddHealthcareModal"
+  @data-updated="fetchData"
 />
 <EditRetailModal 
   v-if="isEditRetailModalVisible"
@@ -250,6 +256,7 @@
   :isLoading="loading"
   @close ="closeEditRetailModal"
   @error="handleError"
+  @data-updated="fetchData"
 />
 <EditTechnologyModal 
      v-if="isEditTechnologyModalVisible"
@@ -257,6 +264,7 @@
       :isLoading="loading"
       @close="closeEditTechnologyModal"
       @error="handleError"
+      @data-updated="fetchData"
     />
 <EditFoodAndBeveragesModal 
      v-if="isEditFoodAndBeveragesModalVisible"
@@ -264,6 +272,7 @@
       :isLoading="loading"
       @close="closeEditFoodAndBeveragesModal"
       @error="handleError"
+      @data-updated="fetchData"
     />
 <EditHealthcareModal 
      v-if="isEditHealthcareModalVisible"
@@ -271,6 +280,7 @@
       :isLoading="loading"
       @close="closeEditHealthcareModal"
       @error="handleError"
+      @data-updated="fetchData"
     />
 </template>
 

@@ -727,6 +727,7 @@ methods: {
       title: 'Success!',
       text: 'Technology prediction added successfully.',
     });
+    this.$emit('data-updated');
 
     this.resetForm();
     this.$emit('close');

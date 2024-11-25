@@ -92,6 +92,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Swal from 'sweetalert2';
 
 export default {
   mounted() {
@@ -129,10 +130,20 @@ export default {
           emailAdd: this.emailAdd,
           userPass: this.userPass
         })
+        await Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully logged in.',
+          icon: 'success',
+          timer: 1500
+        });
         this.$router.push({ name: 'predictions' })
         this.closeModal()
       } catch (error) {
-        console.error('Login failed:', error)
+        await Swal.fire({
+          title: 'Error',
+          text: error.message || 'Failed to log in. Please try again.',
+          icon: 'error'
+        });
       }
     },
     
