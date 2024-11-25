@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { users } from '../model/index.js';
+import { verifyRefreshToken, createToken } from '../middleware/UserAuth.js';
 
 const userRouter = express.Router();
 userRouter.use(bodyParser.json());
@@ -153,11 +154,35 @@ userRouter.post('/login', async (req, res) => {
   }
 })
 
-userRouter.post('/logout', async (req, res) => {
+userRouter.post('/logout', (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return res.status(400).json({ status: 400, message: 'Refresh token is required' })
+  }
+  res.json({ status: 200, message: 'Logged out successfully. Token will expire naturally.' })
+})
+
+
+userRouter.post('/refresh-token', async (req, res) => {
   try {
-    res.json({ status: 200, message: 'Logged out successfully' })
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ status: 400, message: 'Refresh token is required' });
+    }
+
+    const decoded = await verifyRefreshToken(refreshToken);
+    const newToken = createToken({ userID: decoded.userID });
+
+    res.json({
+      status: 200,
+      token: newToken,
+      message: 'Token refreshed successfully',
+    })
   } catch (err) {
-    res.status(500).json({ status: 500, message: 'Error logging out' })
+    if (err.name === 'TokenExpiredError') {
+      return res.status(403).json({ status: 403, message: 'Refresh token expired. Please log in again.' });
+    }
+    return res.status(401).json({ status: 401, message: 'Invalid refresh token' })
   }
 })
 

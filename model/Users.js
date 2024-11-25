@@ -96,7 +96,7 @@ class Users {
     }
   }
 
-  async loginUser (data) {
+  async loginUser(data) {
     try {
       const { emailAdd, userPass } = data;
       const strQry = `
@@ -120,14 +120,17 @@ class Users {
         userPass: result[0].userPass
       });
   
+      const refreshToken = refreshToken({ userID: result[0].UserID });
+  
       return {
         token,
+        refreshToken,
         user: {
           UserID: result[0].UserID,
           firstName: result[0].firstName,
           lastName: result[0].lastName,
-          userAge: result[0].userAge, // Include userAge
-          gender: result[0].gender, // Include gender
+          userAge: result[0].userAge,
+          gender: result[0].gender,
           userProfile: result[0].userProfile,
           userRole: result[0].userRole,
           emailAdd: result[0].emailAdd
@@ -138,5 +141,6 @@ class Users {
     }
   }
 }
+
 export { 
     Users } 

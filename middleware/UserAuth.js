@@ -56,8 +56,20 @@ function verifyToken(req, res, next) {
   }
 }
 
+function verifyRefreshToken(refreshToken) {
+  return new Promise((resolve, reject) => {
+    try {
+      const decoded = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+      resolve(decoded);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 export {
   createToken,
   createRefreshToken,
-  verifyToken
+  verifyToken,
+  verifyRefreshToken,
 };
