@@ -31,6 +31,7 @@ export default createStore({
     allSectorsData: [],
     singlePrediction: null,
     token: null,
+    refreshToken: null,
     filteredSectors: [],
     sectors: [],
     chatLoading: false,
@@ -109,6 +110,9 @@ export default createStore({
     },
     SET_TOKEN(state, token) {
       state.token = token;
+    },
+    SET_REFRESH_TOKEN(state, refreshToken) {
+      state.refreshToken = refreshToken;
     },
     ADD_USER(state, newUser) {
       state.users.push(newUser);
@@ -731,6 +735,7 @@ export default createStore({
         if (status === 200 && results.user) {
           commit('SET_USER', results.user);
           localStorage.setItem('token', results.token);
+          localStorage.setItem('refreshToken', results.refreshToken);
           localStorage.setItem('user', JSON.stringify(results.user));
           toast.success('Logged in successfully', {
             position: toast.POSITION.TOP_CENTER,
@@ -752,20 +757,28 @@ export default createStore({
       }
     },
 
-    async logoutUser({ commit }) {
+    async logoutUser ({ commit }) {
       commit('SET_LOADING', true);
       try {
+        const refreshToken = localStorage.getItem('refreshToken'); // Assuming you store the refresh token in local storage
+        
         // Ensure this returns a Promise
-        await new Promise((resolve) => {
-          axios.post(`${hostedData}user/logout`)
+        await new Promise((resolve, reject) => {
+          axios.post(`${hostedData}user/logout`, { refreshToken }) // Include the refresh token in the request body
             .then(() => {
               localStorage.removeItem('token');
               localStorage.removeItem('user');
+              localStorage.removeItem('refreshToken'); // Optionally remove the refresh token as well
               commit('LOGOUT_USER');
               delete axios.defaults.headers.common['Authorization'];
               resolve();
+            })
+            .catch(error => {
+              console.error('Logout error:', error);
+              reject(error); // Reject the promise if there's an error
             });
         });
+    
         toast.success('Logged out successfully', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000
