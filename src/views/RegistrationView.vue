@@ -244,7 +244,6 @@ button:hover {
   border: solid black;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .account-management {
     padding: 15px;
@@ -260,7 +259,7 @@ button:hover {
 
   .button-group {
     flex-direction: row;
-    gap: 5px; /* Reduce space between buttons */
+    gap: 5px;
     justify-content: flex-end;
   }
 }
@@ -276,7 +275,7 @@ button:hover {
 
   .save, .delete {
     width: auto;
-    padding: 5px 10px; /* Lower height and adjust padding */
+    padding: 5px 10px;
   }
 
   .button-group {

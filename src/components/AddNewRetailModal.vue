@@ -652,7 +652,7 @@ export default {
 },
   methods: {
     isValidDate(date) {
-    return !isNaN(new Date(date).getTime()); // Check if the date is valid
+    return !isNaN(new Date(date).getTime());
   },
   async createRetail() {
   if (!this.isFormValid) {

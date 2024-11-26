@@ -1,9 +1,7 @@
 <template>
   <div class="predict-view">
-    <!-- Always visible header -->
     <h1>Predict</h1>
 
-    <!-- Always visible account/logout buttons -->
     <div class="button-container">
       <button class="acc" @click="redirectToAccount">
         <img v-if="currentUser  && currentUser .userProfile" :src="currentUser .userProfile" class="profile-picture" alt="Profile">
@@ -16,20 +14,16 @@
       </button>
     </div>
 
-    <!-- Always visible PredictionFilters -->
     <PredictionFilters 
       :sectors="sectors"
       @filter-change="handleFilterChange"
     />
 
-    <!-- Content Container -->
     <div class="content-container">
-      <!-- Spinner -->
       <div v-if="isLoading" class="spinner-container">
         <SpinnerComp2 />
       </div>
 
-      <!-- Main Content -->
       <div v-else class="all-charts">
         <template v-if="sortedAndFilteredData.length > 0">
           <div v-for="(group, index) in groupedData" :key="index" class="sector-group">
@@ -49,7 +43,6 @@
       </div>
     </div>
 
-    <!-- Login Modal -->
     <LoginModal
       v-model="showLoginModal"
       :is-loading="isLoading"
@@ -58,7 +51,6 @@
       @register="goToRegistration"
     />
 
-    <!-- Welcome Modal -->
     <WelcomeModal
       v-model="showWelcomeModal"
       :is-loading="isLoading"
@@ -130,7 +122,6 @@ export default defineComponent({
       }
     },
 
-       // Add these validation methods if they don't exist in your component
 validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -141,10 +132,8 @@ validatePassword(password) {
 },
 
     async handleLogin(data) {
-  // Reset error message if you have one in your data
   this.errorMessage = '';
       
-  // Validate email format
   if (!this.validateEmail(data.emailAdd)) {
     await Swal.fire({
       title: 'Invalid Email',
@@ -156,7 +145,6 @@ validatePassword(password) {
     return;
   }
       
-  // Validate password length
   if (!this.validatePassword(data.userPass)) {
     await Swal.fire({
       title: 'Invalid Password',
@@ -175,7 +163,6 @@ validatePassword(password) {
       userPass: data.userPass
     });
         
-    // Success message
     await Swal.fire({
           title: 'Success!',
           text: 'You have successfully logged in.',
@@ -195,7 +182,6 @@ validatePassword(password) {
       }
     }
   } catch (error) {
-    // Handle different error scenarios
     let errorMessage = '';
     let errorTitle = 'Login Failed';
         

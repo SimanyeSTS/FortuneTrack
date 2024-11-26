@@ -334,7 +334,6 @@ p {
   gap: 10px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .profile-image {
     max-width: 100px;

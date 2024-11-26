@@ -125,10 +125,8 @@ export default {
     },
     
     async handleLogin() {
-      // Reset error message
       this.errorMessage = ''
       
-      // Validate email format
       if (!this.validateEmail(this.emailAdd)) {
         await Swal.fire({
           title: 'Invalid Email',
@@ -140,7 +138,6 @@ export default {
         return
       }
       
-      // Validate password length
       if (!this.validatePassword(this.userPass)) {
         await Swal.fire({
           title: 'Invalid Password',
@@ -158,7 +155,6 @@ export default {
           userPass: this.userPass
         })
         
-        // Success message
         await Swal.fire({
           title: 'Welcome Back!',
           text: 'Login successful',
@@ -170,7 +166,6 @@ export default {
         this.$router.push({ name: 'predictions' })
         this.closeModal()
       } catch (error) {
-        // Handle different error scenarios
         let errorMessage = ''
         let errorTitle = 'Login Failed'
         
@@ -366,7 +361,6 @@ p, #sp {
   font-size: 30px;
 }
 
-/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;
@@ -444,7 +438,6 @@ p, #sp {
   cursor: pointer;
 }
 
-/* Media Queries for Responsiveness */
 @media (max-width: 768px) {
   .landing {
     flex-direction: column;

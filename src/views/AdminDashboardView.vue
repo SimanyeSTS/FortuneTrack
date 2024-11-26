@@ -64,7 +64,6 @@
       </div>
     </div>
 
-     <!-- Updated AddNewUserModal component usage -->
      <AddNewUserModal 
       v-if="isAddUserModalVisible"
       :isLoading="loading"
@@ -424,13 +423,13 @@ export default {
       this.isAddUserModalVisible = false;
     },
     showEditUserModal(type, user) {
-    this.selectedUser  = user; // Pass the entire user object
-    this.isEditUserModalVisible = true; // Show the modal
+    this.selectedUser  = user;
+    this.isEditUserModalVisible = true;
   },
 
   closeEditUserModal() {
-    this.isEditUserModalVisible = false; // Hide the modal
-    this.selectedUser  = null; // Reset selected user
+    this.isEditUserModalVisible = false; 
+    this.selectedUser  = null;
   },
     showAddModal(type) {
       switch(type) {
@@ -498,117 +497,117 @@ export default {
     },
 
     async checkUserAccount() {
-      try {
-        
-        const response = await this.$axios.get(`https://fortunetrack.onrender.com/user/${this.current.id}`);
-        return response.data.exists;
-      } catch (error) {
-        console.error('Error checking user account:', error);
-        return false;
-      }
-    },
+  try {
+    const response = await this.$axios.get(`https://fortunetrack.onrender.com/user/${this.current.id}`);
+    return response.data.exists;
+  } catch (error) {
+    this.handleError('Error checking user account');
+    return false;
+  }
+},
 
     async created() {
     await this.fetchUsers();
   },
 
-    async confirmDelete(type, id) {
-      const result = await SweetAlert.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '# 3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      });
+  async confirmDelete(type, id) {
+  const result = await SweetAlert.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  });
 
-      if (result.isConfirmed) {
-        try {
-          const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
-          await this[methodName](id);
-          await SweetAlert.fire('Deleted!', 'The account has been deleted.' , 'success');
-          await this.fetchData();
-        } catch (error) {
-          await SweetAlert.fire('Error!', 'Failed to delete the account.', 'error ');
-        }
-      }
-    },
+  if (result.isConfirmed) {
+    try {
+      const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      await this[methodName](id);
+      await SweetAlert.fire('Deleted!', 'The account has been deleted.', 'success');
+      await this.fetchData();
+    } catch (error) {
+      this.handleError('Failed to delete the account.');
+    }
+  }
+},
 
-    async confirmDelete1(type, id) {
-      const result = await SweetAlert.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '# 3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      });
+async confirmDelete1(type, id) {
+  const result = await SweetAlert.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  });
 
-      if (result.isConfirmed) {
-        try {
-          const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
-          await this[methodName](id);
-          await SweetAlert.fire('Deleted!', 'The prediction has been deleted.', 'success');
-          await this.fetchData();
-        } catch (error) {
-          await SweetAlert.fire('Error!', 'Failed to delete the prediction.', 'error ');
-        }
-      }
-    },
+  if (result.isConfirmed) {
+    try {
+      const methodName = `delete${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      await this[methodName](id);
+      await SweetAlert.fire('Deleted!', 'The prediction has been deleted.', 'success');
+      await this.fetchData();
+    } catch (error) {
+      this.handleError('Failed to delete the prediction.');
+    }
+  }
+},
 
     async handleSubmit() {
-      try {
-        const action = this.isEditing ? 'update' : 'create';
-        const capitalizedType = this.selectedType.charAt(0).toUpperCase() + this.selectedType.slice(1);
-        const methodName = `${action}${capitalizedType}`;
-        
-        if (this.isEditing) {
-          await this[methodName]({ id: this.selectedId, ...this.formData });
-        } else {
-          await this[methodName](this.formData);
-        }
-        
-        await SweetAlert.fire('Success!', 'Record has been saved.', 'success');
-        this.closeModal();
-        await this.fetchData();
-      } catch (error) {
-        await SweetAlert.fire('Error!', 'Failed to save the record.', 'error');
-        console.error('Error submitting form:', error);
-      }
-    },
+  try {
+    const action = this.isEditing ? 'update' : 'create';
+    const capitalizedType = this.selectedType.charAt(0).toUpperCase() + this.selectedType.slice(1);
+    const methodName = `${action}${capitalizedType}`;
+    
+    if (this.isEditing) {
+      await this[methodName]({ id: this.selectedId, ...this.formData });
+    } else {
+      await this[methodName](this.formData);
+    }
+    
+    await SweetAlert.fire('Success!', 'Record has been saved.', 'success');
+    this.closeModal();
+    await this.fetchData();
+  } catch (error) {
+    this.handleError('Failed to save the record.');
+  }
+},
 
     async fetchData() {
-      try {
-        await Promise.all([
-          this.fetchUsers(),
-          this.fetchRetail(),
-          this.fetchTechnology(),
-          this.fetchFoodAndBeverages(),
-          this.fetchHealthcare()
-        ]);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    },
+  try {
+    await Promise.all([
+      this.fetchUsers(),
+      this.fetchRetail(),
+      this.fetchTechnology(),
+      this.fetchFoodAndBeverages(),
+      this.fetchHealthcare()
+    ]);
+  } catch (error) {
+    this.handleError('Error fetching data.');
+  }
+},
     scrollLeft(type) {
       const tableWrapper = document.querySelector(`#table-${type}`);
-      tableWrapper.scrollLeft -= 200; // Scroll left by 100 pixels
+      tableWrapper.scrollLeft -= 200;
       tableWrapper.scroll({
         left: tableWrapper.scrollLeft,
         behavior: 'smooth'
       });
     },
+
     scrollRight(type) {
       const tableWrapper = document.querySelector(`#table-${type}`);
-      tableWrapper.scrollLeft += 200; // Scroll right by 100 pixels
+      tableWrapper.scrollLeft += 200;
       tableWrapper.scroll({
         left: tableWrapper.scrollLeft,
         behavior: 'smooth'
       });
     },
   },
+
   async created() {
     await this.fetchData();
   }
@@ -777,7 +776,6 @@ th {
   background-color: #de2e21;
 }
 
-/* Modal styles */
 .modal-form {
   max-width: 500px;
   margin: 0 auto;
@@ -800,7 +798,6 @@ th {
   border: 1px solid #ddd;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .admin-management {
     padding: 15px;
@@ -816,7 +813,6 @@ th {
   }
 }
 
-/* Ultra-small device responsiveness */
 @media (max-width: 300px) {
   .admin-management {
     padding: 10px;
@@ -845,7 +841,6 @@ th {
   }
 }
 
-/* Small device responsiveness */
 @media (min-width: 301px) and (max-width: 576px) {
   .admin-management {
     padding: 15px;
@@ -869,7 +864,6 @@ th {
   }
 }
 
-/* Horizontal scrollbar styling */
 .table-wrapper::-webkit-scrollbar {
   height: 8px;
 }

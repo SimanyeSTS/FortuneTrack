@@ -180,8 +180,7 @@
       text: 'User  updated successfully.',
     });
     
-    // Emit an event to notify the parent component
-    this.$emit('data-updated'); // Emit the event here
+    this.$emit('data-updated');
     
     this.$emit('close');
   } catch (error) {

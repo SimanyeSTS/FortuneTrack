@@ -652,7 +652,7 @@ export default {
 },
 methods: {
     isValidDate(date) {
-    return !isNaN(new Date(date).getTime()); // Check if the date is valid
+    return !isNaN(new Date(date).getTime());
   },
   async createHealthcare() {
   if (!this.isFormValid) {
@@ -937,7 +937,6 @@ h1 {
   font-size: 24px;
 }
 
-/* Media Queries */
 @media (max-width: 450px) {
   .admin-modal-content {
     width: 90vw; 

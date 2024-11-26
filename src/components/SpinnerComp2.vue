@@ -62,13 +62,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 250px; /* Reduced from 300px */
-    height: 250px; /* Reduced from 300px */
+    width: 250px; 
+    height: 250px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: transparent!important; /* Changed to transparent */
+    background-color: transparent!important;
     border-radius: 16px;
     padding: 20px;
   }
@@ -97,7 +97,6 @@
     transform: translateY(-20px) scale(0.9);
   }
 
-  /* Mobile Responsiveness */
   @media (max-width: 768px) {
     .spinner-container {
       width: 200px;

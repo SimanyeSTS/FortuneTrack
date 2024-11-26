@@ -62,7 +62,6 @@
       const isFullScreen = ref(false);
       const isLoading = ref(false);
   
-      // Compute sectors from store to avoid direct state mutation
       const sectors = computed(() => ({
         retail: store.state.retail,
         technology: store.state.technology,

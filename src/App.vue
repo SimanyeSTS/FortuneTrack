@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 export default {
   components: {
     NavBar,
-    FooterComp
+    FooterComp,
   },
   data() {
     return {
@@ -25,21 +25,20 @@ export default {
       WARNING_DURATION: 30 * 1000, // 30 seconds warning
       TOKEN_CHECK_INTERVAL: 5 * 60 * 1000, // Check token every 5 minutes
       resetEvents: [
-        'mousedown', 'mousemove', 'keydown', 
-        'scroll', 'touchstart', 'touchmove', 
-        'wheel', 'click'
+        'mousedown', 'mousemove', 'keydown',
+        'scroll', 'touchstart', 'touchmove',
+        'wheel', 'click',
       ],
-      lastActivityTime: null
-    }
+      lastActivityTime: null,
+    };
   },
   computed: {
     ...mapGetters(['current']),
     isLoggedIn() {
       return this.current !== null && this.current !== undefined;
-    }
+    },
   },
   watch: {
-    // Reset tracking when login state changes
     isLoggedIn(newValue) {
       if (newValue) {
         this.setupInactivityTracking();
@@ -48,7 +47,7 @@ export default {
         this.removeInactivityTracking();
         this.removeTokenChecking();
       }
-    }
+    },
   },
   mounted() {
     if (this.isLoggedIn) {
@@ -61,25 +60,30 @@ export default {
     this.removeTokenChecking();
   },
   methods: {
-    ...mapActions(['checkTokenExpiration', 'autoLogout']),
+    ...mapActions(['checkTokenExpiration', 'autoLogout', 'refreshAccessToken']),
 
     async setupTokenChecking() {
-  this.removeTokenChecking();
+      this.removeTokenChecking();
 
-  this.tokenCheckInterval = setInterval(async () => {
-    if (this.isLoggedIn) {
-      const tokenExpired = await this.$store.dispatch('checkTokenExpiration');
-      if (tokenExpired) {
-        try {
-          await this.$store.dispatch('refreshAccessToken'); // Dispatch a refresh token action
-        } catch (error) {
-          console.error("Token refresh failed:", error);
-          this.handleLogout();
+      this.tokenCheckInterval = setInterval(async () => {
+        if (this.isLoggedIn) {
+          try {
+            const tokenExpired = await this.$store.dispatch('checkTokenExpiration');
+            if (tokenExpired) {
+              await this.$store.dispatch('refreshAccessToken');
+            }
+          } catch (error) {
+            Swal.fire({
+              title: 'Session Error',
+              text: 'Your session could not be refreshed. Please log in again.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+            this.handleLogout();
+          }
         }
-      }
-    }
-  }, this.TOKEN_CHECK_INTERVAL);
-},
+      }, this.TOKEN_CHECK_INTERVAL);
+    },
 
     removeTokenChecking() {
       if (this.tokenCheckInterval) {
@@ -89,43 +93,33 @@ export default {
     },
 
     setupInactivityTracking() {
-      // Remove any existing listeners first
       this.removeInactivityTracking();
 
-      // Add new event listeners
       this.resetEvents.forEach(eventName => {
         window.addEventListener(eventName, this.resetInactivityTimer, { passive: true });
       });
 
-      // Initialize last activity time
       this.lastActivityTime = Date.now();
-
-      // Start the initial inactivity timer
       this.startInactivityTimer();
     },
 
     removeInactivityTracking() {
-      // Clear existing timeout
       if (this.inactivityTimeout) {
         clearTimeout(this.inactivityTimeout);
         this.inactivityTimeout = null;
       }
 
-      // Remove all event listeners
       this.resetEvents.forEach(eventName => {
         window.removeEventListener(eventName, this.resetInactivityTimer);
       });
     },
 
     startInactivityTimer() {
-      // Clear any existing timeout
       if (this.inactivityTimeout) {
         clearTimeout(this.inactivityTimeout);
       }
 
-      // Set new timeout for inactivity
       this.inactivityTimeout = setTimeout(() => {
-        // Check if user is still logged in and actually inactive
         const timeSinceLastActivity = Date.now() - this.lastActivityTime;
         if (this.isLoggedIn && timeSinceLastActivity >= this.INACTIVITY_DURATION) {
           this.showLogoutWarning();
@@ -134,24 +128,16 @@ export default {
     },
 
     resetInactivityTimer() {
-      // Update last activity time
       this.lastActivityTime = Date.now();
-
-      // If no logged-in user, do nothing
-      if (!this.isLoggedIn) {
-        return;
-      }
-
-      // Restart the inactivity timer
+      if (!this.isLoggedIn) return;
       this.startInactivityTimer();
     },
 
     showLogoutWarning() {
       if (!this.isLoggedIn) return;
 
-      let countdown = this.WARNING_DURATION / 1000; // Convert to seconds
+      let countdown = this.WARNING_DURATION / 1000;
 
-      // Show SweetAlert warning
       Swal.fire({
         title: 'Inactivity Warning',
         html: `<p>You will be logged out in <strong>${countdown}</strong> seconds due to inactivity.</p>`,
@@ -169,54 +155,48 @@ export default {
             if (content && countdown > 0) {
               content.querySelector('strong').textContent = countdown.toString();
             } else {
-              // Stop interval and logout
               clearInterval(this.warningInterval);
               this.handleLogout();
             }
           }, 1000);
         },
         willClose: () => {
-          // Clear interval on modal close
           clearInterval(this.warningInterval);
         },
         preConfirm: () => {
-          // Reset timer if 'Stay Logged In' is clicked
           this.resetInactivityTimer();
         },
-        customClass: {
-          popup: 'inactivity-modal'
-        }
       }).then((result) => {
         if (result.dismiss === Swal.DismissReason.timer || result.isDenied) {
-          // Automatically logout if timer expires or user chooses to logout
           this.handleLogout();
         } else if (result.isConfirmed) {
-          // User wants to stay logged in
           this.resetInactivityTimer();
         }
       });
     },
 
     handleLogout() {
-      // Ensure we have a logged-in user before attempting logout
       if (this.isLoggedIn) {
         this.$store.dispatch('autoLogout')
           .then(() => {
-            // Clear any remaining tracking
             this.removeInactivityTracking();
             this.removeTokenChecking();
-            // Redirect to home/login page after successful logout
             this.$router.push('/');
           })
-          .catch((error) => {
-            console.error("Logout failed:", error);
-            // Fallback redirect even if logout fails
-            this.$router.push('/');
+          .catch(() => {
+            Swal.fire({
+              title: 'Logout Failed',
+              text: 'An error occurred while logging you out. Redirecting to login page.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.$router.push('/');
+            });
           });
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -224,12 +204,12 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #000080; 
+  background-color: #000080;
 }
 
 html, body {
   height: 100%;
-  margin: 0; 
+  margin: 0;
 }
 
 body {

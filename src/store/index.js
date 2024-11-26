@@ -14,6 +14,13 @@ const handleError = (commit, error) => {
   });
 };
 
+const handleSuccess = (message) => {
+  toast.success(message, {
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 3000
+  });
+};
+
 export default createStore({
   state: {
     users: [],
@@ -418,16 +425,12 @@ export default createStore({
       try {
         const response = await axios.patch(`${hostedData}user/${userId}`, userData);
         if (response.data.status === 200) {
-          // Ensure we update the correct user data in the state
           commit('UPDATE_USER_PROFILE', { userId, userData });
-    
-          // Notify success
           toast.success('Profile updated successfully', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000
           });
     
-          // Return the response data if needed
           return response.data;
         }
         throw new Error(response.data.message || 'Failed to update profile');
@@ -497,18 +500,13 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/retail/${id}`, retailData);
-        console.log('Response from API:', response);
         if (response.status === 200) {
           commit('UPDATE_RETAIL', response.data);
-          toast.success('Retail data updated successfully', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000
-          });
+          handleSuccess('Retail data updated successfully');
         } else {
           throw new Error(`Failed to update retail: ${response.statusText || response.status}`);
         }
       } catch (error) {
-        console.error('Error in updateRetail action:', error);
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
@@ -560,18 +558,13 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/technology/${id}`, technologyData);
-        console.log('Response from API:', response);
         if (response.status === 200) {
           commit('UPDATE_TECHNOLOGY', response.data);
-          toast.success('Technology data updated successfully', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000
-          });
+          handleSuccess('Technology data updated successfully');
         } else {
           throw new Error(`Failed to update technology: ${response.statusText || response.status}`);
         }
       } catch (error) {
-        console.error('Error in updateTechnology action:', error)
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
@@ -623,18 +616,13 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/food-and-beverages/${id}`, foodAndBeveragesData);
-        console.log('Response from API', response)
         if (response.status === 200) {
           commit('UPDATE_FOOD_AND_BEVERAGES', response.data);
-          toast.success('Food and beverages data updated successfully', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000
-          });
+          handleSuccess('Food and beverages data updated successfully');
         } else {
           throw new Error(`Failed to update food and beverages: ${response.statusText || response.status}`);
         }
       } catch (error) {
-        console.error('Error in updateFoodAndBeverages action:', error)
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
@@ -686,18 +674,13 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const response = await axios.patch(`${hostedData}from/db/healthcare/${id}`, healthcareData);
-        console.log('Response from API:', response);
         if (response.status === 200) {
           commit('UPDATE_HEALTHCARE', response.data);
-          toast.success('Healthcare data updated successfully', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000
-          });
+          handleSuccess('Healthcare data updated successfully');
         } else {
           throw new Error(`Failed to update healthcare: ${response.statusText || response.status}`);
         }
       } catch (error) {
-        console.error('Error in updateHealthcare action:', error)
         handleError(commit, error);
       } finally {
         commit('SET_LOADING', false);
@@ -757,39 +740,26 @@ export default createStore({
       }
     },
 
-    async logoutUser ({ commit }) {
+    async logoutUser({ commit }) {
       commit('SET_LOADING', true);
       try {
-        const refreshToken = localStorage.getItem('refreshToken'); // Assuming you store the refresh token in local storage
+        const refreshToken = localStorage.getItem('refreshToken');
+        await axios.post(`${hostedData}user/logout`, { refreshToken });
         
-        // Ensure this returns a Promise
-        await new Promise((resolve, reject) => {
-          axios.post(`${hostedData}user/logout`, { refreshToken }) // Include the refresh token in the request body
-            .then(() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              localStorage.removeItem('refreshToken'); // Optionally remove the refresh token as well
-              commit('LOGOUT_USER');
-              delete axios.defaults.headers.common['Authorization'];
-              resolve();
-            })
-            .catch(error => {
-              console.error('Logout error:', error);
-              reject(error); // Reject the promise if there's an error
-            });
-        });
-    
-        toast.success('Logged out successfully', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000
-        });
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('refreshToken');
+        commit('LOGOUT_USER');
+        delete axios.defaults.headers.common['Authorization'];
+        
+        handleSuccess('Logged out successfully');
       } catch (error) {
-        toast.error('Failed to logout', {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000
-        });
-        console.error('Logout error:', error);
-        throw error;
+        handleError(commit, error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('refreshToken');
+        commit('LOGOUT_USER');
+        delete axios.defaults.headers.common['Authorization'];
       } finally {
         commit('SET_LOADING', false);
       }
@@ -816,7 +786,6 @@ export default createStore({
           companyData
         });
         
-        // Merge the AI response with the original company data
         const newPrediction = { 
           ...state.singlePrediction, 
           aiResponse: response.data.response 
@@ -825,7 +794,7 @@ export default createStore({
         commit('SET_SINGLE_PREDICTION', newPrediction);
         return newPrediction.aiResponse;
       } catch (error) {
-        console.error('Error generating prediction:', error);
+        handleError(commit, error);
         throw error;
       } finally {
         commit('SET_CHAT_LOADING', false);
@@ -833,40 +802,31 @@ export default createStore({
     },
 
     async getSectorInsights({ commit }, { message, sectors }) {
-    try {
-      const response = await axios.post(`${hostedData}chatbot/openAI`, { message, sectors });
-      const data = response.data;
-      if (data.summary || data.response) {
-        commit('SET_SECTOR_INSIGHTS', data.summary || data.response);
-        return data.summary || data.response; // Return for the component
+      try {
+        const response = await axios.post(`${hostedData}chatbot/openAI`, { message, sectors });
+        const data = response.data;
+        if (data.summary || data.response) {
+          commit('SET_SECTOR_INSIGHTS', data.summary || data.response);
+          return data.summary || data.response;
+        }
+        throw new Error('Invalid response format');
+      } catch (error) {
+        handleError(commit, error);
+        throw error;
       }
-      throw new Error('Invalid response format');
-    } catch (error) {
-      console.error('Error fetching sector insights:', error);
-      throw error; // Allow the component to handle the error
-    }
-  },
+    },
 
-  checkTokenExpiration({ state }) {
-    try {
-      const token = state.currentToken;
-      
-      // No token means expired
-      if (!token) return true;
-      
-      // Decode JWT payload
-      const { exp } = JSON.parse(atob(token.split('.')[1]));
-      
-      const currentTime = Math.floor(Date.now() / 1000);
-      
-      // Returns true if token is expired
-      return currentTime > exp;
-    } catch (error) {
-      console.error('Error checking token expiration:', error);
-      // You can also dispatch an error action or throw a custom error here
-      return true; // Token is considered expired if there's an error
-    }
-  },
+    checkTokenExpiration({ state }) {
+      try {
+        const token = state.currentToken;
+        if (!token) return true;
+        const { exp } = JSON.parse(atob(token.split('.')[1]));
+        return Math.floor(Date.now() / 1000) > exp;
+      } catch (error) {
+        handleError(error);
+        return true;
+      }
+    },
 
   async autoLogout({ dispatch, commit }) {
     try {
@@ -891,23 +851,21 @@ export default createStore({
         throw new Error('No refresh token found');
       }
   
-      axios.defaults.headers.post['Content-Type'] = 'application/json';
-  
       const response = await axios.post(`${hostedData}user/refresh-token`, {
         refreshToken
       });
   
       const { accessToken } = response.data;
-      commit('setToken', accessToken); // Update token in state
+      commit('setToken', accessToken);
+      handleSuccess('Token refreshed successfully');
     } catch (error) {
-      console.error("Failed to refresh token:", error);
-      if (error.response && error.response.status === 401) {
-        // Handle token expiration or invalid token
-        this.handleLogout(); // Call your logout method
+      handleError(commit, error);
+      if (error.response?.status === 401) {
+        this.handleLogout();
       }
       throw error;
     }
-  }  
-  },
-  modules: {}
+  }
+},
+modules: {}
 })
