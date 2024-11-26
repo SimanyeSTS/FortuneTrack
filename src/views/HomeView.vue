@@ -237,6 +237,12 @@ export default {
       } else {
         this.showLoginModal = true
       }
+    },
+    goToReachMe() {
+      this.$router.push({ name: 'about-me' })
+    },
+    goToRegistration() {
+      this.$router.push({ name: 'sign-up' })
     }
   }
 }
