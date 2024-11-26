@@ -857,7 +857,6 @@ export default createStore({
   
       const { accessToken } = response.data;
       commit('SET_TOKEN', accessToken);
-      handleSuccess('Token refreshed successfully');
     } catch (error) {
       handleError(commit, error);
       if (error.response?.status === 401) {
