@@ -11,7 +11,7 @@ function createToken(user) {
     },
     process.env.SECRET_KEY,
     { expiresIn: '45m' }
-  );
+  )
 }
 
 function createRefreshToken(user) {
@@ -21,7 +21,7 @@ function createRefreshToken(user) {
     },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: '7d' }
-  );
+  )
 }
 
 function verifyToken(req, res, next) {
@@ -29,7 +29,7 @@ function verifyToken(req, res, next) {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({
       msg: "Invalid token format. Please log in again."
-    });
+    })
   }
 
   const token = authHeader.split(' ')[1];
@@ -42,16 +42,15 @@ function verifyToken(req, res, next) {
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({
         msg: "Session expired. Please log in again."
-      });
+      })
     } else if (err.name === 'JsonWebTokenError') {
       return res.status(401).json({
         msg: "Invalid token. Please log in again."
-      });
+      })
     } else {
-      console.error(`Token verification failed: ${err.message}`);
       return res.status(500).json({
         msg: "Something went wrong during authentication. Please try again."
-      });
+      })
     }
   }
 }
@@ -64,7 +63,7 @@ function verifyRefreshToken(refreshToken) {
     } catch (err) {
       reject(err);
     }
-  });
+  })
 }
 
 export {
@@ -72,4 +71,4 @@ export {
   createRefreshToken,
   verifyToken,
   verifyRefreshToken,
-};
+}

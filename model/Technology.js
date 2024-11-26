@@ -103,19 +103,18 @@ class Technology {
       const response = await axios.get(url);
       const data = response.data;
   
-      // Convert 'None' strings and '-' to actual null values
       for (const key in data) {
         if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null; // Set to null for invalid decimal values
+          data[key] = null;
         } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
           // Convert string numbers to actual numbers
-          data[key] = parseFloat(data[key]);
+          data[key] = parseFloat(data[key])
         }
       }
   
       await Technology.patchTechnologyData(1, data);
     } catch (error) {
-      throw new Error(`Failed to update technology data: ${error.message}`);
+      throw new Error(`Failed to update technology data: ${error.message}`)
     }
   }
 
@@ -126,12 +125,10 @@ class Technology {
       const response = await axios.get(url);
       const data = response.data;
   
-      // Convert 'None' strings and '-' to actual null values
       for (const key in data) {
         if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null; // Set to null for invalid decimal values
+          data[key] = null;
         } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          // Convert string numbers to actual numbers
           data[key] = parseFloat(data[key]);
         }
       }
@@ -149,12 +146,10 @@ class Technology {
       const response = await axios.get(url);
       const data = response.data;
   
-      // Convert 'None' strings and '-' to actual null values
       for (const key in data) {
         if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null; // Set to null for invalid decimal values
+          data[key] = null;
         } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          // Convert string numbers to actual numbers
           data[key] = parseFloat(data[key]);
         }
       }

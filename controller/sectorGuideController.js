@@ -95,7 +95,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 class SectorGuideController {
   constructor() {
-    // Ensure you have set GEMINI_API_KEY in your environment variables
     if (!process.env.GEMINI_API_KEY) {
       throw new Error('GEMINI_API_KEY must be set in environment variables');
     }
@@ -105,7 +104,6 @@ class SectorGuideController {
   async getInsights(req, res) {
     try {
       const { message, sectors } = req.body;
-      // Prepare sector summary data
       const sectorSummaries = {
         retail: this.summarizeSector(sectors.retail),
         technology: this.summarizeSector(sectors.technology),
@@ -134,13 +132,13 @@ class SectorGuideController {
           ? company
           : top,
       companies[0]
-    );
+    )
     return {
       companyCount: companies.length,
       averageGrowth: avgGrowth.toFixed(2),
       topPerformer: topPerformer.Symbol,
       topPerformerGrowth: topPerformer.QuarterlyEarningsGrowthYOY,
-    };
+    }
   }
 
   async generateResponse(message, sectorSummaries) {
@@ -158,18 +156,17 @@ class SectorGuideController {
 
     Remember:
     - Compare sectors when relevant.
-    - Encourage using the Predict button for detailed analysis.
-    - Keep responses concise and easy to understand.`;
+    - Encourage using the Predict button for detailed analysis on specific companies/stocks.
+    - Keep responses concise and easy to understand.`
 
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       return response.text().trim();
     } catch (error) {
-      console.error('Gemini AI API Error:', error.message);
-      throw new Error('Failed to generate response from Gemini AI.');
+      throw new Error('Failed to generate response from Gemini AI.')
     }
   }
 }
 
-export default new SectorGuideController();
+export default new SectorGuideController()

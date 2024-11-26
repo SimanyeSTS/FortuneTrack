@@ -146,7 +146,6 @@ const getRetailData2 = async (req, res) => {
     await Retail.saveRetailData(retailData2);
     res.json(data);
   } catch (error) {
-    console.error(error);  // Logs the full error for debugging
     res.status(500).json({ message: 'Error fetching retail data-2' });
   }
 };
