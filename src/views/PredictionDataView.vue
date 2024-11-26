@@ -1,7 +1,7 @@
 <template>
   <h1 class="heading">Prediction Data</h1>
   <div class="prediction-data-view">
-    <SpinnerComp2 v-if="isLoading" />
+    <SpinnerComp2 v-if="isLoading" class="spinner-container" />
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else-if="predictionData">
       <h1>{{ predictionData.Name }} ({{ predictionData.Symbol }})</h1>
@@ -334,6 +334,13 @@ const prepareAnalystTargetPriceData = () => {
   font-family: 'Montserrat';
   color: white;
   padding: 20px;
+}
+
+.spinner-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 30vh;
 }
 
 .data-section {

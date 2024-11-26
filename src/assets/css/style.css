@@ -17,3 +17,8 @@ body {
     height: 100vh;
     overflow-x: hidden;
   }
+
+  button:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }

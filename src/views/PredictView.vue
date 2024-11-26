@@ -130,42 +130,121 @@ export default defineComponent({
       }
     },
 
-    async handleLogin(data) {
-      try {
-        this.$store.commit('SET_LOADING', true);
-        await this.$store.dispatch('loginUser', {
-          emailAdd: data.emailAdd,
-          userPass: data.userPass
-        });
+       // Add these validation methods if they don't exist in your component
+validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+},
 
-        await Swal.fire({
+validatePassword(password) {
+  return password && password.length >= 6;
+},
+
+    async handleLogin(data) {
+  // Reset error message if you have one in your data
+  this.errorMessage = '';
+      
+  // Validate email format
+  if (!this.validateEmail(data.emailAdd)) {
+    await Swal.fire({
+      title: 'Invalid Email',
+      text: 'Please enter a valid email address',
+      icon: 'error',
+      confirmButtonText: 'Try Again',
+      confirmButtonColor: '#4169E1'
+    });
+    return;
+  }
+      
+  // Validate password length
+  if (!this.validatePassword(data.userPass)) {
+    await Swal.fire({
+      title: 'Invalid Password',
+      text: 'Password must be at least 6 characters long',
+      icon: 'error',
+      confirmButtonText: 'Try Again',
+      confirmButtonColor: '#4169E1'
+    });
+    return;
+  }
+      
+  try {
+    this.$store.commit('SET_LOADING', true);
+    await this.$store.dispatch('loginUser', {
+      emailAdd: data.emailAdd,
+      userPass: data.userPass
+    });
+        
+    // Success message
+    await Swal.fire({
           title: 'Success!',
           text: 'You have successfully logged in.',
           icon: 'success',
           timer: 1500
         });
+        
+    this.closeModal();
 
-        this.closeModal();
-
-        if (data.type === 'welcome') {
-          return;
-        } else {
-          if (this.currentUser .userRole.toLowerCase() === 'admin') {
-            this.$router.push({ name: 'admin-dashboard' });
-          } else {
-            this.$router.push({ name: 'user-dashboard' });
-          }
-        }
-      } catch (error) {
-        await Swal.fire({
-          title: 'Error',
-          text: error.message || 'Failed to log in. Please try again.',
-          icon: 'error'
-        });
-      } finally {
-        this.$store.commit('SET_LOADING', false);
+    if (data.type === 'welcome') {
+      return;
+    } else {
+      if (this.currentUser.userRole.toLowerCase() === 'admin') {
+        this.$router.push({ name: 'admin-dashboard' });
+      } else {
+        this.$router.push({ name: 'user-dashboard' });
       }
-    },
+    }
+  } catch (error) {
+    // Handle different error scenarios
+    let errorMessage = '';
+    let errorTitle = 'Login Failed';
+        
+    if (error.response) {
+      const status = error.response.status;
+          
+      switch (status) {
+        case 401:
+          errorTitle = 'Invalid Credentials';
+          errorMessage = 'The email or password you entered is incorrect';
+          break;
+        case 404:
+          errorTitle = 'Account Not Found';
+          errorMessage = 'No account exists with this email address';
+          break;
+        case 429:
+          errorTitle = 'Too Many Attempts';
+          errorMessage = 'Please wait a few minutes before trying again';
+          break;
+        case 503:
+          errorTitle = 'Service Unavailable';
+          errorMessage = 'Our servers are currently down. Please try again later';
+          break;
+        default:
+          errorMessage = 'An unexpected error occurred. Please try again';
+      }
+    } else if (error.message === 'Network Error') {
+      errorTitle = 'Connection Error';
+      errorMessage = 'Please check your internet connection and try again';
+    }
+        
+    await Swal.fire({
+      title: errorTitle,
+      text: errorMessage || error.message || 'Failed to log in. Please try again.',
+      icon: 'error',
+      confirmButtonText: 'Try Again',
+      confirmButtonColor: '#4169E1',
+      showCancelButton: true,
+      cancelButtonText: 'Forgot Password?',
+      cancelButtonColor: '#718096'
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        this.handleForgotPassword();
+      }
+    });
+  } finally {
+    this.$store.commit('SET_LOADING', false);
+  }
+},
 
     async confirmLogout() {
       try {

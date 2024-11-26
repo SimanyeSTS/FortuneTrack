@@ -84,7 +84,7 @@ export default {
       this.isSubmitting = true;
       Swal.fire({
         title: 'Sending...',
-        html: '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>',
+        html: '<div class="spinner-border" role="status"><span class="sr-only"></span></div>',
         showConfirmButton: false,
         allowOutsideClick: false,
         allowEscapeKey: false,

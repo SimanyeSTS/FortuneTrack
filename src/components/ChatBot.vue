@@ -143,6 +143,12 @@ export default {
 .chat-button {
   animation: bounce-animation 2s ease infinite;
   animation-delay: 0s;
+  transition: transform 0.2s ease-in-out;
+}
+
+.chat-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .chat-button:hover {

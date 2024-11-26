@@ -3,8 +3,8 @@
     <h1>Account Management</h1>
     <p v-if="current">Welcome, {{ current.firstName }}! <br> Feel free to make adjustments.</p>
     
-    <div v-if="loading" class="text-center">
-  <SpinnerComp /> 
+    <div v-if="loading" class="spinner-container">
+  <SpinnerComp2 /> 
 </div>
     
     <div v-if="error" class="error-message">
@@ -108,12 +108,12 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import Swal from 'sweetalert2';
-import SpinnerComp from '@/components/SpinnerComp.vue';
+import SpinnerComp2 from '@/components/SpinnerComp2.vue';
 
 export default {
 name: 'UserDashboardView',
 components: {
-  SpinnerComp
+  SpinnerComp2
 },
 
 data() {
@@ -248,6 +248,14 @@ methods: {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   text-align: center;
+}
+
+.spinner-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 200px; 
+  margin-top: 100px;
 }
 
 .profile-preview {

@@ -92,7 +92,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 export default {
   mounted() {
@@ -115,35 +115,107 @@ export default {
   methods: {
     ...mapActions(['loginUser']),
     
-    goToReachMe() {
-      this.$router.push({ name: 'about-me' })
+    validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      return emailRegex.test(email)
     },
     
-    goToRegistration() {
-      this.$router.push({ name: 'sign-up' })
-      this.closeModal()
+    validatePassword(password) {
+      return password.length >= 6
     },
     
     async handleLogin() {
+      // Reset error message
+      this.errorMessage = ''
+      
+      // Validate email format
+      if (!this.validateEmail(this.emailAdd)) {
+        await Swal.fire({
+          title: 'Invalid Email',
+          text: 'Please enter a valid email address',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+          confirmButtonColor: '#4169E1'
+        })
+        return
+      }
+      
+      // Validate password length
+      if (!this.validatePassword(this.userPass)) {
+        await Swal.fire({
+          title: 'Invalid Password',
+          text: 'Password must be at least 6 characters long',
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+          confirmButtonColor: '#4169E1'
+        })
+        return
+      }
+      
       try {
         await this.loginUser({
           emailAdd: this.emailAdd,
           userPass: this.userPass
         })
+        
+        // Success message
         await Swal.fire({
-          title: 'Success!',
-          text: 'You have successfully logged in.',
+          title: 'Welcome Back!',
+          text: 'Login successful',
           icon: 'success',
-          timer: 1500
-        });
+          timer: 1500,
+          showConfirmButton: false
+        })
+        
         this.$router.push({ name: 'predictions' })
         this.closeModal()
       } catch (error) {
+        // Handle different error scenarios
+        let errorMessage = ''
+        let errorTitle = 'Login Failed'
+        
+        if (error.response) {
+          const status = error.response.status
+          
+          switch (status) {
+            case 401:
+              errorTitle = 'Invalid Credentials'
+              errorMessage = 'The email or password you entered is incorrect'
+              break
+            case 404:
+              errorTitle = 'Account Not Found'
+              errorMessage = 'No account exists with this email address'
+              break
+            case 429:
+              errorTitle = 'Too Many Attempts'
+              errorMessage = 'Please wait a few minutes before trying again'
+              break
+            case 503:
+              errorTitle = 'Service Unavailable'
+              errorMessage = 'Our servers are currently down. Please try again later'
+              break
+            default:
+              errorMessage = 'An unexpected error occurred. Please try again'
+          }
+        } else if (error.message === 'Network Error') {
+          errorTitle = 'Connection Error'
+          errorMessage = 'Please check your internet connection and try again'
+        }
+        
         await Swal.fire({
-          title: 'Error',
-          text: error.message || 'Failed to log in. Please try again.',
-          icon: 'error'
-        });
+          title: errorTitle,
+          text: errorMessage,
+          icon: 'error',
+          confirmButtonText: 'Try Again',
+          confirmButtonColor: '#4169E1',
+          showCancelButton: true,
+          cancelButtonText: 'Forgot Password?',
+          cancelButtonColor: '#718096'
+        }).then((result) => {
+          if (!result.isConfirmed) {
+            this.handleForgotPassword()
+          }
+        })
       }
     },
     

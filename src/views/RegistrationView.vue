@@ -4,7 +4,7 @@
     <p>Let's get you signed up now, shall we?</p>
     <form @submit.prevent="registerAccount">
       <div v-if="isLoading" class="spinner-container">
-        <SpinnerComp />
+        <SpinnerComp2 />
       </div>
       <div v-else>
         <div class="form-group">
@@ -50,12 +50,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import SpinnerComp from '@/components/SpinnerComp.vue';
+import SpinnerComp2 from '@/components/SpinnerComp2.vue';
 import Swal from 'sweetalert2';
 
 export default {
   components: {
-    SpinnerComp,
+    SpinnerComp2,
   },
   data() {
     return {
@@ -167,10 +167,11 @@ export default {
 
 <style scoped>
 .spinner-container {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 200px; 
+  margin-top: 100px;
 }
 
 .account-management {
