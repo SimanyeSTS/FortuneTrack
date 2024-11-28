@@ -7,7 +7,9 @@ import AdminDashboardView from '@/views/AdminDashboardView.vue'
 import UserDashboardView from '@/views/UserDashboardView.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
 import PredictionDataView from '@/views/PredictionDataView.vue'
+import NotFoundView from '@/views/NotFoundView.vue' // Add this import
 import store from '../store/index.js'
+
 const requireAuth = (to, from, next) => {
   const currentUser = store.getters.current;
   if (!currentUser) {
@@ -19,6 +21,7 @@ const requireAuth = (to, from, next) => {
   }
   next();
 };
+
 const requireAdmin = (to, from, next) => {
   const currentUser = store.getters.current;
   if (!currentUser || currentUser.userRole !== 'Admin') {
@@ -30,6 +33,7 @@ const requireAdmin = (to, from, next) => {
   }
   next();
 };
+
 const requireUser = (to, from, next) => {
   const currentUser = store.getters.current;
   if (!currentUser || currentUser.userRole !== 'User') {
@@ -86,6 +90,12 @@ const routes = [
     component: PredictionDataView,
     props: true,
     beforeEnter: requireAuth
+  },
+  // Add the 404 route at the end to catch all unmatched routes
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: NotFoundView
   }
 ];
 
