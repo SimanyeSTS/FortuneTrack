@@ -1,6 +1,5 @@
 <template>
   <svg class="gauge-chart-loader" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-    <!-- Background arc -->
     <path 
       d="M 10 80 A 40 40 0 0 1 90 80" 
       fill="none" 
@@ -8,7 +7,6 @@
       stroke-width="8"
     />
     
-    <!-- Active arc -->
     <path 
       d="M 10 80 A 40 40 0 0 1 90 80" 
       fill="none" 
@@ -19,7 +17,6 @@
       class="active-arc"
     />
     
-    <!-- Gauge arm -->
     <line 
       x1="50" 
       y1="80" 
@@ -30,7 +27,6 @@
       class="gauge-arm"
     />
     
-    <!-- Center point -->
     <circle 
       cx="50" 
       cy="80" 
@@ -44,18 +40,17 @@
 export default {
   data() {
     return {
-      armAngle: -90, // Start at -90 degrees (pointing straight up)
-      dashOffset: 126, // Full length of the arc
+      armAngle: -90,
+      dashOffset: 126, 
       colors: {
         blue: '#3B82F6',
         red: '#EF4444',
         green: '#10B981'
       },
-      currentColor: '#3B82F6' // Start with blue
+      currentColor: '#3B82F6'
     };
   },
   computed: {
-    // Calculate the end point of the arm based on angle
     armEndX() {
       return 50 + Math.cos((this.armAngle - 90) * Math.PI / 180) * 30;
     },
@@ -68,7 +63,6 @@ export default {
   },
   methods: {
     updateColor(progress) {
-      // Change colors based on progress
       if (progress < 0.33) {
         this.currentColor = this.colors.blue;
       } else if (progress < 0.66) {
@@ -78,7 +72,7 @@ export default {
       }
     },
     animateGauge() {
-      const duration = 1500; // Animation duration in ms
+      const duration = 1500;
       const startTime = performance.now();
       const startAngle = -90;
       const endAngle = 90;
@@ -89,7 +83,6 @@ export default {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
         
-        // Ease in-out animation
         const eased = progress < 0.5
           ? 2 * progress * progress
           : 1 - Math.pow(-2 * progress + 2, 2) / 2;
@@ -97,17 +90,15 @@ export default {
         this.armAngle = startAngle + (endAngle - startAngle) * eased;
         this.dashOffset = startOffset + (endOffset - startOffset) * eased;
         
-        // Update color based on progress
         this.updateColor(eased);
         
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          // Start animation again after a delay
           setTimeout(() => {
             this.armAngle = startAngle;
             this.dashOffset = startOffset;
-            this.currentColor = this.colors.blue; // Reset to blue
+            this.currentColor = this.colors.blue;
             requestAnimationFrame(this.animateGauge);
           }, 500);
         }
@@ -134,7 +125,6 @@ export default {
   transform-origin: 50px 80px;
 }
 
-/* Add color transition */
 .active-arc, .gauge-arm {
   transition: all 0.5s ease-in-out;
 }

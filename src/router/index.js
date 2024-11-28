@@ -7,7 +7,7 @@ import AdminDashboardView from '@/views/AdminDashboardView.vue'
 import UserDashboardView from '@/views/UserDashboardView.vue'
 import RegistrationView from '@/views/RegistrationView.vue'
 import PredictionDataView from '@/views/PredictionDataView.vue'
-import NotFoundView from '@/views/NotFoundView.vue' // Add this import
+import NotFoundView from '@/views/NotFoundView.vue'
 import store from '../store/index.js'
 
 const requireAuth = (to, from, next) => {
@@ -91,7 +91,6 @@ const routes = [
     props: true,
     beforeEnter: requireAuth
   },
-  // Add the 404 route at the end to catch all unmatched routes
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
