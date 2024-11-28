@@ -3,11 +3,15 @@
     <h1>About</h1>
     <section class="about-content">
       <p>
-        I, Simanye Somdaka, the developer and brains behind FortuneTrack, welcome you to this cutting-edge predictive analytics platform, designed to empower businesses with actionable insights across key industry sectors. This web application leverages the power of the MEVN stack (MySQL, Express.JS, Vue.JS and Node.JS) to deliver a robust and user-friendly tool for monitoring and forecasting trends in Retail, Technology, Food & Beverages, and Healthcare from the top 3 companies contributing to each sector across regions.
-      </p>
-      <p>
-        <span>My Mission:</span> I aim to provide businesses with timely and accurate data-driven predictions to optimize their strategies and maximize their potential. By integrating real-time data from Apha Vantage, this platform offers a comprehensive view of market dynamics and customer behavior.
-      </p>
+    Welcome to <strong>FortuneTrack</strong>, a state-of-the-art predictive analytics platform meticulously crafted by me, Simanye Somdaka. Designed to empower businesses and individuals, this innovative tool provides actionable insights across key industry sectors, enabling smarter decisions and strategic foresight.<br> 
+    <br>
+    Built on the powerful MEVN stack (MySQL, Express.js, Vue.js, and Node.js), FortuneTrack offers a seamless and user-friendly experience for tracking and forecasting trends in Retail, Technology, Food & Beverages, and Healthcare. By analyzing data from the top three companies driving these sectors in the NYSE and NASDAQ, this platform delivers unparalleled insights across global markets.
+</p>
+
+<p>
+    <span><strong>My Mission:</strong></span> To equip businesses with precise, data-driven predictions, empowering them to optimize strategies and unlock their full potential. Leveraging real-time data from Alpha Vantage, FortuneTrack provides a holistic view of market dynamics and consumer behavior, transforming raw data into actionable intelligence.
+</p>
+
     </section>
     <br>
     <section class="founder-image">
