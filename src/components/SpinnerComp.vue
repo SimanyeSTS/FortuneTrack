@@ -16,16 +16,16 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  width: 100vw;  /* Full width of the viewport */
+  width: 100vw;
 }
 
 .spinner-border {
   width: 3rem;
   height: 3rem;
-  border-radius: 50%; /* Make it circular */
-  border: 0.25em solid transparent; /* Transparent border for the spinner */
-  border-top-color: #007bff; /* Primary color for the top */
-  animation: spin 1s linear infinite; /* Spin animation */
+  border-radius: 50%;
+  border: 0.25em solid transparent;
+  border-top-color: #007bff;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -71,7 +71,6 @@ export default {
   animation: spin 1s linear infinite, colorChange 2s linear infinite;
 }
 
-/* Responsive adjustments */
 @media (max-width: 300px) {
   .spinner-border {
       width: 2rem;
