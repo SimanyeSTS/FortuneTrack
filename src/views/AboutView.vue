@@ -9,7 +9,7 @@
 </p>
 
 <p>
-    <span><strong>My Mission:</strong></span> To equip businesses with precise, data-driven predictions, empowering them to optimize strategies and unlock their full potential. Leveraging real-time data from Alpha Vantage, FortuneTrack provides a holistic view of market dynamics and consumer behavior, transforming raw data into actionable intelligence.
+    <span><strong>My Mission:</strong></span> To equip businesses along analytical individuals with precise, data-driven predictions, empowering them to optimize strategies and unlock their full potential. Leveraging real-time data from Alpha Vantage, FortuneTrack provides a holistic view of market dynamics and consumer behavior, transforming raw data into actionable intelligence.
 </p>
 
     </section>
