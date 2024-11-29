@@ -477,12 +477,19 @@ validatePassword(password) {
 }
 
 .profile-picture {
+  border: solid #1249ef;
   width: 25px!important;
   height: 25px!important;
   border-radius: 50%!important;
   object-fit: cover!important;
   margin-right: 10px!important;
 }
+
+.profile-picture:hover {
+  border: solid #002080;
+}
+
+
 
 .modal {
   position: fixed!important;
