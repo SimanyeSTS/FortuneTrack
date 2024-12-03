@@ -485,6 +485,8 @@ validatePassword(password) {
   margin-right: 10px!important;
 }
 
+.acc:hover .profile-picture,
+.logout:hover .profile-picture,
 .profile-picture:hover {
   border: solid #002080;
 }

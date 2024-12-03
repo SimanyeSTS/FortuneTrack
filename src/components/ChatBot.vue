@@ -153,10 +153,16 @@ export default {
 
 .chat-button:hover {
   animation-play-state: paused;
+  border: solid black;
 }
 
 .bi {
   font-size: 50px;
+}
+
+.chat-button:hover .bi,
+.bi:hover {
+  color: black;
 }
 
 .icon-container {
@@ -176,6 +182,7 @@ export default {
   bottom: 20px;
   right: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border: solid white;
 }
 
 .chat-button:hover {
