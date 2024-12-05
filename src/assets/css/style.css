@@ -154,3 +154,13 @@ body {
     transform: translateX(100%);
   }
 }
+
+:root {
+  --toastify-color-light: linear-gradient(135deg, #4169E1 0%, #0e3d6c 100%);
+  --toastify-text-color-light: black;
+  --toastify-color-success: #28a745;
+  --toastify-color-error: #dc3545;
+  --toastify-color-warning: #ffc107;
+  --toastify-color-info: #17a2b8;
+  --toastify-toast-border-radius: 15px;
+}
