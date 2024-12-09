@@ -64,14 +64,15 @@
               />
             </div>
             <div class="form-group">
-              <label for="userProfile">Profile Picture URL:</label>
-              <input 
-                type="text" 
-                id="userProfile" 
-                v-model="userProfile" 
-                placeholder="Leave to use default"
-                :disabled="isLoading"
-              />
+           <label for="userProfile">Profile Picture URL:</label>
+           <input 
+           type="url" 
+           id="userProfile" 
+           v-model="userProfile" 
+           placeholder="Leave to use default"
+          :disabled="isLoading"
+          @input="handleProfileUrlInput"
+           />
             </div>
             <div class="form-group">
               <label for="userRole">Role:</label>
@@ -135,63 +136,110 @@
       }
     },
     methods: {
-      ...mapActions(['updateUserProfile']),
-      
-      populateForm(user) {
-        this.firstName = user.firstName || '';
-        this.lastName = user.lastName || '';
-        this.userAge = user.userAge !== undefined ? user.userAge : null;
-        this.gender = user.gender || '';
-        this.emailAdd = user.emailAdd || '';
-        this.userProfile = user.userProfile || '';
-        this.userRole = user.userRole || '';
-      },
-      async updateUser () {
-  const userId = this.user.UserID;
+  ...mapActions(['updateUserProfile']),
 
-  if (!userId) {
-    Swal.fire({
+  populateForm(user) {
+    this.firstName = user.firstName || '';
+    this.lastName = user.lastName || '';
+    this.userAge = user.userAge !== undefined ? user.userAge : null;
+    this.gender = user.gender || '';
+    this.emailAdd = user.emailAdd || '';
+    this.userProfile = user.userProfile || '';
+    this.userRole = user.userRole || '';
+  },
+
+  hasChanges() {
+    return (
+      this.firstName.trim() !== this.user.firstName ||
+      this.lastName.trim() !== this.user.lastName ||
+      parseInt(this.userAge) !== parseInt(this.user.userAge) ||
+      this.gender !== this.user.gender ||
+      this.emailAdd.trim().toLowerCase() !== this.user.emailAdd.toLowerCase() ||
+      this.userProfile.trim() !== this.user.userProfile ||
+      this.userRole !== this.user.userRole ||
+      this.userPass.trim() !== ''
+    );
+  },
+
+  validateImageUrl(url) {
+  if (!url) return true;
+  try {
+    const urlObj = new URL(url);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    return imageExtensions.some(ext => urlObj.pathname.toLowerCase().endsWith(ext));
+  } catch {
+    return false;
+  }
+},
+
+  async updateUser() {
+    if (this.userProfile && !this.validateImageUrl(this.userProfile)) {
+    await Swal.fire({
       icon: 'error',
-      title: 'Error!',
-      text: 'User  ID is undefined.',
+      title: 'Invalid Profile Picture URL',
+      text: 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)',
     });
     return;
   }
-
-  const userData = {
-    firstName: this.firstName.trim(),
-    lastName: this.lastName.trim(),
-    userAge: parseInt(this.userAge),
-    gender: this.gender,
-    emailAdd: this.emailAdd.toLowerCase().trim(),
-    userProfile: this.userProfile.trim() || 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
-    userRole: this.userRole.trim()
-  };
-
-  if (this.userPass) {
-    userData.userPass = this.userPass;
-  }
-
-  try {
-    await this.updateUserProfile({ userId, userData });
-    Swal.fire({
-      icon: 'success',
-      title: 'Success!',
-      text: 'User  updated successfully.',
-    });
-    
-    this.$emit('data-updated');
-    
-    this.$emit('close');
-  } catch (error) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error!',
-      text: 'Failed to update user. Please try again.',
-    });
-  }
-}
+    if (!this.hasChanges()) {
+      Swal.fire({
+        icon: 'info',
+        title: 'No Changes Made',
+        text: 'No updates were detected. Please make changes before saving.',
+      });
+      return;
     }
+
+    const userId = this.user.UserID;
+
+    if (!userId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'User ID is undefined.',
+      });
+      return;
+    }
+
+    const userData = {
+      firstName: this.firstName.trim(),
+      lastName: this.lastName.trim(),
+      userAge: parseInt(this.userAge),
+      gender: this.gender,
+      emailAdd: this.emailAdd.toLowerCase().trim(),
+      userProfile:
+        this.userProfile.trim() ||
+        'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+      userRole: this.userRole.trim(),
+    };
+
+    if (this.userPass) {
+      userData.userPass = this.userPass;
+    }
+
+    try {
+      await this.updateUserProfile({ userId, userData });
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'User updated successfully.',
+      });
+
+      this.$emit('data-updated');
+      this.$emit('close');
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update user. Please try again.',
+      });
+    }
+  },
+
+  handleProfileUrlInput(event) {
+  this.userProfile = event.target.value;
+},
+},
   }
 
   </script>

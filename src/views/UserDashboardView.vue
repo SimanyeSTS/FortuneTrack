@@ -65,13 +65,16 @@
         />
       </div>
       <div class="form-group">
-        <input 
-          placeholder="Profile Pic URL" 
-          type="url" 
-          v-model="formData.userProfile" 
-          id="profilePicUrl" 
-        />
-      </div>
+  <input 
+    placeholder="Profile Pic URL" 
+    type="url" 
+    v-model="formData.userProfile" 
+    id="profilePicUrl"
+    @input="handleProfileUrlInput"
+    pattern=".*\.(jpg|jpeg|png|gif|webp|svg)$"
+    title="Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)"
+  />
+</div>
       
       <div class="profile-preview" v-if="formData.userProfile">
         <img :src="formData.userProfile" alt="Profile Preview" 
@@ -166,36 +169,74 @@ methods: {
     };
   },
 
-  async saveAccount() {
-    try {
-      this.loading = true;
-      this.error = null;
+  hasChanges() {
+  return (
+    this.formData.firstName.trim() !== this.current.firstName ||
+    this.formData.lastName.trim() !== this.current.lastName ||
+    parseInt(this.formData.userAge) !== parseInt(this.current.userAge) ||
+    this.formData.gender !== this.current.gender ||
+    this.formData.emailAdd.trim().toLowerCase() !== this.current.emailAdd.toLowerCase() ||
+    this.formData.userProfile.trim() !== this.current.userProfile ||
+    this.formData.userPass.trim() !== ''
+  );
+},
 
-      const payload = { ...this.formData };
-      if (!payload.userPass) {
-        delete payload.userPass;
-      }
+async saveAccount() {
+  if (this.formData.userProfile && !this.validateImageUrl(this.formData.userProfile)) {
+    await Swal.fire({
+      icon: 'error',
+      title: 'Invalid Profile Picture URL',
+      text: 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)',
+    });
+    return;
+  }
 
-      await this.updateUserProfile({
-        userId: this.current.UserID,
-        userData: payload
-      });
+  if (!this.hasChanges()) {
+    await Swal.fire({
+      icon: 'info',
+      title: 'No Changes Made',
+      text: 'No updates were detected. Please make changes before saving.',
+    });
+    return;
+  }
 
-      await Swal.fire({
-        title: 'Success!',
-        text: 'Your profile has been updated successfully.',
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-      });
+  try {
+    this.loading = true;
+    this.error = null;
 
-      this.initializeForm();
-    } catch (error) {
-      this.error = error.response?.data?.message || 'Failed to update profile';
-    } finally {
-      this.loading = false;
+    const payload = { ...this.formData };
+    if (!payload.userPass) {
+      delete payload.userPass;
     }
-  },
+
+    await this.updateUserProfile({
+      userId: this.current.UserID,
+      userData: payload
+    });
+
+    const updatedUser = {
+      ...this.current,
+      ...payload,
+      UserID: this.current.UserID
+    };
+
+    this.$store.commit('SET_USER', updatedUser);
+
+    await Swal.fire({
+      title: 'Success!',
+      text: 'Your profile has been updated successfully.',
+      icon: 'success',
+      timer: 1500,
+      showConfirmButton: false
+    });
+
+    this.initializeForm();
+  } catch (error) {
+    this.error = error.response?.data?.message || 'Failed to update profile';
+  } finally {
+    this.loading = false;
+  }
+},
 
   async deleteAccount() {
     Swal.fire({
@@ -205,7 +246,6 @@ methods: {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
-      reverseButtons: true
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -229,10 +269,32 @@ methods: {
       }
     });
   },
-
+  
   handleImageError(e) {
     e.target.src = 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg';
+  },
+
+  validateImageUrl(url) {
+  if (!url) return true;
+  try {
+    const urlObj = new URL(url);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    return imageExtensions.some(ext => urlObj.pathname.toLowerCase().endsWith(ext));
+  } catch {
+    return false;
   }
+},
+
+  handleProfileUrlInput(event) {
+  const url = event.target.value;
+  if (!url || this.validateImageUrl(url)) {
+    this.error = null;
+    this.formData.userProfile = url;
+  } else {
+    this.error = 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)';
+    this.formData.userProfile = url;
+  }
+}
 }
 }
 </script>

@@ -144,32 +144,6 @@ export default {
   animation: bounce-animation 2s ease infinite;
   animation-delay: 0s;
   transition: transform 0.2s ease-in-out;
-}
-
-.chat-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.chat-button:hover {
-  animation-play-state: paused;
-  border: solid black;
-}
-
-.bi {
-  font-size: 50px;
-}
-
-.chat-button:hover .bi,
-.bi:hover {
-  color: black;
-}
-
-.icon-container {
-  display: inline-block;
-}
-
-.chat-button {
   background-color: #2196F3;
   color: white;
   border: none;
@@ -185,10 +159,31 @@ export default {
   border: solid white;
 }
 
-.chat-button:hover {
-  background-color: #1A73B5!important;
+.chat-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+.chat-button:hover {
+  animation-play-state: paused;
+  background-color: #1A73B5 !important;
+  border: solid black;
+}
+
+.chat-button:hover .bi,
+.bi:hover {
+  color: black;
+}
+
+.bi {
+  font-size: 50px;
+}
+
+.icon-container {
+  display: inline-block;
+}
+
+/* Admin Modal Styling */
 .admin-modal {
   position: fixed;
   top: 0;
@@ -273,12 +268,7 @@ export default {
 .dot:nth-child(2) { animation-delay: 0.2s; }
 .dot:nth-child(3) { animation-delay: 0.4s; }
 
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-8px); }
-}
-
-.messageFromUser , .messageFromAI {
+.messageFromUser, .messageFromAI {
   margin: 10px;
   padding: 12px;
   border-radius: 8px;
@@ -286,7 +276,7 @@ export default {
   word-wrap: break-word;
 }
 
-.messageFromUser  {
+.messageFromUser {
   background-color: #2196F3;
   color: white;
   margin-left: auto;
@@ -351,14 +341,6 @@ h1 {
   border: solid black;
 }
 
-h1 {
-  margin: 0 0 20px 0;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  color: white;
-  font-size: 24px;
-}
-
 .full-screen-toggle {
   position: absolute;
   bottom: 10px;
@@ -388,16 +370,20 @@ h1 {
 }
 
 @media (max-width: 800px) {
+  .chat-button {
+    width: 100px;
+    height: 100px;
+  }
+
+  .bi {
+    font-size: 30px;
+  }
+
   .admin-modal-content {
     width: 90vw;
     height: auto;
     padding: 15px;
     max-height: 85vh;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 8px;
   }
 
   h1 {
@@ -406,25 +392,37 @@ h1 {
 }
 
 @media (max-width: 450px) {
-  .form-group input,
-  .form-group select {
-    padding: 8px;
+  .chat-button {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bi {
+    font-size: 25px;
   }
 
   h1 {
-    font-size: 20px }
+    font-size: 18px;
+  }
 }
 
 @media (max-width: 300px) {
+  .chat-button {
+    width: 60px;
+    height: 60px;
+  }
+
+  .bi {
+    font-size: 20px;
+  }
+
   .admin-modal-content {
-    width: 90vw;
-    height: auto;
     padding: 10px;
     max-height: 85vh;
   }
 
-  .form-group {
-    margin-bottom: 10px;
+  h1 {
+    font-size: 16px;
   }
 
   .save-button {

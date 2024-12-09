@@ -165,7 +165,7 @@ methods: {
       userRole: this.userRole
     };
 
-    await this.$store.dispatch('registerUser ', userData);
+    await this.$store.dispatch('registerUser', userData);
 
     Swal.fire({
       icon: 'success',

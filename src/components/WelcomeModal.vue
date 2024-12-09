@@ -115,7 +115,6 @@
   </script>
   
   <style scoped>
-  /* Same styles as LoginModal.vue */
   .modal {
     position: fixed!important;
     top: 0!important;
