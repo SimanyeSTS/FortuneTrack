@@ -238,8 +238,8 @@
 
   handleProfileUrlInput(event) {
   this.userProfile = event.target.value;
-},
-},
+}
+}
   }
 
   </script>

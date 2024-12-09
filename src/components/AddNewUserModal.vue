@@ -64,15 +64,16 @@
             >
           </div>
           <div class="form-group">
-            <label for="userProfile">Profile Picture:</label>
-            <input 
-              placeholder="Leave to use default"
-              type="text"
-              id="userProfile"
-              v-model="userProfile"
-              :disabled="isLoading"
-            >
-          </div>
+           <label for="userProfile">Profile Picture URL:</label>
+           <input 
+           type="url" 
+           id="userProfile" 
+           v-model="userProfile" 
+           placeholder="Leave to use default"
+          :disabled="isLoading"
+          @input="handleProfileUrlInput"
+           />
+            </div>
           <div class="form-group">
             <label for="userRole">Role:</label>
             <select v-model="userRole" id="userRole" required :disabled="isLoading">
@@ -143,12 +144,31 @@ computed: {
   }
 },
 methods: {
+  validateImageUrl(url) {
+  if (!url) return true;
+  try {
+    const urlObj = new URL(url);
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    return imageExtensions.some(ext => urlObj.pathname.toLowerCase().endsWith(ext));
+  } catch {
+    return false;
+  }
+},
   async registerAccount() {
   if (!this.isFormValid) {
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
       text: 'Please fill in all required fields correctly.',
+    });
+    return;
+  }
+
+  if (this.userProfile && !this.validateImageUrl(this.userProfile)) {
+    await Swal.fire({
+      icon: 'error',
+      title: 'Invalid Profile Picture URL',
+      text: 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)',
     });
     return;
   }
@@ -170,7 +190,7 @@ methods: {
     Swal.fire({
       icon: 'success',
       title: 'Success!',
-      text: 'User  registered successfully.',
+      text: 'User registered successfully.',
     });
     this.$emit('data-updated');
 
@@ -193,7 +213,10 @@ methods: {
     this.userPass = '';
     this.userProfile = '';
     this.userRole = '';
-  }
+  },
+  handleProfileUrlInput(event) {
+  this.userProfile = event.target.value;
+}
 }
 }
 </script>
