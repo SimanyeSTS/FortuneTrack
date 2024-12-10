@@ -182,7 +182,6 @@
   display: inline-block;
 }
 
-/* Center and align modal content */
 .chat-modal {
   position: fixed;
   top: 0;
@@ -208,6 +207,19 @@
   max-width: 800px;
   max-height: 600px;
   min-height: 400px;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: scale(0.95);
+}
+to {
+opacity: 1;
+transform: scale(1);
+}
 }
 
 .modal-scroll-container {
@@ -241,7 +253,6 @@
   margin-bottom: 10px;
 }
 
-/* Button styling */
 .chat-button {
   animation: bounce-animation 2s ease infinite;
   animation-delay: 0s;
@@ -303,7 +314,6 @@
   40% { transform: translateY(-8px); }
 }
 
-/* Message styling */
 .messageFromUser, .messageFromGuide {
   margin: 10px;
   padding: 12px;
@@ -332,7 +342,6 @@ input {
   background-color: white;
 }
 
-/* Header styling */
 h1 {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
@@ -342,7 +351,6 @@ h1 {
   padding: 10px;
 }
 
-/* Input and button container */
 .button-container {
   display: flex;
   justify-content: center;
@@ -413,7 +421,6 @@ h1 {
   margin-bottom: 0;
 }
 
-/* Responsive styles */
 @media (max-width: 800px) {
   .chat-button {
     width: 100px;

@@ -79,7 +79,7 @@ export default {
         messages.value.push({
           from: 'AI',
           data: `Welcome, ${firstName}! I'm here to help you analyze ${predictionData.value?.Name || 'this company'}'s performance and provide valuable market insights. What information are you interested in?
-          
+
 Please note: On desktop, scroll to the bottom to access the typing field and the Send button.`
         });
       }
@@ -137,7 +137,6 @@ Please note: On desktop, scroll to the bottom to access the typing field and the
 </script>
 
 <style scoped>
-/* Center and align modal content */
 .admin-modal {
 position: fixed;
 top: 0;
@@ -164,7 +163,6 @@ animation: fadeIn 0.3s ease-in-out;
 box-sizing: border-box;
 overflow: hidden;
 }
-/* Fade-in effect */
 @keyframes fadeIn {
 from {
 opacity: 0;
@@ -185,7 +183,6 @@ position: absolute;
 top: 10px;
 right: 10px;
 }
-/* Form groups and message content */
 .messageBox {
 max-height: 300px;
 overflow-y: auto;
@@ -212,7 +209,6 @@ cursor: pointer;
 background-color: #1249ef !important;
 color: black !important;
 }
-/* Ensure close button stays in position */
 h1 {
 font-family: 'Montserrat', sans-serif;
 font-weight: 900;
@@ -221,7 +217,6 @@ font-size: 28px;
 text-align: center;
 padding: 10px;
 }
-/* Media Query for Mobile Responsiveness */
 @media (max-width: 600px) {
 .admin-modal-content {
 padding: 15px;
@@ -288,8 +283,7 @@ font-weight: 900;
 color: white;
 font-size: 24px;
 }
-/* Admin Modal Styling */
-/* Admin Modal Styling */
+
 .admin-modal {
 position: fixed;
 top: 0;
