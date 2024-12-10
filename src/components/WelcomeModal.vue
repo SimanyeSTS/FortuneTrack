@@ -1,5 +1,5 @@
 <template>
-    <div v-if="modelValue" class="modal">
+    <div v-if="modelValue" class="modal" @click.self="closeModal">
       <div class="modal-content">
         <h1>Wonderful to have you here!</h1>
         <form @submit.prevent="handleLogin">
@@ -116,25 +116,40 @@
   
   <style scoped>
   .modal {
-    position: fixed!important;
-    top: 0!important;
-    left: 0!important;
-    right: 0!important;
-    bottom: 0!important;
-    background: rgba(0, 0, 0, 0.7)!important;
-    display: flex!important;
-    justify-content: center!important;
-    align-items: center!important;
-    z-index: 1000!important;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
   
-  .modal-content {
-    background: #4169E1!important;
-    padding: 20px!important;
-    border-radius: 8px!important;
-    width: 400px!important;
-    text-align: center!important;
+.modal-content {
+  background: #4169E1;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
   
   button:hover {
     background-color: #1249ef!important;
@@ -143,7 +158,7 @@
   }
   
   .form-group {
-    margin-bottom: 15px!important;
+    margin-bottom: 15px;
   }
   
   .form-group label {
@@ -158,9 +173,9 @@
     border-radius: 4px!important;
   }
   
-  .button-group {
-    margin-top: 20px!important;
-  }
+.button-group {
+  margin-top: 20px;
+}
   
   .login-button {
     background-color: white!important;
@@ -191,12 +206,15 @@
   }
   
   .close-button {
-    background: none!important;
-    border: none!important;
-    color: #000!important;
-    font-size: 24px!important;
-    cursor: pointer!important;
-  }
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 1px;
+  right: 7px;
+}
   
   h1 {
     font-family: 'Montserrat', sans-serif;
@@ -206,15 +224,9 @@
     margin-bottom: 2rem;
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     .modal-content {
-      width: 90%!important;
-    }
-  }
-  
-  @media (max-width: 400px) {
-    .modal-content {
-      padding: 15px!important;
+      width: 95%!important;
     }
   }
   </style>

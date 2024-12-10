@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-retail-modal">
+  <div class="admin-retail-modal" @click.self="$emit('close')">
     <div class="admin-retail-modal-content">
       <h1>This will lead in an unmaintained retail prediction!</h1>
       <div class="modal-scroll-container">
@@ -911,17 +911,17 @@ h1 {
 .close-button {
   background: none;
   border: none;
-  color: #000;
+  color: white;
   font-size: 24px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: color 0.3s;
+  position: absolute;
+  top: 1px;
+  right: 7px;
 }
-
 .close-button:hover {
-  color: black;
-  background: #0f3dc6;
-  border: solid black;
+color: black;
+background: #0f3dc6;
+border: solid black;
 }
 
 .close-button:disabled {

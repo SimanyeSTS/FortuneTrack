@@ -26,7 +26,8 @@
   </section>
 
   <!-- Login Modal -->
-  <div v-if="showLoginModal" class="modal">
+  <div v-if="showLoginModal" class="modal" @click.self="closeModal">
+
     <div class="modal-content">
       <h1>Wonderful to have you here!</h1>
       <form @submit.prevent="handleLogin">
@@ -245,18 +246,6 @@ export default {
 
 
 <style scoped>
-.login-button:disabled,
-.forgot-password:disabled,
-.register-button:disabled,
-.close-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.form-group input:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
 .home {
   color: #ffffff;
   font-family: Arial, sans-serif;
@@ -372,14 +361,29 @@ p, #sp {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 10px;
 }
 
 .modal-content {
   background: #4169E1;
   padding: 20px;
   border-radius: 8px;
-  width: 400px;
+  width: 90%;
+  max-width: 400px;
   text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .form-group {
@@ -433,9 +437,12 @@ p, #sp {
 .close-button {
   background: none;
   border: none;
-  color: #000;
+  color: white;
   font-size: 24px;
   cursor: pointer;
+  position: absolute;
+  top: 1px;
+  right: 7px;
 }
 
 @media (max-width: 768px) {
@@ -482,61 +489,27 @@ p, #sp {
   .button-container {
     gap: 10px;
   }
-}
-
-@media (max-width: 400px) {
-  .landing-content {
-    padding: 20px;
-    font-size: 14px;
-  }
-
-  #welcoming {
-    font-size: 28px;
-  }
-
-  h1 {
-    font-size: 22px;
-  }
-
-  p, #sp {
-    font-size: 18px;
-  }
-
-  .cta-button {
-    padding: 6px 12px;
-    font-size: 0.8em;
-  }
-
-  .button-container {
-    gap: 5px;
-  }
-}
-
-@media (max-width: 300px) {
-  .landing {
-    flex-direction: column;
-    height: auto;
-  }
 
   .modal-content {
     width: 95%;
-    padding: 15px;
-  }
-
-  .form-group input {
-    padding: 6px;
-  }
-
-  .button-group {
-    flex-direction: column;
-  }
-
-  .button-group button {
-    margin-bottom: 5px;
-  }
-
-  .close-button {
-    font-size: 20px;
   }
 }
-</style>
+
+@media (max-width: 320px) {
+  #welcoming {
+    font-size: 24px;
+    word-wrap: break-word;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .specializations ul {
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .specializations li {
+    line-height: 1.5;
+  }
+}
+</style>  

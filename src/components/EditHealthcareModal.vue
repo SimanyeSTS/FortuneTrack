@@ -1,5 +1,5 @@
 <template>
-    <div class="admin-healthcare-modal">
+    <div class="admin-healthcare-modal" @click.self="$emit('close')">
       <div class="admin-healthcare-modal-content">
         <h1>Please verify all information is correct on the healthcare prediction before altering!</h1>
         <div class="modal-scroll-container">
@@ -860,20 +860,20 @@
   }
   
   .close-button {
-    background: none;
-    border: none;
-    color: #000;
-    font-size: 24px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: color 0.3s;
-  }
-  
-  .close-button:hover {
-    color: black;
-    background: #0f3dc6;
-    border: solid black;
-  }
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 1px;
+  right: 7px;
+}
+.close-button:hover {
+color: black;
+background: #0f3dc6;
+border: solid black;
+}
   
   .close-button:disabled {
     opacity: 0.7;

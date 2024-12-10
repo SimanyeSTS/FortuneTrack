@@ -6,7 +6,7 @@
 </span>
       </button>
   
-      <div v-if="isChatOpen" class="chat-modal">
+      <div v-if="isChatOpen" class="chat-modal" @click.self="toggleChat">
         <div class="chat-modal-content">
           <h1>Market Sector Guide</h1>
           <div class="modal-scroll-container">
@@ -164,7 +164,7 @@
   </script>
 
 <style scoped>
-  @keyframes bounce-animation {
+@keyframes bounce-animation {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
@@ -182,42 +182,7 @@
   display: inline-block;
 }
 
-.chat-button {
-  animation: bounce-animation 2s ease infinite;
-  animation-delay: 0s;
-  transition: transform 0.2s ease-in-out;
-}
-
-.chat-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.chat-button:hover {
-  animation-play-state: paused;
-  border: solid black;
-}
-
-.chat-button {
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  font-size: 16px;
-  cursor: pointer;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  border: solid white;
-}
-
-.chat-button:hover {
-  background-color: #1A73B5 !important;
-}
-
+/* Center and align modal content */
 .chat-modal {
   position: fixed;
   top: 0;
@@ -276,6 +241,37 @@
   margin-bottom: 10px;
 }
 
+/* Button styling */
+.chat-button {
+  animation: bounce-animation 2s ease infinite;
+  animation-delay: 0s;
+  transition: transform 0.2s ease-in-out;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  font-size: 16px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border: solid white;
+}
+
+.chat-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.chat-button:hover {
+  animation-play-state: paused;
+  background-color: #1A73B5 !important;
+  border: solid black;
+}
+
 .typing-indicator {
   padding: 8px 12px !important;
   min-width: 60px;
@@ -307,8 +303,8 @@
   40% { transform: translateY(-8px); }
 }
 
-.messageFromUser,
-.messageFromGuide {
+/* Message styling */
+.messageFromUser, .messageFromGuide {
   margin: 10px;
   padding: 12px;
   border-radius: 8px;
@@ -336,15 +332,17 @@ input {
   background-color: white;
 }
 
+/* Header styling */
 h1 {
-  text-align: center;
-  margin: 0 0 20px 0;
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   color: white;
   font-size: 24px;
+  text-align: center;
+  padding: 10px;
 }
 
+/* Input and button container */
 .button-container {
   display: flex;
   justify-content: center;
@@ -373,11 +371,12 @@ h1 {
 .close-button {
   background: none;
   border: none;
-  color: #000;
+  color: white;
   font-size: 24px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: color 0.3s;
+  position: absolute;
+  top: 1px;
+  right: 7px;
 }
 
 .close-button:hover {
@@ -414,7 +413,17 @@ h1 {
   margin-bottom: 0;
 }
 
+/* Responsive styles */
 @media (max-width: 800px) {
+  .chat-button {
+    width: 100px;
+    height: 100px;
+  }
+
+  .icon-large {
+    font-size: 30px;
+  }
+
   .chat-modal-content {
     width: 90vw;
     height: auto;
@@ -423,67 +432,50 @@ h1 {
   }
 
   h1 {
-      font-size: 20px;
-    }
+    font-size: 20px;
+  }
+}
 
-    .messageBox {
-      height: 200px;
-    }
-
-    .chat-button {
-      width: 120px;
-      height: 120px;
-      bottom: 15px;
-      right: 15px;
-    }
-
-    .icon-large {
-      font-size: 40px;
-    }
-
-    .send-button {
-      padding: 8px 16px;
-    }
-
-    .modal-scroll-container {
-      max-height: 60vh;
-    }
+@media (max-width: 450px) {
+  .chat-button {
+    width: 80px;
+    height: 80px;
   }
 
-  @media (max-width: 500px) {
-    .chat-modal-content {
-      padding: 10px;
-    }
-
-    h1 {
-      font-size: 18px;
-    }
-
-    .messageBox {
-      height: 150px;
-    }
-
-    .chat-button {
-      width: 100px;
-      height: 100px;
-      bottom: 10px;
-      right: 10px;
-    }
-
-    .icon-large {
-      font-size: 30px;
-    }
-
-    .send-button {
-      padding: 6px 12px;
-    }
-
-    input {
-      padding: 8px;
-    }
-
-    .modal-scroll-container {
-      max-height: 50vh;
-    }
+  .icon-large {
+    font-size: 25px;
   }
+
+  h1 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 300px) {
+  .chat-button {
+    width: 60px;
+    height: 60px;
+  }
+
+  .icon-large {
+    font-size: 20px;
+  }
+
+  .chat-modal-content {
+    padding: 10px;
+    max-height: 85vh;
+  }
+
+  h1 {
+    font-size: 16px;
+  }
+
+  .send-button {
+    padding: 8px 16px;
+  }
+
+  .close-button {
+    font-size: 20px;
+  }
+}
 </style>
