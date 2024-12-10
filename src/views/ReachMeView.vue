@@ -161,7 +161,7 @@ export default {
 }
 
 .indent {
-  margin-left: 8%;
+  margin-left: 0%;
 }
 
 input[type="text"],
@@ -245,6 +245,28 @@ input[type="text"]:hover,
 input[type="email"]:hover,
 textarea:hover {
   border: solid #688eff;
+}
+
+.contact-info p {
+  display: flex;
+  align-items: flex-start;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  margin: 20px;
+}
+
+.contact-info a {
+  display: flex;
+  align-items: flex-start;
+  text-decoration: none;
+  color: white;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.icon {
+  margin-right: 10px;
+  flex-shrink: 0;
 }
 
 @media (max-width: 600px) {

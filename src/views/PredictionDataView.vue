@@ -15,11 +15,14 @@
         <p><strong>Country:</strong> {{ predictionData.Country || 'N/A' }}</p>
         <p><strong>Industry:</strong> {{ predictionData.Industry || 'N/A' }}</p>
         <p><strong>Address:</strong> {{ predictionData.Address || 'N/A' }}</p>
-        <p>
-           <strong>Official Site:</strong> 
-           <a :href="predictionData.OfficialSite || '#' " target="_blank">
-             {{ predictionData.OfficialSite || 'N/A' }}
-            </a></p>
+        <p class="official-site">
+  <strong>Official Site:</strong> 
+  <span class="link-wrapper">
+    <a :href="predictionData.OfficialSite || '#'" target="_blank">
+      {{ predictionData.OfficialSite || 'N/A' }}
+    </a>
+  </span>
+</p>
         <p><strong>Fiscal Year End:</strong> {{ predictionData.FiscalYearEnd || 'N/A' }}</p>
         <p><strong>Latest Quarter:</strong> {{ formatDate(predictionData.LatestQuarter) }}</p>
       </div>
@@ -376,5 +379,28 @@ p {
   font-weight: 900;
   color: white;
   font-size: 17px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
+.official-site {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.link-wrapper {
+  flex: 1;
+  min-width: 0; /* This is important for text truncation */
 }
 </style>
