@@ -138,30 +138,31 @@ Please note: On desktop, scroll to the bottom to access the typing field and the
 
 <style scoped>
 .admin-modal {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background: rgba(0, 0, 0, 0.7);
-display: flex;
-justify-content: center;
-align-items: center;
-padding: 10px;
-z-index: 1000;
-overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 .admin-modal-content {
-background: #4169E1;
-padding: 20px;
-border-radius: 8px;
-width: 90%;
-max-width: 400px;
-text-align: center;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-animation: fadeIn 0.3s ease-in-out;
-box-sizing: border-box;
-overflow: hidden;
+  background: #4169E1;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  max-height: 600px;
+  min-height: 400px;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 @keyframes fadeIn {
 from {
@@ -184,10 +185,13 @@ top: 10px;
 right: 10px;
 }
 .messageBox {
-max-height: 300px;
-overflow-y: auto;
-padding: 10px;
-box-sizing: border-box;
+  height: 300px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 .form-group {
 margin-bottom: 15px;

@@ -13,17 +13,10 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent" :class="{ show: isNavbarOpen }">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/" @click="closeNavbar" active-class="active"> Home </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/about" @click="closeNavbar" active-class="active"> About </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/predict" @click="closeNavbar" active-class="active"> Predict </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/contact" @click="closeNavbar" active-class="active"> Reach Me </router-link>
+          <li class="nav-item" v-for="(item, index) in navItems" :key="index" :style="getItemAnimationStyle(index)">
+            <router-link class="nav-link" :to="item.to" @click="closeNavbar" active-class="active">
+              {{ item.name }}
+            </router-link>
           </li>
         </ul>
       </div>
@@ -46,22 +39,30 @@ nav {
   font-size: 24px;
 }
 
+.navbar-nav {
+  gap: 20px;
+}
+
 .nav-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeIn 0.5s ease-in-out forwards;
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.nav-item a {
+  white-space: nowrap;
+}
 
 .nav-link:hover {
   color: white;
@@ -106,6 +107,16 @@ nav {
 .hamburger-icon.is-active .line:nth-child(3) {
   transform: translateY(-9px) rotate(-45deg);
 }
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .nav-item {
+    margin-left: 1%;
+  }
+}
 </style>
 
 <script>
@@ -113,6 +124,12 @@ export default {
   data() {
     return {
       isNavbarOpen: false,
+      navItems: [
+        { name: 'Home', to: '/' },
+        { name: 'About', to: '/about' },
+        { name: 'Predict', to: '/predict' },
+        { name: 'Reach Me', to: '/contact' }
+      ]
     };
   },
   methods: {
@@ -124,6 +141,11 @@ export default {
       let navbarCollapse = document.getElementById('navbarSupportedContent');
       navbarCollapse.classList.remove('show');
     },
-  },
+    getItemAnimationStyle(index) {
+      return this.isNavbarOpen
+        ? { animationDelay: `${index * 0.1}s` }
+        : { opacity: 0, transform: 'translateY(20px)' };
+    }
+  }
 };
 </script>
