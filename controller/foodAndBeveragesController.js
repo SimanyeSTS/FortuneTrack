@@ -8,20 +8,29 @@ const apikey3 = 'I7FZD4K4SRHYLEL8'
 const baseUrl = 'https://www.alphavantage.co/query'
 
 const safeParseFloat = (value) => {
-  if (value === undefined || value === null || value === '') {
+  if (!value ||value === undefined || value === null || value === '' || value === 'None' || value === '-') {
     return null;
   }
-  const parsed = parseFloat(value);
+  const cleanValue = String(value).replace(/[$,]/g, '');
+  const parsed = parseFloat(cleanValue);
   return isNaN(parsed) ? null : parsed;
-}
+};
 
 const safeParseInt = (value) => {
-  if (value === undefined || value === null || value === '') {
+  if (value === undefined || value === null || value === '' || value === 'None' || value === '-') {
     return null;
   }
-  const parsed = parseInt(value);
+  const parsed = parseInt(value, 10);
   return isNaN(parsed) ? null : parsed;
-}
+};
+
+const safeParseDate = (dateStr) => {
+  if (!dateStr || dateStr === 'None' || dateStr === '-') {
+    return null;
+  }
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? null : dateStr;
+};
 
 const handleApiError = (data) => {
   if (data.Note || data.Information) {
@@ -30,7 +39,7 @@ const handleApiError = (data) => {
   if (!data || typeof data !== 'object') {
     throw new Error('Invalid or empty response from API');
   }
-}
+};
 
 const getFoodAndBeveragesData = async (req, res) => {
   try {
