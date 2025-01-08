@@ -78,7 +78,7 @@ const transformApiData = (data) => ({
 class FoodAndBeverages {
   static async getFoodAndBeveragesData() {
     try {
-      const query = "SELECT * FROM FoodAndBeverages";
+      const query = `SELECT * FROM FoodAndBeverages`;
       const [rows] = await db.query(query);
       return rows;
     } catch (error) {
