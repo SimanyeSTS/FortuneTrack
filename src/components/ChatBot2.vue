@@ -70,9 +70,15 @@
       }));
   
       const welcomeMessages = [
-        "Hi there! Want to explore market sectors? I can help you understand what's happening!",
-        "Looking for sector insights? I'm your friendly guide! What would you like to know?",
-        "Need help understanding the market sectors? Let's explore together!"
+        `Hi there! Want to explore market sectors? I can help you understand what's happening!
+        
+        Please note: On desktop, scroll to the bottom to access the typing field and the Send button.`,
+        `Looking for sector insights? I'm your friendly guide! What would you like to know?
+        
+        Please note: On desktop, scroll to the bottom to access the typing field and the Send button.`,
+        `Need help understanding the market sectors? Let's explore together!
+        
+        Please note: On desktop, scroll to the bottom to access the typing field and the Send button.`
       ];
   
       const formatMessage = (text) => {
