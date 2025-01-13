@@ -16,7 +16,12 @@
           Simanye Somdaka
         </a>
       </p>
-      <p><i class="bi bi-telephone-fill icon"></i> <a href="tel:+27730633069">+27 73 063 3069</a></p>
+      <p>
+        <a href="tel:+27730633069">
+        <i class="bi bi-telephone-fill icon"></i>
+        +27 73 063 3069
+      </a>
+      </p>
       <p>
         <i class="bi bi-geo-alt-fill icon"></i>
         <span class="spacing">Weltevreden Valley North, <br> 
