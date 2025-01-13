@@ -64,6 +64,9 @@ hr {
     font-size: 16px;
     padding: 10px;
     text-align: center;
+    position: sticky;  /* Add this */
+    top: 0;           /* Add this */
+    z-index: 100;     /* Add this */
 }
 
 .header img {
