@@ -173,8 +173,8 @@ const getFoodAndBeveragesData2 = async (req, res) => {
       '50DayMovingAverage': safeParseFloat(data['50DayMovingAverage']),
       '200DayMovingAverage': safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
-      DividendDate: data.DividendDate || null,
-      ExDividendDate: data.ExDividendDate || null
+      DividendDate: safeParseDate(data.DividendDate) || null,
+      ExDividendDate: safeParseDate(data.ExDividendDate) || null
     }
 
     if (!foodAndBeveragesData2.Symbol) {
