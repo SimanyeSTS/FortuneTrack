@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -8,36 +7,38 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const generatePrediction = async (req, res) => {
   try {
     const { message, companyData } = req.body;
-
+    
     if (!companyData || !companyData.Name || !companyData.Symbol) {
-      return res.status(400).json({ error: 'Company data is required.' })
+      return res.status(400).json({ 
+        error: 'Invalid request: Company name and symbol are required' 
+      });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
-
-    let historicalMetrics = ''
-    if (companyData['52WeekHigh']) {
-      historicalMetrics += `\n    - 52 Week High: ${companyData['52WeekHigh']}`
-    } else if (companyData['Week52High']) {
-      historicalMetrics += `\n    - 52 Week High: ${companyData['Week52High']}`
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ 
+        error: 'Server configuration error: API key not found' 
+      });
     }
 
-    if (companyData['52WeekLow']) {
-      historicalMetrics += `\n    - 52 Week Low: ${companyData['52WeekLow']}`
-    } else if (companyData['Week52Low']) {
-      historicalMetrics += `\n    - 52 Week Low: ${companyData['Week52Low']}`
-    }
-
-    if (companyData['50DayMovingAverage']) {
-      historicalMetrics += `\n    - Moving Averages: 50-Day: ${companyData['50DayMovingAverage']}`
-    } else if (companyData['Day50MovingAverage']) {
-      historicalMetrics += `\n    - Moving Averages: 50-Day: ${companyData['Day50MovingAverage']}`
-    }
-
-    if (companyData['200DayMovingAverage']) {
-      historicalMetrics += `, 200-Day: ${companyData['200DayMovingAverage']}`
-    } else if (companyData['Day200MovingAverage']) {
-      historicalMetrics += `, 200-Day: ${companyData['Day200MovingAverage']}`
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    
+    let historicalMetrics = '';
+    historicalMetrics += companyData['52WeekHigh'] || companyData['Week52High'] 
+      ? `\n    - 52 Week High: ${companyData['52WeekHigh'] || companyData['Week52High']}`
+      : '';
+    
+    historicalMetrics += companyData['52WeekLow'] || companyData['Week52Low']
+      ? `\n    - 52 Week Low: ${companyData['52WeekLow'] || companyData['Week52Low']}`
+      : '';
+    
+    const movingAverage50 = companyData['50DayMovingAverage'] || companyData['Day50MovingAverage'];
+    const movingAverage200 = companyData['200DayMovingAverage'] || companyData['Day200MovingAverage'];
+    
+    if (movingAverage50) {
+      historicalMetrics += `\n    - Moving Averages: 50-Day: ${movingAverage50}`;
+      if (movingAverage200) {
+        historicalMetrics += `, 200-Day: ${movingAverage200}`;
+      }
     }
 
     const prompt = `As a financial analyst, analyze this company data and ${message}:
@@ -56,19 +57,32 @@ const generatePrediction = async (req, res) => {
     
     Historical Metrics: ${historicalMetrics}
     
-    Please provide detailed analysis and forecasting based on these metrics, with emphasis on future market trends and stock price predictions.`
+    Please provide detailed analysis and forecasting based on these metrics, with emphasis on future market trends and stock price predictions.`;
 
-    const result = await model.generateContent(prompt)
-    const response = await result.response
-    const text = response.text()
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
 
-    res.json({ response: text })
+    return res.json({ response: text });
   } catch (error) {
-    console.error('Gemini API Error:', error)
-    res.status(500).json({ error: 'Failed to generate prediction' })
+    if (error.name === 'AbortError') {
+      return res.status(408).json({ 
+        error: 'Request timeout: The analysis took too long to complete' 
+      });
+    }
+    
+    if (error.name === 'QuotaExceededError') {
+      return res.status(429).json({ 
+        error: 'API quota exceeded. Please try again later' 
+      });
+    }
+
+    return res.status(500).json({ 
+      error: 'An error occurred while generating the prediction' 
+    });
   }
-}
+};
 
 export default { 
-  generatePrediction
-}
+  generatePrediction 
+};
