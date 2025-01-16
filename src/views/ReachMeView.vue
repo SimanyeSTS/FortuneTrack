@@ -89,7 +89,55 @@ export default {
       this.isSubmitting = true;
       Swal.fire({
         title: 'Sending...',
-        html: '<div class="spinner-border" role="status"><span class="sr-only"></span></div>',
+        html: `<div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+            <div class="spinner" style="
+              width: 50px;
+              height: 50px;
+              border: 4px solid #f3f3f3;
+              border-top: 4px solid #007bff;
+              border-radius: 50%;
+              animation: spin 1s linear infinite, colorChange 5s linear infinite;
+            "></div>
+          </div>
+          <style>
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            @keyframes colorChange {
+              0% {
+                  border-top-color: #007bff; /* Primary (Blue) */
+              }
+              12.5% {
+                  border-top-color: #6c757d; /* Secondary (Gray) */
+              }
+              25% {
+                  border-top-color: #28a745; /* Success (Green) */
+              }
+              37.5% {
+                  border-top-color: #dc3545; /* Danger (Red) */
+              }
+              50% {
+                  border-top-color: #ffc107; /* Warning (Yellow) */
+              }
+              62.5% {
+                  border-top-color: #17a2b8; /* Info (Cyan) */
+              }
+              75% {
+                  border-top-color: #f8f9fa; /* Light (Light Grey) */
+              }
+              87.5% {
+                  border-top-color: #343a40; /* Dark (Black) */
+              }
+              100% {
+                  border-top-color: #007bff; /* Loop back to Primary (Blue) */
+              }
+            }
+            body.swal2-height-auto {
+              overflow-y: hidden !important;
+            }
+          </style>
+        `,
         showConfirmButton: false,
         allowOutsideClick: false,
         allowEscapeKey: false,
