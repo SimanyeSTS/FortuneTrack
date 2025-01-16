@@ -249,55 +249,81 @@ export default {
 .home {
   color: #ffffff;
   font-family: Arial, sans-serif;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .landing {
   display: flex;
-  height: 60vh;
-}
-
-.image {
-  background-image: url('https://i.postimg.cc/wvGrsQYB/Header.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.landing-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0 20px;
-  margin-top: 5%;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  color: white;
-  font-size: 20px;
+  min-height: 60vh;
+  width: 100%;
 }
 
 .landing-image {
   flex: 1;
-  overflow: hidden;
+  position: relative;
+  width: 100%;
+  background-image: url('https://i.postimg.cc/wvGrsQYB/Header.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 60vh;
+}
+
+.landing-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#welcoming {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: clamp(24px, 5vw, 50px);
+  margin-bottom: 20px;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+.landing-content p {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  color: white;
+  font-size: clamp(16px, 3vw, 30px);
+  margin-bottom: 30px;
+  line-height: 1.4;
+  max-width: 800px;
 }
 
 .button-container {
   display: flex;
-  gap: 20px;
+  gap: clamp(10px, 2vw, 20px);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .cta-button {
   background-color: white;
   color: #4169E1;
   border: 2px solid #4169E1;
-  padding: 10px 20px;
+  padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 20px);
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: 1em;
+  font-size: clamp(14px, 2vw, 1em);
   cursor: pointer;
   border-radius: 20px;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  white-space: nowrap;
 }
 
 button:hover {
@@ -325,13 +351,6 @@ button:hover {
 .specializations li {
   font-size: 1.1em;
   margin-bottom: 15px;
-}
-
-#welcoming {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  color: white;
-  font-size: 50px;
 }
 
 h1 {
@@ -445,57 +464,66 @@ p, #sp {
   right: 7px;
 }
 
+/* Responsive breakpoints */
 @media (max-width: 768px) {
   .landing {
-    flex-direction: column;
-    height: auto;
+    min-height: auto;
   }
 
   .landing-content {
-    padding: 40px 20px;
-  }
-
-  .landing h1 {
-    font-size: 2em;
-  }
-
-  .landing p {
-    font-size: 1em;
+    padding: 40px 15px;
   }
 
   .button-container {
+    width: 100%;
     flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-button {
+    width: 80%;
+    max-width: 250px;
+  }
+
+  .specializations h2 {
+    font-size: 1.5em;
+  }
+
+  .specializations li {
+    font-size: 1em;
+    line-height: 1.4;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
+  .landing-content {
+    padding: 30px 10px;
+  }
+  
   #welcoming {
-    font-size: 36px;
+    margin-bottom: 15px;
   }
 
-  h1 {
-    font-size: 28px;
+  .specializations {
+    padding: 30px 15px;
   }
 
   p, #sp {
     font-size: 24px;
   }
-
-  .cta-button {
-    padding: 8px 15px;
-    font-size: 0.9em;
-  }
-
-  .button-container {
-    gap: 10px;
-  }
-
-  .modal-content {
-    width: 95%;
-  }
 }
 
 @media (max-width: 320px) {
+  .landing-content {
+    padding: 20px 8px;
+  }
+
+  .cta-button {
+    width: 90%;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
   #welcoming {
     font-size: 24px;
     word-wrap: break-word;
@@ -510,6 +538,11 @@ p, #sp {
 
   .specializations li {
     line-height: 1.5;
+    font-size: 0.9em;
+  }
+
+  .modal-content {
+    padding: 15px;
   }
 }
-</style>  
+</style>
