@@ -15,6 +15,7 @@
     </div>
 
     <PredictionFilters 
+    class="PredictionFilters"
       :sectors="sectors"
       @filter-change="handleFilterChange"
     />
@@ -446,6 +447,12 @@ validatePassword(password) {
 <style scoped>
 .content-container {
   margin-top: 20px;
+}
+
+@media (min-width: 1024px) {
+  .predict-view .PredictionFilters {
+    margin-top: 80px;
+  }
 }
 
 .spinner-container {

@@ -8,8 +8,10 @@
     Built on the powerful MEVN stack (MySQL, Express.js, Vue.js, and Node.js), FortuneTrack offers a seamless and user-friendly experience for tracking and forecasting trends in Retail, Technology, Food & Beverages, and Healthcare. By analyzing data from the top three companies driving these sectors in the NYSE and NASDAQ, this platform delivers unparalleled insights across global markets.
 </p>
 
+<h2>My Mission</h2>
+
 <p>
-    <span><strong>My Mission:</strong></span> To equip businesses along analytical individuals with precise, data-driven predictions, empowering them to optimize strategies and unlock their full potential. Leveraging real-time data from Alpha Vantage, FortuneTrack provides a holistic view of market dynamics and consumer behavior, transforming raw data into actionable intelligence.
+     To equip businesses along analytical individuals with precise, data-driven predictions, empowering them to optimize strategies and unlock their full potential. Leveraging real-time data from Alpha Vantage, FortuneTrack provides a holistic view of market dynamics and consumer behavior, transforming raw data into actionable intelligence.
 </p>
 
     </section>
@@ -83,10 +85,11 @@ h2{
     font-weight: 900;
     color: white;
     font-size: 30px;
+    text-align: center;
 }
 span {
   font-family: 'Montserrat', sans-serif;
-    font-weight: 900;
+    font-weight: 900; 
     color: white;
     font-size: 30px;
 }
