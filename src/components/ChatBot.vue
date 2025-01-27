@@ -137,6 +137,9 @@ Please note: On desktop, scroll to the bottom to access the typing field and the
 </script>
 
 <style scoped>
+.bi {
+  font-size: 30px!important;
+}
 .admin-modal {
   position: fixed;
   top: 0;

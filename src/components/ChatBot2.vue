@@ -176,7 +176,7 @@
 }
 
 .icon-large {
-  font-size: 50px;
+  font-size: 30px;
 }
 
 .chat-button:hover .bi,
