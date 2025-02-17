@@ -4,8 +4,8 @@
     <p v-if="current">Welcome, {{ current.firstName }}! <br> Feel free to make adjustments.</p>
     
     <div v-if="loading" class="spinner-container">
-  <SpinnerComp2 /> 
-</div>
+      <SpinnerComp2 /> 
+    </div>
     
     <div v-if="error" class="error-message">
       {{ error }}
@@ -63,18 +63,21 @@
           v-model="formData.userPass" 
           id="password" 
         />
+        <div v-if="passwordError" class="error-message">
+          {{ passwordError }}
+        </div>
       </div>
       <div class="form-group">
-  <input 
-    placeholder="Profile Pic URL" 
-    type="url" 
-    v-model="formData.userProfile" 
-    id="profilePicUrl"
-    @input="handleProfileUrlInput"
-    pattern=".*\.(jpg|jpeg|png|gif|webp|svg)$"
-    title="Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)"
-  />
-</div>
+        <input 
+          placeholder="Profile Pic URL" 
+          type="url" 
+          v-model="formData.userProfile" 
+          id="profilePicUrl"
+          @input="handleProfileUrlInput"
+          pattern=".*\.(jpg|jpeg|png|gif|webp|svg)$"
+          title="Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)"
+        />
+      </div>
       
       <div class="profile-preview" v-if="formData.userProfile">
         <img :src="formData.userProfile" alt="Profile Preview" 
@@ -114,191 +117,210 @@ import Swal from 'sweetalert2';
 import SpinnerComp2 from '@/components/SpinnerComp2.vue';
 
 export default {
-name: 'UserDashboardView',
-components: {
-  SpinnerComp2
-},
-
-data() {
-  return {
-    loading: false,
-    error: null,
-    defaultProfilePic: 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
-    formData: {
-      firstName: '',
-      lastName: '',
-      userAge: null,
-      gender: '',
-      emailAdd: '',
-      userPass: '',
-      userProfile: '',
-    }
-  }
-},
-
-computed: {
-  ...mapState({
-    current: state => state.user
-  })
-},
-
-mounted() {
-  window.scrollTo(0, 0);
-},
-
-created() {
-  if (this.current) {
-    this.initializeForm();
-  } else {
-    this.$router.push('/user');
-  }
-},
-
-methods: {
-  ...mapActions(['updateUserProfile']),
-
-  initializeForm() {
-    this.formData = {
-      firstName: this.current.firstName || '',
-      lastName: this.current.lastName || '',
-      userAge: this.current.userAge !== undefined ? this.current.userAge : null,
-      gender: this.current.gender || '',
-      emailAdd: this.current.emailAdd || '',
-      userPass: '',
-      userProfile: this.current.userProfile || this.defaultProfilePic,
-    };
+  name: 'UserDashboardView',
+  components: {
+    SpinnerComp2
   },
 
-  hasChanges() {
-  return (
-    this.formData.firstName.trim() !== this.current.firstName ||
-    this.formData.lastName.trim() !== this.current.lastName ||
-    parseInt(this.formData.userAge) !== parseInt(this.current.userAge) ||
-    this.formData.gender !== this.current.gender ||
-    this.formData.emailAdd.trim().toLowerCase() !== this.current.emailAdd.toLowerCase() ||
-    this.formData.userProfile.trim() !== this.current.userProfile ||
-    this.formData.userPass.trim() !== ''
-  );
-},
-
-async saveAccount() {
-  if (this.formData.userProfile && !this.validateImageUrl(this.formData.userProfile)) {
-    await Swal.fire({
-      icon: 'error',
-      title: 'Invalid Profile Picture URL',
-      text: 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)',
-    });
-    return;
-  }
-
-  if (!this.hasChanges()) {
-    await Swal.fire({
-      icon: 'info',
-      title: 'No Changes Made',
-      text: 'No updates were detected. Please make changes before saving.',
-    });
-    return;
-  }
-
-  try {
-    this.loading = true;
-    this.error = null;
-
-    const payload = { ...this.formData };
-    if (!payload.userPass) {
-      delete payload.userPass;
-    }
-
-    await this.updateUserProfile({
-      userId: this.current.UserID,
-      userData: payload
-    });
-
-    const updatedUser = {
-      ...this.current,
-      ...payload,
-      UserID: this.current.UserID
-    };
-
-    this.$store.commit('SET_USER', updatedUser);
-
-    await Swal.fire({
-      title: 'Success!',
-      text: 'Your profile has been updated successfully.',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false
-    });
-
-    this.initializeForm();
-  } catch (error) {
-    this.error = error.response?.data?.message || 'Failed to update profile';
-  } finally {
-    this.loading = false;
-  }
-},
-
-  async deleteAccount() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this account!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          this.loading = true;
-          await this.$store.dispatch('deleteUser', this.current.UserID);
-
-          await Swal.fire({
-            title: 'Deleted!',
-            text: 'Your account has been deleted.',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-          });
-
-          this.$router.push('/');
-        } catch (error) {
-          this.error = 'Failed to delete account. Please try again.';
-        } finally {
-          this.loading = false;
-        }
+  data() {
+    return {
+      loading: false,
+      error: null,
+      passwordError: null,
+      defaultProfilePic: 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg',
+      formData: {
+        firstName: '',
+        lastName: '',
+        userAge: null,
+        gender: '',
+        emailAdd: '',
+        userPass: '',
+        userProfile: '',
       }
-    });
-  },
-  
-  handleImageError(e) {
-    e.target.src = 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg';
+    }
   },
 
-  validateImageUrl(url) {
-  if (!url) return true;
-  try {
-    const urlObj = new URL(url);
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
-    return imageExtensions.some(ext => urlObj.pathname.toLowerCase().endsWith(ext));
-  } catch {
-    return false;
-  }
-},
+  computed: {
+    ...mapState({
+      current: state => state.user
+    })
+  },
 
-  handleProfileUrlInput(event) {
-  const url = event.target.value;
-  if (!url || this.validateImageUrl(url)) {
-    this.error = null;
-    this.formData.userProfile = url;
-  } else {
-    this.error = 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)';
-    this.formData.userProfile = url;
+  mounted() {
+    window.scrollTo(0, 0);
+  },
+
+  created() {
+    if (this.current) {
+      this.initializeForm();
+    } else {
+      this.$router.push('/user');
+    }
+  },
+
+  methods: {
+    ...mapActions(['updateUserProfile']),
+
+    initializeForm() {
+      this.formData = {
+        firstName: this.current.firstName || '',
+        lastName: this.current.lastName || '',
+        userAge: this.current.userAge !== undefined ? this.current.userAge : null,
+        gender: this.current.gender || '',
+        emailAdd: this.current.emailAdd || '',
+        userPass: '',
+        userProfile: this.current.userProfile || this.defaultProfilePic,
+      };
+    },
+
+    hasChanges() {
+      return (
+        this.formData.firstName.trim() !== this.current.firstName ||
+        this.formData.lastName.trim() !== this.current.lastName ||
+        parseInt(this.formData.userAge) !== parseInt(this.current.userAge) ||
+        this.formData.gender !== this.current.gender ||
+        this.formData.emailAdd.trim().toLowerCase() !== this.current.emailAdd.toLowerCase() ||
+        this.formData.userProfile.trim() !== this.current.userProfile ||
+        this.formData.userPass.trim() !== ''
+      );
+    },
+
+    validatePassword() {
+      if (this.formData.userPass && this.formData.userPass.length < 6) {
+        this.passwordError = 'Password must be at least 6 characters long.';
+        return false;
+      }
+
+      if (this.formData.userPass === this.current.userPass) {
+      this.passwordError = 'New password must be different from your current password.';
+      return false;
+    }
+    
+      this.passwordError = null;
+      return true;
+    },
+
+    async saveAccount() {
+      if (this.formData.userProfile && !this.validateImageUrl(this.formData.userProfile)) {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Invalid Profile Picture URL',
+          text: 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)',
+        });
+        return;
+      }
+
+      if (!this.validatePassword()) {
+        return;
+      }
+
+      if (!this.hasChanges()) {
+        await Swal.fire({
+          icon: 'info',
+          title: 'No Changes Made',
+          text: 'No updates were detected. Please make changes before saving.',
+        });
+        return;
+      }
+
+      try {
+        this.loading = true;
+        this.error = null;
+
+        const payload = { ...this.formData };
+        if (!payload.userPass) {
+          delete payload.userPass;
+        }
+
+        await this.updateUserProfile({
+          userId: this.current.UserID,
+          userData: payload
+        });
+
+        const updatedUser = {
+          ...this.current,
+          ...payload,
+          UserID: this.current.UserID
+        };
+
+        this.$store.commit('SET_USER', updatedUser);
+
+        await Swal.fire({
+          title: 'Success!',
+          text: 'Your profile has been updated successfully.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+
+        this.initializeForm();
+      } catch (error) {
+        this.error = error.response?.data?.message || 'Failed to update profile';
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async deleteAccount() {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this account!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            this.loading = true;
+            await this.$store.dispatch('deleteUser', this.current.UserID);
+
+            await Swal.fire({
+              title: 'Deleted!',
+              text: 'Your account has been deleted.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            this.$router.push('/');
+          } catch (error) {
+            this.error = 'Failed to delete account. Please try again.';
+          } finally {
+            this.loading = false;
+          }
+        }
+      });
+    },
+    
+    handleImageError(e) {
+      e.target.src = 'https://i.postimg.cc/G3QS51Yp/file-bn7j-Biea-KTk-Wmn3rxd-Spm25u.jpg';
+    },
+
+    validateImageUrl(url) {
+      if (!url) return true;
+      try {
+        const urlObj = new URL(url);
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+        return imageExtensions.some(ext => urlObj.pathname.toLowerCase().endsWith(ext));
+      } catch {
+        return false;
+      }
+    },
+
+    handleProfileUrlInput(event) {
+      const url = event.target.value;
+      if (!url || this.validateImageUrl(url)) {
+        this.error = null;
+        this.formData.userProfile = url;
+      } else {
+        this.error = 'Please enter a valid image URL (must end with .jpg, .jpeg, .png, .gif, .webp, or .svg)';
+        this.formData.userProfile = url;
+      }
+    }
   }
-}
-}
 }
 </script>
-
 
 <style scoped>
 .error-message {
