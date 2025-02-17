@@ -8,7 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 class Gemini {
   static async generatePrediction(message, companyData) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
       let historicalMetrics = ''
       if (companyData['52WeekHigh']) {

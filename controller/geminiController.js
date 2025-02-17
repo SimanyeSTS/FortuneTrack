@@ -20,7 +20,7 @@ const generatePrediction = async (req, res) => {
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     
     let historicalMetrics = '';
     historicalMetrics += companyData['52WeekHigh'] || companyData['Week52High'] 
