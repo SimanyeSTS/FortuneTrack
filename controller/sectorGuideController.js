@@ -91,6 +91,8 @@
 
 // export default new SectorGuideController();
 
+
+
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -113,7 +115,7 @@ const generatePrediction = async (req, res) => {
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     
     let historicalMetrics = '';
     historicalMetrics += companyData['52WeekHigh'] || companyData['Week52High'] 
