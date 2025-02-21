@@ -104,19 +104,19 @@ class SectorGuideController {
   async getInsights(req, res) {
     try {
       const { message, sectors } = req.body;
-      
+
       if (!message || !sectors) {
-        return res.status(400).json({ 
-          error: 'Message and sectors data are required' 
+        return res.status(400).json({
+          error: 'Message and sectors data are required'
         });
       }
 
       const requiredSectors = ['retail', 'technology', 'foodAndBeverages', 'healthcare'];
       const missingSectors = requiredSectors.filter(sector => !sectors[sector]);
-      
+
       if (missingSectors.length > 0) {
-        return res.status(400).json({ 
-          error: `Missing sector data for: ${missingSectors.join(', ')}` 
+        return res.status(400).json({
+          error: `Missing sector data for: ${missingSectors.join(', ')}`
         });
       }
 
@@ -132,8 +132,8 @@ class SectorGuideController {
         .map(([sector]) => sector);
 
       if (invalidSectors.length > 0) {
-        return res.status(400).json({ 
-          error: `Invalid company data for sectors: ${invalidSectors.join(', ')}` 
+        return res.status(400).json({
+          error: `Invalid company data for sectors: ${invalidSectors.join(', ')}`
         });
       }
 
@@ -141,13 +141,13 @@ class SectorGuideController {
       return res.json({ response });
     } catch (error) {
       if (error.message.includes('GEMINI_API_KEY')) {
-        return res.status(500).json({ 
-          error: 'Server configuration error' 
+        return res.status(500).json({
+          error: 'Server configuration error'
         });
       }
-      
-      return res.status(500).json({ 
-        error: 'Failed to generate sector insights' 
+
+      return res.status(500).json({
+        error: 'Failed to generate sector insights'
       });
     }
   }
@@ -158,9 +158,9 @@ class SectorGuideController {
         return null;
       }
 
-      const validCompanies = companies.filter(company => 
-        company && 
-        typeof company === 'object' && 
+      const validCompanies = companies.filter(company =>
+        company &&
+        typeof company === 'object' &&
         'QuarterlyEarningsGrowthYOY' in company &&
         'Symbol' in company
       );
@@ -195,10 +195,9 @@ class SectorGuideController {
   }
 
   async generateResponse(message, sectorSummaries) {
-    const model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    const prompt = `You are a helpful assistant that provides friendly, conversational insights about market sectors. 
-    Do not make specific predictions or give financial advice. Keep the tone light, engaging, and concise.
+    const prompt = `You are a helpful assistant that provides friendly, conversational insights about market sectors. Do not make specific predictions or give financial advice. Keep the tone light, engaging, and concise.
 
     Generate a friendly, conversational response about market sectors. Here is the user question and the available sector information:
 
@@ -209,21 +208,20 @@ class SectorGuideController {
 
     Remember:
     - Compare sectors when relevant.
-    - Encourage using the Predict button for detailed analysis on specific companies/stocks.
+    - Encourage using the Predict button for detailed analysis.
     - Keep responses concise and easy to understand.`;
 
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
+
       if (!text) {
         throw new Error('Empty response from AI model');
       }
-
       return text.trim();
     } catch (error) {
-      if (error.name === 'QuotaExceededError') {
+       if (error.name === 'QuotaExceededError') {
         throw new Error('API quota exceeded');
       }
       if (error.name === 'AbortError') {
