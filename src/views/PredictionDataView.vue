@@ -16,16 +16,23 @@
         <p><strong>Industry:</strong> {{ predictionData.Industry || 'N/A' }}</p>
         <p><strong>Address:</strong> {{ predictionData.Address || 'N/A' }}</p>
         <p class="official-site">
-  <strong>Official Site:</strong> 
-  <span class="link-wrapper">
-    <a :href="predictionData.OfficialSite || '#'" target="_blank">
-      {{ predictionData.OfficialSite || 'N/A' }}
-    </a>
-  </span>
-</p>
+          <strong>Official Site:</strong> 
+          <span class="link-wrapper">
+            <a :href="predictionData.OfficialSite || '#'" target="_blank">
+              {{ predictionData.OfficialSite || 'N/A' }}
+            </a>
+          </span>
+        </p>
         <p><strong>Fiscal Year End:</strong> {{ predictionData.FiscalYearEnd || 'N/A' }}</p>
         <p><strong>Latest Quarter:</strong> {{ formatDate(predictionData.LatestQuarter) }}</p>
       </div>
+
+      <!-- <div class="ownership-section">
+        <h2>Ownership Structure</h2>
+        <p><strong>Shares Float:</strong> {{ formatNumber(predictionData.SharesFloat) }}</p>
+        <p><strong>Percent Insiders:</strong> {{ formatPercentage(predictionData.PercentInsiders) }}</p>
+        <p><strong>Percent Institutions:</strong> {{ formatPercentage(predictionData.PercentInstitutions) }}</p>
+      </div> -->
 
       <div class="chart-section" v-if="predictionData.QuarterlyEarningsGrowthYOY !== undefined && predictionData.QuarterlyRevenueGrowthYOY !== undefined">
         <h2>Growth Metrics</h2>
