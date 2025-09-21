@@ -90,6 +90,9 @@ const getTechnologyData = async (req, res) => {
       Day50MovingAverage: safeParseFloat(data['50DayMovingAverage']),
       Day200MovingAverage: safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
+      SharesFloat: safeParseInt(data.SharesFloat),
+      PercentInsiders: safeParseFloat(data.PercentInsiders),
+      PercentInstitutions: safeParseFloat(data.PercentInstitutions),
       DividendDate: data.DividendDate || null,
       ExDividendDate: data.ExDividendDate || null,
     }
@@ -160,6 +163,9 @@ const getTechnologyData2 = async (req, res) => {
       Day50MovingAverage: safeParseFloat(data['50DayMovingAverage']),
       Day200MovingAverage: safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
+      SharesFloat: safeParseInt(data.SharesFloat),
+      PercentInsiders: safeParseFloat(data.PercentInsiders),
+      PercentInstitutions: safeParseFloat(data.PercentInstitutions),
       DividendDate: data.DividendDate || null,
       ExDividendDate: data.ExDividendDate || null,
     }
@@ -230,6 +236,9 @@ const getTechnologyData3 = async (req, res) => {
       Day50MovingAverage: safeParseFloat(data['50DayMovingAverage']),
       Day200MovingAverage: safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
+      SharesFloat: safeParseInt(data.SharesFloat),
+      PercentInsiders: safeParseFloat(data.PercentInsiders),
+      PercentInstitutions: safeParseFloat(data.PercentInstitutions),
       DividendDate: data.DividendDate || null,
       ExDividendDate: data.ExDividendDate || null,
     }

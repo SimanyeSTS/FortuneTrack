@@ -40,12 +40,12 @@ app.get('^/$|FortuneTrack', (req, res) => {
   res.status(200).sendFile(path.resolve('./static/index.html'))
 })
 
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     status: 404,
     msg: 'Resource not found'
-  })
-})
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on ${port}`)

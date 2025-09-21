@@ -90,6 +90,9 @@ const getHealthcareData = async (req, res) => {
       '50DayMovingAverage': safeParseFloat(data['50DayMovingAverage']),
       '200DayMovingAverage': safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
+      SharesFloat: safeParseInt(data.SharesFloat),
+      PercentInsiders: safeParseFloat(data.PercentInsiders),
+      PercentInstitutions: safeParseFloat(data.PercentInstitutions),
       DividendDate: data.DividendDate || null,
       ExDividendDate: data.ExDividendDate || null
     }
@@ -162,6 +165,9 @@ const getHealthcareData2 = async (req, res) => {
       '50DayMovingAverage': safeParseFloat(data['50DayMovingAverage']),
       '200DayMovingAverage': safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
+      SharesFloat: safeParseInt(data.SharesFloat),
+      PercentInsiders: safeParseFloat(data.PercentInsiders),
+      PercentInstitutions: safeParseFloat(data.PercentInstitutions),
       DividendDate: data.DividendDate || null,
       ExDividendDate: data.ExDividendDate || null
     }
@@ -241,6 +247,9 @@ const getHealthcareData3 = async (req, res) => {
       '50DayMovingAverage': safeParseFloat(data['50DayMovingAverage']),
       '200DayMovingAverage': safeParseFloat(data['200DayMovingAverage']),
       SharesOutstanding: safeParseInt(data.SharesOutstanding),
+      SharesFloat: safeParseInt(data.SharesFloat),
+      PercentInsiders: safeParseFloat(data.PercentInsiders),
+      PercentInstitutions: safeParseFloat(data.PercentInstitutions),
       DividendDate: data.DividendDate || null,
       ExDividendDate: data.ExDividendDate || null
     }
