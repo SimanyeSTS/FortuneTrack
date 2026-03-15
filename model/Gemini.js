@@ -1,14 +1,13 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
+const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY);
 class Gemini {
   static async generatePrediction(message, companyData) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3.1-pro-preview" });
 
       let historicalMetrics = '';
       if (companyData['52WeekHigh']) {
