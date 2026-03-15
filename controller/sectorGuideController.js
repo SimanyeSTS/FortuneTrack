@@ -91,14 +91,16 @@
 
 // export default new SectorGuideController();
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from '@google/genai';
+
+const GEMINI_MODEL = 'gemini-3.1-pro-preview';
 
 class SectorGuideController {
   constructor() {
     if (!process.env.GEMINI_API_KEY) {
       throw new Error('GEMINI_API_KEY must be set in environment variables');
     }
-    this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    this.genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   }
 
   async getInsights(req, res) {
@@ -195,8 +197,6 @@ class SectorGuideController {
   }
 
   async generateResponse(message, sectorSummaries) {
-    const model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
     const prompt = `You are a helpful assistant that provides friendly, conversational insights about market sectors. Do not make specific predictions or give financial advice. Keep the tone light, engaging, and concise.
 
     Generate a friendly, conversational response about market sectors. Here is the user question and the available sector information:
@@ -212,22 +212,26 @@ class SectorGuideController {
     - Keep responses concise and easy to understand.`;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const response = await this.genAI.models.generateContent({
+        model: GEMINI_MODEL,
+        contents: prompt
+      });
+
+      const text = response?.text;
 
       if (!text) {
         throw new Error('Empty response from AI model');
       }
+
       return text.trim();
     } catch (error) {
-       if (error.name === 'QuotaExceededError') {
+      if (error.name === 'QuotaExceededError') {
         throw new Error('API quota exceeded');
       }
       if (error.name === 'AbortError') {
         throw new Error('Request timeout');
       }
-      throw new Error('Failed to generate AI response');
+      throw new Error(`Failed to generate AI response: ${error.message}`);
     }
   }
 }

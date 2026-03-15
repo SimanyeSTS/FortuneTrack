@@ -3,12 +3,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY);
+const GEMINI_MODEL = 'gemini-3.1-pro-preview';
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 class Gemini {
   static async generatePrediction(message, companyData) {
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-3.1-pro-preview" });
-
       let historicalMetrics = '';
       if (companyData['52WeekHigh']) {
         historicalMetrics += `\n      - 52 Week High: ${companyData['52WeekHigh']}`;
@@ -51,9 +50,16 @@ class Gemini {
       
       Please provide detailed analysis and forecasting based on these metrics.`;
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text();
+      const response = await genAI.models.generateContent({
+        model: GEMINI_MODEL,
+        contents: prompt
+      });
+
+      if (!response?.text) {
+        throw new Error('Empty response from Gemini');
+      }
+
+      return response.text;
     } catch (error) {
       throw new Error(`Failed to generate prediction: ${error.message}`);
     }

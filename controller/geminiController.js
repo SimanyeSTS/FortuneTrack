@@ -1,8 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const GEMINI_MODEL = 'gemini-3.1-pro-preview';
 
 const generatePrediction = async (req, res) => {
   try {
@@ -20,7 +20,7 @@ const generatePrediction = async (req, res) => {
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     let historicalMetrics = '';
     historicalMetrics += companyData['52WeekHigh'] || companyData['Week52High']
@@ -59,12 +59,20 @@ const generatePrediction = async (req, res) => {
 
     Please provide detailed analysis and forecasting based on these metrics, with emphasis on future market trends and stock price predictions.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const response = await genAI.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: prompt
+    });
 
-    return res.json({ response: text });
+    const text = response?.text;
+
+    if (!text) {
+      throw new Error('Empty response from Gemini');
+    }
+
+    return res.json({ response: text, model: GEMINI_MODEL });
   } catch (error) {
+
     if (error.name === 'AbortError') {
       return res.status(408).json({
         error: 'Request timeout: The analysis took too long to complete'
@@ -78,7 +86,7 @@ const generatePrediction = async (req, res) => {
     }
 
     return res.status(500).json({
-      error: 'An error occurred while generating the prediction'
+      error: error?.message || 'An error occurred while generating the prediction'
     });
   }
 };
