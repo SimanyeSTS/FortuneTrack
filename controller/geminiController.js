@@ -2,7 +2,18 @@ import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const GEMINI_MODEL = 'gemini-3.1-pro-preview';
+const GEMINI_MODEL = 'gemini-3-flash-preview';
+
+const isQuotaError = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  return (
+    error?.name === 'QuotaExceededError' ||
+    message.includes('quota') ||
+    message.includes('resource_exhausted') ||
+    message.includes('"code":429') ||
+    message.includes('429')
+  );
+};
 
 const generatePrediction = async (req, res) => {
   try {
@@ -79,9 +90,9 @@ const generatePrediction = async (req, res) => {
       });
     }
 
-    if (error.name === 'QuotaExceededError') {
+    if (isQuotaError(error)) {
       return res.status(429).json({
-        error: 'API quota exceeded. Please try again later'
+        error: 'Gemini API quota exceeded for the current key/model. Try again shortly or upgrade billing in Google AI Studio.'
       });
     }
 

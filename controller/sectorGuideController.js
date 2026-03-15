@@ -93,7 +93,18 @@
 
 import { GoogleGenAI } from '@google/genai';
 
-const GEMINI_MODEL = 'gemini-3.1-pro-preview';
+const GEMINI_MODEL = 'gemini-3-flash-preview';
+
+const isQuotaError = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  return (
+    error?.name === 'QuotaExceededError' ||
+    message.includes('quota') ||
+    message.includes('resource_exhausted') ||
+    message.includes('"code":429') ||
+    message.includes('429')
+  );
+};
 
 class SectorGuideController {
   constructor() {
@@ -225,7 +236,7 @@ class SectorGuideController {
 
       return text.trim();
     } catch (error) {
-      if (error.name === 'QuotaExceededError') {
+      if (isQuotaError(error)) {
         throw new Error('API quota exceeded');
       }
       if (error.name === 'AbortError') {

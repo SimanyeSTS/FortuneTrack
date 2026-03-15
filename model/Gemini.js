@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const GEMINI_MODEL = 'gemini-3.1-pro-preview';
+const GEMINI_MODEL = 'gemini-3-flash-preview';
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 class Gemini {
   static async generatePrediction(message, companyData) {
