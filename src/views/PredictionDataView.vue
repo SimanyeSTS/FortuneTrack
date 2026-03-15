@@ -2,7 +2,7 @@
   <h1 class="heading">Prediction Data</h1>
   <div class="prediction-data-view">
     <SpinnerComp2 v-if="isLoading" class="spinner-container" />
-    <div v-else-if="error" class="error">{{ error }}</div>
+    <!-- <div v-else-if="error" class="error">{{ error }}</div> -->
     <div v-else-if="predictionData">
       <h1>{{ predictionData.Name }} ({{ predictionData.Symbol }})</h1>
       <p>Sector: {{ sector }}</p>
