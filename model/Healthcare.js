@@ -102,6 +102,14 @@ class Healthcare {
       const response = await axios.get(url)
       const data = response.data
 
+      for (const key in data) {
+        if (data[key] === 'None' || data[key] === '-') {
+          data[key] = null;
+        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
+          data[key] = parseFloat(data[key]);
+        }
+      }
+
       await Healthcare.patchHealthcareData(1, data)
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
@@ -115,6 +123,14 @@ class Healthcare {
       const response = await axios.get(url)
       const data = response.data
 
+      for (const key in data) {
+        if (data[key] === 'None' || data[key] === '-') {
+          data[key] = null;
+        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
+          data[key] = parseFloat(data[key]);
+        }
+      }
+
       await Healthcare.patchHealthcareData(2, data)
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
@@ -127,6 +143,14 @@ class Healthcare {
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
       const response = await axios.get(url)
       const data = response.data
+
+      for (const key in data) {
+        if (data[key] === 'None' || data[key] === '-') {
+          data[key] = null;
+        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
+          data[key] = parseFloat(data[key]);
+        }
+      }
 
       await Healthcare.patchHealthcareData(3, data)
     } catch (error) {

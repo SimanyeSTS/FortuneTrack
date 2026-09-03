@@ -7,6 +7,14 @@ const apikey2 = 'QDH8TZ6T7U3FFARZ'
 const apikey3 = 'OFXEEMU7MC6ZSWYL'
 const baseUrl = 'https://www.alphavantage.co/query'
 
+const safeParseInt = (value) => {
+  if (value === undefined || value === null || value === '' || value === 'None' || value === '-') {
+    return null;
+  }
+  const parsed = parseInt(value, 10);
+  return isNaN(parsed) ? null : parsed;
+};
+
 const getRetailData = async (req, res) => {
   try {
     const symbol = 'COST'
