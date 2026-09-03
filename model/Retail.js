@@ -157,12 +157,6 @@ class Retail {
       const response = await axios.get(url)
       const data = response.data
 
-        for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null
-        }
-      }
-
       for (const key in data) {
         if (data[key] === 'None' || data[key] === '-') {
           data[key] = null;
