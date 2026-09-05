@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { connection as db } from '../../config/index.js';
+import { insertOverview, normalizeOverview } from './normalizeOverview.js';
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = '67DAX9WMDSD7ISLF';
@@ -11,7 +12,7 @@ const getHealthcareData2 = async () => {
 
   try {
     const response = await axios.get(url)
-    const data = response.data
+    const data = normalizeOverview(response.data)
 
     await saveHealthcareData2(data)
 
@@ -23,8 +24,7 @@ const getHealthcareData2 = async () => {
 
 const saveHealthcareData2 = async (data) => {
   try {
-    const query = `INSERT INTO Healthcare SET ?`
-    await db.query(query, data)
+    await insertOverview(db, 'Healthcare', data)
   } catch (error) {
     throw error
   }

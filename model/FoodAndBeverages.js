@@ -1,6 +1,7 @@
 import { connection as db } from "../config/index.js";
 import axios from "axios";
 import cron from "node-cron";
+import { insertOverview, normalizeOverview, updateOverview } from "../services/AlphaVantage/normalizeOverview.js";
 
 const apikey = "K9HED7RC8QLPJTT0";
 const apikey2 = "W7VKF4FSAGSTIUY2";
@@ -88,14 +89,7 @@ class FoodAndBeverages {
 
   static async saveFoodAndBeveragesData(data) {
     try {
-      if (!data) throw new Error("Data cannot be null or undefined");
-
-      const columns = Object.keys(data);
-      const values = Object.values(data);
-      const placeholders = Array(columns.length).fill("?").join(", ");
-
-      const query = `INSERT INTO FoodAndBeverages (${columns}) VALUES (${placeholders})`;
-      await db.execute(query, values);
+      await insertOverview(db, "FoodAndBeverages", data);
     } catch (error) {
       throw new Error(`Failed to save Food and Beverages data: ${error.message}`);
     }
@@ -103,16 +97,7 @@ class FoodAndBeverages {
 
   static async patchFoodAndBeveragesData(id, data) {
     try {
-      if (!data) throw new Error("Data cannot be null or undefined");
-
-      const columns = Object.keys(data);
-      const values = Object.values(data);
-      values.push(id);
-
-      const placeholders = columns.map((col) => `${col} = ?`).join(", ");
-
-      const query = `UPDATE FoodAndBeverages SET ${placeholders} WHERE id = ?`;
-      await db.execute(query, values);
+      await updateOverview(db, "FoodAndBeverages", id, data);
     } catch (error) {
       throw new Error(`Failed to patch Food and Beverages data: ${error.message}`);
     }
@@ -132,7 +117,7 @@ class FoodAndBeverages {
         throw new Error(rawData.Note || rawData.Information);
       }
 
-      const transformedData = transformApiData(rawData);
+      const transformedData = normalizeOverview(rawData);
       await FoodAndBeverages.patchFoodAndBeveragesData(id, transformedData);
     } catch (error) {
       throw new Error(`Failed to fetch and update data for ${symbol}: ${error.message}`);

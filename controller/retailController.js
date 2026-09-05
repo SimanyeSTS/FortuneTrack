@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Retail from '../model/Retail.js'
+import { normalizeOverview } from '../services/AlphaVantage/normalizeOverview.js'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'UZKLRJ8NRMMH51PQ'
@@ -15,12 +16,14 @@ const safeParseInt = (value) => {
   return isNaN(parsed) ? null : parsed;
 };
 
+const safeParseFloat = (value) => Number.isFinite(Number(value)) ? Number(value) : null;
+
 const getRetailData = async (req, res) => {
   try {
     const symbol = 'COST'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
     const response = await axios.get(url)
-    const data = response.data
+    const data = normalizeOverview(response.data)
 
     const retailData = {
       Symbol: data.Symbol,
@@ -93,7 +96,7 @@ const getRetailData2 = async (req, res) => {
     const symbol = 'BABA';
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`;
     const response = await axios.get(url);
-    const data = response.data;
+    const data = normalizeOverview(response.data);
 
     if (!data || Object.keys(data).length === 0) {
       throw new Error(`No data returned for symbol ${symbol} with API key ${apikey2}`);
@@ -169,7 +172,7 @@ const getRetailData3 = async (req, res) => {
     const symbol = 'UL'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
     const response = await axios.get(url)
-    const data = response.data
+    const data = normalizeOverview(response.data)
 
     if (!data || Object.keys(data).length === 0) {
       throw new Error(`No data returned for symbol ${symbol} with API key ${apikey3}`);

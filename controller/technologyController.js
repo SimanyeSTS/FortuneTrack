@@ -1,4 +1,5 @@
 import Technology from '../model/Technology.js'
+import { normalizeOverview } from '../services/AlphaVantage/normalizeOverview.js'
 import axios from 'axios'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
@@ -37,7 +38,7 @@ const getTechnologyData = async (req, res) => {
     const symbol = 'INTC'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
     const response = await axios.get(url)
-    const data = response.data
+    const data = normalizeOverview(response.data)
 
     const technologyData = {
       Symbol: data.Symbol,
@@ -110,7 +111,7 @@ const getTechnologyData2 = async (req, res) => {
     const symbol = 'ASML'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
     const response = await axios.get(url)
-    const data = response.data
+    const data = normalizeOverview(response.data)
 
     const technologyData2 = {
       Symbol: data.Symbol,
@@ -183,7 +184,7 @@ const getTechnologyData3 = async (req, res) => {
     const symbol = 'MELI'
     const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
     const response = await axios.get(url)
-    const data = response.data
+    const data = normalizeOverview(response.data)
 
     const technologyData3 = {
       Symbol: data.Symbol,

@@ -1,6 +1,7 @@
 import { connection as db } from "../config/index.js"
 import axios from "axios"
 import cron from 'node-cron'
+import { insertOverview, normalizeOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'PIJIS96UCXDW58KF'
@@ -23,17 +24,7 @@ class Healthcare {
 
   static async saveHealthcareData(data) {
     try {
-      if (!data) {
-        throw new Error('Data cannot be null or undefined')
-      }
-      const columns = Object.keys(data)
-      const values =  Object.values(data)
-      const placeholders = Array(columns.length).fill('?').join(', ')
-
-      const query = `
-      INSERT INTO Healthcare (${columns}) VALUES (${placeholders})
-      `
-      await db.execute(query, values)
+      await insertOverview(db, 'Healthcare', data)
     } catch (error) {
       throw error
     }
@@ -65,20 +56,7 @@ class Healthcare {
 
   static async patchHealthcareData(id, data) {
     try {
-      if (!data) {
-        throw new Error('Data cannot be null or undefined')
-      }
-
-      const columns = Object.keys(data)
-      const values = Object.values(data)
-      values.push(id)
-
-      const placeholders = columns.map((column) => `${column} = ?`).join(', ')
-
-      const query = `
-      UPDATE Healthcare SET ${placeholders} WHERE id = ?
-      `
-      await db.execute(query, values)
+      await updateOverview(db, 'Healthcare', id, data)
     } catch (error) {
       throw error
     }
@@ -100,17 +78,7 @@ class Healthcare {
       const symbol = 'JNJ'
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
       const response = await axios.get(url)
-      const data = response.data
-
-      for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null;
-        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          data[key] = parseFloat(data[key]);
-        }
-      }
-
-      await Healthcare.patchHealthcareData(1, data)
+      await Healthcare.patchHealthcareData(1, normalizeOverview(response.data))
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
@@ -121,17 +89,7 @@ class Healthcare {
       const symbol = 'NVS'
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
       const response = await axios.get(url)
-      const data = response.data
-
-      for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null;
-        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          data[key] = parseFloat(data[key]);
-        }
-      }
-
-      await Healthcare.patchHealthcareData(2, data)
+      await Healthcare.patchHealthcareData(2, normalizeOverview(response.data))
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
@@ -142,17 +100,7 @@ class Healthcare {
       const symbol = 'AZN'
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
       const response = await axios.get(url)
-      const data = response.data
-
-      for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null;
-        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          data[key] = parseFloat(data[key]);
-        }
-      }
-
-      await Healthcare.patchHealthcareData(3, data)
+      await Healthcare.patchHealthcareData(3, normalizeOverview(response.data))
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
@@ -160,17 +108,7 @@ class Healthcare {
 
   static async addHealthcareData(data) {
     try {
-      if (!data) {
-        throw new Error('Data cannot be null or undefined')
-      }
-      const columns = Object.keys(data)
-      const values = Object.values(data)
-      const placeholders = Array(columns.length).fill('?').join(', ')
-
-      const query = `
-      INSERT INTO Healthcare (${columns}) VALUES (${placeholders})
-      `
-      await db.execute(query, values)
+      await insertOverview(db, 'Healthcare', data)
     } catch (error) {
       throw new Error(`Failed to add retail data: ${error.message}`)
     }

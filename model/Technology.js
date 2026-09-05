@@ -1,6 +1,7 @@
 import { connection as db } from "../config/index.js";
 import axios from 'axios'
 import cron from 'node-cron'
+import { insertOverview, normalizeOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'R4015USIUYJ56RBE'
@@ -23,18 +24,7 @@ class Technology {
 
   static async saveTechnologyData(data) {
     try {
-      if (!data) {
-        throw new Error('Data cannot be null or undefined')
-      }
-
-      const columns = Object.keys(data)
-      const values = Object.values(data)
-      const placeholders = Array(columns.length).fill('?').join(', ')
-
-      const query = `
-      INSERT INTO Technology (${columns}) VALUES (${placeholders})
-      `
-      await db.query(query, values)
+      await insertOverview(db, 'Technology', data)
     } catch (error) {
       throw error
     }
@@ -42,20 +32,7 @@ class Technology {
 
   static async patchTechnologyData(id, data) {
     try {
-      if (!data) {
-        throw new Error('Data cannot be null or undefined')
-      }
-
-      const columns = Object.keys(data)
-      const values = Object.values(data)
-      values.push(id)
-
-      const placeholders = columns.map((column) => `${column} = ?`).join(', ')
-
-      const query = `
-      UPDATE Technology SET ${placeholders} WHERE id = ?
-      `
-      await db.execute(query, values)
+      await updateOverview(db, 'Technology', id, data)
     } catch (error) {
       throw error
     }
@@ -101,18 +78,7 @@ class Technology {
       const symbol = 'INTC';
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`;
       const response = await axios.get(url);
-      const data = response.data;
-  
-      for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null;
-        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          // Convert string numbers to actual numbers
-          data[key] = parseFloat(data[key])
-        }
-      }
-  
-      await Technology.patchTechnologyData(1, data);
+      await Technology.patchTechnologyData(1, normalizeOverview(response.data));
     } catch (error) {
       throw new Error(`Failed to update technology data: ${error.message}`)
     }
@@ -123,17 +89,7 @@ class Technology {
       const symbol = 'ASML';
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`;
       const response = await axios.get(url);
-      const data = response.data;
-  
-      for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null;
-        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          data[key] = parseFloat(data[key]);
-        }
-      }
-  
-      await Technology.patchTechnologyData(2, data);
+      await Technology.patchTechnologyData(2, normalizeOverview(response.data));
     } catch (error) {
       throw new Error(`Failed to update technology data: ${error.message}`);
     }
@@ -144,17 +100,7 @@ class Technology {
       const symbol = 'MELI';
       const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`;
       const response = await axios.get(url);
-      const data = response.data;
-  
-      for (const key in data) {
-        if (data[key] === 'None' || data[key] === '-') {
-          data[key] = null;
-        } else if (typeof data[key] === 'string' && !isNaN(data[key])) {
-          data[key] = parseFloat(data[key]);
-        }
-      }
-  
-      await Technology.patchTechnologyData(3, data);
+      await Technology.patchTechnologyData(3, normalizeOverview(response.data));
     } catch (error) {
       throw new Error(`Failed to update technology data: ${error.message}`);
     }
@@ -162,18 +108,7 @@ class Technology {
 
   static async addTechnologyData(data) {
     try {
-      if (!data) {
-        throw new Error('Data cannot be null or undefined')
-      }
-
-      const columns = Object.keys(data)
-      const values = Object.values(data)
-      const placeholders = Array(columns.length).fill('?').join(', ')
-
-      const query = `
-      INSERT INTO Technology (${columns}) VALUES (${placeholders})
-      `
-      await db.execute(query, values)
+      await insertOverview(db, 'Technology', data)
     } catch (error) {
       throw new Error(`Failed to add technology data: ${error.message}`)
     }
