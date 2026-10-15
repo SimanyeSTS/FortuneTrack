@@ -3,6 +3,7 @@ name: Update Retail Data
 on:
   schedule:
     - cron: '0 */2 * * *'
+  workflow_dispatch:
 
 jobs:
   update_retail:

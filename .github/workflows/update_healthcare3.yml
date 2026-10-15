@@ -4,6 +4,7 @@ on:
   schedule:
     # This cron job will run every 2 hours
     - cron: '0 */2 * * *'
+  workflow_dispatch:
 
 jobs:
   update_healthcare:
