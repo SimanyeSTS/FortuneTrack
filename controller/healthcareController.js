@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Healthcare from '../model/Healthcare.js'
 import { normalizeOverview } from '../services/AlphaVantage/normalizeOverview.js'
+import { fetchYahooOverview } from '../services/AlphaVantage/yahooOverview.js'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'PIJIS96UCXDW58KF'
@@ -36,9 +37,7 @@ const handleApiError = (data) => {
 const getHealthcareData = async (req, res) => {
   try {
     const symbol = 'JNJ'
-    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
-    const response = await axios.get(url)
-    const data = normalizeOverview(response.data)
+    const data = await fetchYahooOverview(symbol)
 
     const healthcareData = {
       Symbol: data.Symbol,

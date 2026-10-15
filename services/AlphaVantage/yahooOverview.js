@@ -1,161 +1,175 @@
-const TEXT_FIELDS = [
-  'Symbol', 'AssetType', 'Name', 'Description', 'CIK', 'Exchange', 'Currency',
-  'Country', 'Sector', 'Industry', 'Address', 'OfficialSite', 'FiscalYearEnd',
-  'LatestQuarter'
-]
+import YahooFinancePkg from 'yahoo-finance2';
+import { normalizeOverview } from './normalizeOverview.js';
 
-const NUMERIC_FIELDS = [
-  'MarketCapitalization', 'EBITDA', 'PERatio', 'PEGRatio', 'BookValue',
-  'DividendPerShare', 'DividendYield', 'EPS', 'RevenuePerShareTTM',
-  'ProfitMargin', 'OperatingMarginTTM', 'ReturnOnAssetsTTM', 'ReturnOnEquityTTM',
-  'RevenueTTM', 'GrossProfitTTM', 'DilutedEPSTTM', 'QuarterlyEarningsGrowthYOY',
-  'QuarterlyRevenueGrowthYOY', 'AnalystTargetPrice', 'TrailingPE', 'ForwardPE',
-  'PriceToSalesRatioTTM', 'PriceToBookRatio', 'EVToRevenue', 'EVToEBITDA', 'Beta',
-  'Week52High', 'Week52Low', 'Day50MovingAverage', 'Day200MovingAverage',
-  'PercentInsiders', 'PercentInstitutions'
-]
+const yahooFinance =
+  typeof YahooFinancePkg === 'function'
+    ? new YahooFinancePkg({ suppressNotices: ['yahooSurvey'] })
+    : YahooFinancePkg;
 
-const INTEGER_FIELDS = [
-  'AnalystRatingStrongBuy', 'AnalystRatingBuy', 'AnalystRatingHold',
-  'AnalystRatingSell', 'AnalystRatingStrongSell', 'SharesOutstanding', 'SharesFloat'
-]
+const COUNTRY_MAP = {
+  'United States': 'USA',
+  'United Kingdom': 'UK',
+  Netherlands: 'NLD',
+  Switzerland: 'CHE',
+  China: 'CHN',
+  Brazil: 'BRA',
+  Uruguay: 'URY',
+  Argentina: 'ARG',
+  Ireland: 'IRL'
+};
 
-const DATE_FIELDS = ['DividendDate', 'ExDividendDate']
+const EXCHANGE_MAP = {
+  NMS: 'NASDAQ',
+  NGM: 'NASDAQ',
+  NCM: 'NASDAQ',
+  NasdaqGS: 'NASDAQ',
+  NasdaqGM: 'NASDAQ',
+  NasdaqCM: 'NASDAQ',
+  NYQ: 'NYSE',
+  NYSE: 'NYSE',
+  PCX: 'NYSE',
+  ASE: 'AMEX'
+};
 
-const FIELD_NAMES = new Set([...TEXT_FIELDS, ...NUMERIC_FIELDS, ...INTEGER_FIELDS, ...DATE_FIELDS])
+const toDateString = (val) => {
+  if (!val) return null;
+  const d = val instanceof Date ? val : new Date(val);
+  return isNaN(d.getTime()) ? null : d.toISOString().split('T')[0];
+};
 
-const API_FIELD_NAMES = {
-  Week52High: '52WeekHigh',
-  Week52Low: '52WeekLow',
-  Day50MovingAverage: '50DayMovingAverage',
-  Day200MovingAverage: '200DayMovingAverage'
+const toFiscalMonth = (val) => {
+  if (!val) return 'December';
+  const d = val instanceof Date ? val : new Date(val);
+  return isNaN(d.getTime())
+    ? 'December'
+    : d.toLocaleString('en-US', { month: 'long' });
+};
+
+const safeDec = (val, maxAbs = 99999999.99, decimals = 2) => {
+  const num = Number(val);
+  if (val === null || val === undefined || Number.isNaN(num) || !Number.isFinite(num)) {
+    return 0;
+  }
+  const clamped = Math.max(-maxAbs, Math.min(maxAbs, num));
+  return Number(clamped.toFixed(decimals));
+};
+
+const safeInt = (val) => {
+  const num = Number(val);
+  if (val === null || val === undefined || Number.isNaN(num) || !Number.isFinite(num)) {
+    return 0;
+  }
+  return Math.round(num);
+};
+
+const safeStr = (val, maxLen, fallback = 'None') => {
+  if (!val || typeof val !== 'string') return fallback;
+  const trimmed = val.trim();
+  return trimmed ? trimmed.slice(0, maxLen) : fallback;
+};
+
+export async function fetchYahooOverview(symbol) {
+  const result = await yahooFinance.quoteSummary(
+    symbol,
+    {
+      modules: [
+        'price',
+        'summaryProfile',
+        'summaryDetail',
+        'defaultKeyStatistics',
+        'financialData',
+        'recommendationTrend',
+        'calendarEvents'
+      ]
+    },
+    { validateResult: false }
+  );
+
+  if (!result || (!result.price && !result.summaryDetail)) {
+    throw new Error(`No Yahoo Finance overview data returned for ${symbol}`);
+  }
+
+  const price = result.price || {};
+  const profile = result.summaryProfile || {};
+  const detail = result.summaryDetail || {};
+  const stats = result.defaultKeyStatistics || {};
+  const fin = result.financialData || {};
+  const calendar = result.calendarEvents || {};
+  const trend = result.recommendationTrend?.trend?.[0] || {};
+
+  const rawCountry = profile.country || 'USA';
+  const shortCountry = COUNTRY_MAP[rawCountry] || rawCountry.slice(0, 10);
+
+  const rawExchange = price.exchange || price.exchangeName || 'NYSE';
+  const shortExchange = EXCHANGE_MAP[rawExchange] || rawExchange.slice(0, 10);
+
+  const addressParts = [
+    profile.address1,
+    profile.city,
+    profile.state,
+    profile.zip,
+    profile.country
+  ].filter(Boolean);
+
+  const rawOverview = {
+    Symbol: safeStr(price.symbol || symbol, 10, symbol),
+    AssetType: price.quoteType === 'EQUITY' ? 'Common Stock' : safeStr(price.quoteType, 20, 'Common Stock'),
+    Name: safeStr(price.longName || price.shortName || symbol, 100, symbol),
+    Description: profile.longBusinessSummary || 'None',
+    CIK: 'None',
+    Exchange: safeStr(shortExchange, 10, 'NYSE'),
+    Currency: safeStr(price.currency || fin.financialCurrency || 'USD', 3, 'USD'),
+    Country: safeStr(shortCountry, 10, 'USA'),
+    Sector: safeStr(profile.sector ? profile.sector.toUpperCase() : 'None', 20, 'None'),
+    Industry: safeStr(profile.industry ? profile.industry.toUpperCase() : 'None', 100, 'None'),
+    Address: addressParts.length > 0 ? addressParts.join(', ').slice(0, 255) : 'None',
+    OfficialSite: safeStr(profile.website, 255, 'None'),
+    FiscalYearEnd: toFiscalMonth(stats.lastFiscalYearEnd),
+    LatestQuarter: toDateString(stats.mostRecentQuarter),
+    MarketCapitalization: safeInt(price.marketCap ?? detail.marketCap),
+    EBITDA: safeInt(fin.ebitda),
+    PERatio: safeDec(detail.trailingPE, 99999999.99),
+    PEGRatio: safeDec(stats.pegRatio, 99999999.99),
+    BookValue: safeDec(stats.bookValue, 99999999.99),
+    DividendPerShare: safeDec(detail.dividendRate, 99999999.99),
+    DividendYield: safeDec(detail.dividendYield, 999.99, 4),
+    EPS: safeDec(stats.trailingEps, 99999999.99),
+    RevenuePerShareTTM: safeDec(fin.revenuePerShare, 99999999.99),
+    ProfitMargin: safeDec(stats.profitMargins ?? fin.profitMargins, 999.99, 4),
+    OperatingMarginTTM: safeDec(fin.operatingMargins, 999.99, 4),
+    ReturnOnAssetsTTM: safeDec(fin.returnOnAssets, 999.99, 4),
+    ReturnOnEquityTTM: safeDec(fin.returnOnEquity, 999.99, 4),
+    RevenueTTM: safeInt(fin.totalRevenue),
+    GrossProfitTTM: safeInt(fin.grossProfits),
+    DilutedEPSTTM: safeDec(stats.trailingEps, 99999999.99),
+    QuarterlyEarningsGrowthYOY: safeDec(stats.earningsQuarterlyGrowth ?? fin.earningsGrowth, 999.99, 4),
+    QuarterlyRevenueGrowthYOY: safeDec(fin.revenueGrowth, 999.99, 4),
+    AnalystTargetPrice: safeDec(fin.targetMeanPrice, 99999999.99),
+    AnalystRatingStrongBuy: safeInt(trend.strongBuy),
+    AnalystRatingBuy: safeInt(trend.buy),
+    AnalystRatingHold: safeInt(trend.hold),
+    AnalystRatingSell: safeInt(trend.sell),
+    AnalystRatingStrongSell: safeInt(trend.strongSell),
+    TrailingPE: safeDec(detail.trailingPE, 99999999.99),
+    ForwardPE: safeDec(detail.forwardPE ?? stats.forwardPE, 99999999.99),
+    PriceToSalesRatioTTM: safeDec(detail.priceToSalesTrailing12Months, 999.99),
+    PriceToBookRatio: safeDec(stats.priceToBook, 999.99),
+    EVToRevenue: safeDec(stats.enterpriseToRevenue, 999.99),
+    EVToEBITDA: safeDec(stats.enterpriseToEbitda, 999.99),
+    Beta: safeDec(detail.beta ?? stats.beta, 999.99),
+    '52WeekHigh': safeDec(detail.fiftyTwoWeekHigh, 99999999.99),
+    '52WeekLow': safeDec(detail.fiftyTwoWeekLow, 99999999.99),
+    '50DayMovingAverage': safeDec(detail.fiftyDayAverage, 99999999.99),
+    '200DayMovingAverage': safeDec(detail.twoHundredDayAverage, 99999999.99),
+    SharesOutstanding: safeInt(stats.sharesOutstanding),
+    SharesFloat: safeInt(stats.floatShares),
+    PercentInsiders: safeDec(stats.heldPercentInsiders, 999.99, 4),
+    PercentInstitutions: safeDec(stats.heldPercentInstitutions, 999.99, 4),
+    DividendDate: toDateString(calendar.dividendDate ?? detail.dividendDate),
+    ExDividendDate: toDateString(detail.exDividendDate ?? calendar.exDividendDate)
+  };
+
+  return normalizeOverview(rawOverview);
 }
 
-const isMissing = (value) => value === undefined || value === null ||
-  (typeof value === 'string' && ['', 'none', 'null', 'n/a', 'na', '-'].includes(value.trim().toLowerCase()))
-
-const parseNumber = (value, integer = false) => {
-  if (isMissing(value)) return null
-  if (typeof value === 'number') return Number.isFinite(value) ? (integer ? Math.trunc(value) : value) : null
-  const normalized = String(value).trim().replace(/[$,%\s,]/g, '')
-  if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(normalized)) return null
-  const parsed = Number(normalized)
-  return Number.isFinite(parsed) ? (integer ? Math.trunc(parsed) : parsed) : null
-}
-
-const parseDate = (value) => {
-  if (isMissing(value)) return null
-  const normalized = String(value).trim()
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) return null
-  const date = new Date(`${normalized}T00:00:00Z`)
-  return Number.isNaN(date.getTime()) ? null : normalized
-}
-
-const parseText = (value) => isMissing(value) ? null : String(value).trim()
-
-export const OVERVIEW_COLUMNS = [
-  ...FIELD_NAMES,
-  '52WeekHigh', '52WeekLow', '50DayMovingAverage', '200DayMovingAverage'
-]
-
-export const normalizeOverview = (data, { requireSymbol = true } = {}) => {
-  if (!data || typeof data !== 'object' || Array.isArray(data)) {
-    throw new Error('Invalid or empty overview response')
-  }
-
-  if (data.Note || data.Information || data['Error Message']) {
-    throw new Error(data.Note || data.Information || data['Error Message'])
-  }
-
-  const normalized = {}
-
-  for (const field of FIELD_NAMES) {
-    const apiField = API_FIELD_NAMES[field] || field
-    const rawVal = Object.prototype.hasOwnProperty.call(data, apiField)
-      ? data[apiField]
-      : data[field]
-
-    if (rawVal === undefined) continue
-
-    if (TEXT_FIELDS.includes(field)) normalized[field] = parseText(rawVal)
-    else if (NUMERIC_FIELDS.includes(field)) normalized[field] = parseNumber(rawVal)
-    else if (INTEGER_FIELDS.includes(field)) normalized[field] = parseNumber(rawVal, true)
-    else normalized[field] = parseDate(rawVal)
-  }
-
-  for (const [field, apiField] of Object.entries(API_FIELD_NAMES)) {
-    if (Object.prototype.hasOwnProperty.call(normalized, field)) {
-      normalized[apiField] = normalized[field]
-    }
-  }
-
-  if (requireSymbol && !normalized.Symbol) {
-    throw new Error('Overview response did not contain a Symbol')
-  }
-
-  return normalized
-}
-
-export const filterOverviewColumns = (data) => {
-  if (!data || typeof data !== 'object' || Array.isArray(data)) {
-    throw new Error('Data must be a non-null object')
-  }
-
-  const filtered = {}
-  for (const column of OVERVIEW_COLUMNS) {
-    if (Object.prototype.hasOwnProperty.call(data, column)) {
-      filtered[column] = data[column]
-    }
-  }
-
-  if (Object.keys(filtered).length === 0) {
-    throw new Error('No recognized data columns were provided')
-  }
-
-  return filtered
-}
-
-const tableColumnsCache = new Map()
-
-const getValidTableColumns = async (db, table) => {
-  if (tableColumnsCache.has(table)) {
-    return tableColumnsCache.get(table)
-  }
-  const [rows] = await db.query(`SHOW COLUMNS FROM \`${table}\``)
-  const colSet = new Set(rows.map((r) => r.Field))
-  tableColumnsCache.set(table, colSet)
-  return colSet
-}
-
-const filterForTable = async (db, table, data) => {
-  const filtered = filterOverviewColumns(data)
-  const validCols = await getValidTableColumns(db, table)
-  const finalData = {}
-
-  for (const [key, val] of Object.entries(filtered)) {
-    if (validCols.has(key)) {
-      finalData[key] = val
-    }
-  }
-
-  return finalData
-}
-
-export const insertOverview = async (db, table, data) => {
-  const filtered = await filterForTable(db, table, data)
-  const columns = Object.keys(filtered)
-  const values = Object.values(filtered)
-  const identifiers = columns.map((column) => `\`${column}\``).join(', ')
-  const placeholders = columns.map(() => '?').join(', ')
-  await db.execute(`INSERT INTO \`${table}\` (${identifiers}) VALUES (${placeholders})`, values)
-}
-
-export const updateOverview = async (db, table, id, data) => {
-  const filtered = await filterForTable(db, table, data)
-  const columns = Object.keys(filtered)
-  const values = Object.values(filtered)
-  const assignments = columns.map((column) => `\`${column}\` = ?`).join(', ')
-  await db.execute(`UPDATE \`${table}\` SET ${assignments} WHERE \`id\` = ?`, [...values, id])
-}
-
-export default normalizeOverview
+export default fetchYahooOverview;

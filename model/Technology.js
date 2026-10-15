@@ -1,49 +1,25 @@
-import { connection as db } from "../config/index.js";
-import axios from 'axios'
+import { connection as db } from "../config/index.js"
 import cron from 'node-cron'
-import { insertOverview, normalizeOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
-
-//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
-const apikey = 'R4015USIUYJ56RBE'
-const apikey2 = 'CD9K8NRWJVO13Q70'
-const apikey3 = 'OD7O17P71U67DRKT'
-const baseUrl = 'https://www.alphavantage.co/query'
+import { insertOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
+import { fetchYahooOverview } from '../services/AlphaVantage/yahooOverview.js'
 
 class Technology {
   static async getTechnologyData() {
-    try {
-      const query = `
-      SELECT * FROM Technology
-      `
-      const [rows] = await db.query(query)
-      return rows
-    } catch (error) {
-      throw error
-    }
+    const [rows] = await db.query(`SELECT * FROM Technology`)
+    return rows
   }
 
   static async saveTechnologyData(data) {
-    try {
-      await insertOverview(db, 'Technology', data)
-    } catch (error) {
-      throw error
-    }
+    await insertOverview(db, 'Technology', data)
   }
 
   static async patchTechnologyData(id, data) {
-    try {
-      await updateOverview(db, 'Technology', id, data)
-    } catch (error) {
-      throw error
-    }
+    await updateOverview(db, 'Technology', id, data)
   }
 
   static async getTechnologyDataById(id) {
     try {
-      const query = `
-      SELECT * FROM Technology WHERE id = ?
-      `
-      const [rows] = await db.query(query, [id])
+      const [rows] = await db.query(`SELECT * FROM Technology WHERE id = ?`, [id])
       return rows[0]
     } catch (error) {
       throw new Error(`Failed to retrieve technology data by ID: ${error.message}`)
@@ -52,10 +28,7 @@ class Technology {
 
   static async getAllTechnologyData() {
     try {
-      const query = `
-        SELECT * FROM Technology
-      `
-      const [rows] = await db.query(query)
+      const [rows] = await db.query(`SELECT * FROM Technology`)
       return rows
     } catch (error) {
       throw new Error(`Failed to retrieve all Technology data: ${error.message}`)
@@ -63,22 +36,13 @@ class Technology {
   }
 
   static async deleteTechnologyData(id) {
-    try {
-      const query = `
-      DELETE FROM Technology WHERE id = ?
-      `
-      await db.execute(query, [id])
-    } catch (error) {
-      throw error
-    }
+    await db.execute(`DELETE FROM Technology WHERE id = ?`, [id])
   }
 
   static async updateTechnologyData() {
     try {
-      const symbol = 'INTC';
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`;
-      const response = await axios.get(url);
-      await Technology.patchTechnologyData(1, normalizeOverview(response.data));
+      const data = await fetchYahooOverview('INTC')
+      await Technology.patchTechnologyData(1, data)
     } catch (error) {
       throw new Error(`Failed to update technology data: ${error.message}`)
     }
@@ -86,23 +50,19 @@ class Technology {
 
   static async updateTechnologyData2() {
     try {
-      const symbol = 'ASML';
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`;
-      const response = await axios.get(url);
-      await Technology.patchTechnologyData(2, normalizeOverview(response.data));
+      const data = await fetchYahooOverview('ASML')
+      await Technology.patchTechnologyData(2, data)
     } catch (error) {
-      throw new Error(`Failed to update technology data: ${error.message}`);
+      throw new Error(`Failed to update technology data: ${error.message}`)
     }
   }
 
   static async updateTechnologyData3() {
     try {
-      const symbol = 'MELI';
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`;
-      const response = await axios.get(url);
-      await Technology.patchTechnologyData(3, normalizeOverview(response.data));
+      const data = await fetchYahooOverview('MELI')
+      await Technology.patchTechnologyData(3, data)
     } catch (error) {
-      throw new Error(`Failed to update technology data: ${error.message}`);
+      throw new Error(`Failed to update technology data: ${error.message}`)
     }
   }
 

@@ -1,41 +1,21 @@
 import { connection as db } from "../config/index.js"
-import axios from "axios"
 import cron from 'node-cron'
-import { insertOverview, normalizeOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
+import { insertOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
+import { fetchYahooOverview } from '../services/AlphaVantage/yahooOverview.js'
 
-//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
-const apikey = 'PIJIS96UCXDW58KF'
-const apikey2 = '67DAX9WMDSD7ISLF'
-const apikey3 = 'JHJT0T1Q8BFTMHTX'
-
-const baseUrl = 'https://www.alphavantage.co/query'
 class Healthcare {
   static async getHealthcareData() {
-    try {
-      const query = `
-      SELECT * FROM Healthcare
-      `
-      const [rows] = await db.query(query)
-      return rows
-    } catch (error) {
-      throw error
-    }
+    const [rows] = await db.query(`SELECT * FROM Healthcare`)
+    return rows
   }
 
   static async saveHealthcareData(data) {
-    try {
-      await insertOverview(db, 'Healthcare', data)
-    } catch (error) {
-      throw error
-    }
+    await insertOverview(db, 'Healthcare', data)
   }
 
   static async getHealthcareDataById(id) {
     try {
-      const query = `
-      SELECT * FROM Healthcare WHERE id = ?
-      `
-      const [rows] = await db.query(query, [id])
+      const [rows] = await db.query(`SELECT * FROM Healthcare WHERE id = ?`, [id])
       return rows[0]
     } catch (error) {
       throw Error(`Failed to retrieve Healthcare data by ID: ${error.message}`)
@@ -44,10 +24,7 @@ class Healthcare {
 
   static async getAllHealthcareData() {
     try {
-      const query = `
-        SELECT * FROM Healthcare
-      `
-      const [rows] = await db.query(query)
+      const [rows] = await db.query(`SELECT * FROM Healthcare`)
       return rows
     } catch (error) {
       throw new Error(`Failed to retrieve all healthcare data: ${error.message}`)
@@ -55,30 +32,17 @@ class Healthcare {
   }
 
   static async patchHealthcareData(id, data) {
-    try {
-      await updateOverview(db, 'Healthcare', id, data)
-    } catch (error) {
-      throw error
-    }
+    await updateOverview(db, 'Healthcare', id, data)
   }
 
   static async deleteHealthcareData(id) {
-    try {
-      const query = `
-      DELETE FROM Healthcare WHERE id = ?
-      `
-      await db.execute(query, [id])
-    } catch (error) {
-      throw error
-    }
+    await db.execute(`DELETE FROM Healthcare WHERE id = ?`, [id])
   }
 
   static async updateHealthcareData() {
     try {
-      const symbol = 'JNJ'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
-      const response = await axios.get(url)
-      await Healthcare.patchHealthcareData(1, normalizeOverview(response.data))
+      const data = await fetchYahooOverview('JNJ')
+      await Healthcare.patchHealthcareData(1, data)
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
@@ -86,10 +50,8 @@ class Healthcare {
 
   static async updateHealthcareData2() {
     try {
-      const symbol = 'NVS'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
-      const response = await axios.get(url)
-      await Healthcare.patchHealthcareData(2, normalizeOverview(response.data))
+      const data = await fetchYahooOverview('NVS')
+      await Healthcare.patchHealthcareData(2, data)
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
@@ -97,10 +59,8 @@ class Healthcare {
 
   static async updateHealthcareData3() {
     try {
-      const symbol = 'AZN'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
-      const response = await axios.get(url)
-      await Healthcare.patchHealthcareData(3, normalizeOverview(response.data))
+      const data = await fetchYahooOverview('AZN')
+      await Healthcare.patchHealthcareData(3, data)
     } catch (error) {
       throw new Error(`Failed to update healthcare data: ${error.message}`)
     }
@@ -110,7 +70,7 @@ class Healthcare {
     try {
       await insertOverview(db, 'Healthcare', data)
     } catch (error) {
-      throw new Error(`Failed to add retail data: ${error.message}`)
+      throw new Error(`Failed to add healthcare data: ${error.message}`)
     }
   }
 }

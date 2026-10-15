@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Retail from '../model/Retail.js'
 import { normalizeOverview } from '../services/AlphaVantage/normalizeOverview.js'
+import { fetchYahooOverview } from '../services/AlphaVantage/yahooOverview.js'
 
 //Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
 const apikey = 'UZKLRJ8NRMMH51PQ'
@@ -21,9 +22,7 @@ const safeParseFloat = (value) => Number.isFinite(Number(value)) ? Number(value)
 const getRetailData = async (req, res) => {
   try {
     const symbol = 'COST'
-    const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
-    const response = await axios.get(url)
-    const data = normalizeOverview(response.data)
+    const data = await fetchYahooOverview(symbol)
 
     const retailData = {
       Symbol: data.Symbol,

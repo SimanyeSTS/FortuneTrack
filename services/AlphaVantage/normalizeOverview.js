@@ -21,6 +21,7 @@ const INTEGER_FIELDS = [
 ]
 
 const DATE_FIELDS = ['DividendDate', 'ExDividendDate']
+
 const FIELD_NAMES = new Set([...TEXT_FIELDS, ...NUMERIC_FIELDS, ...INTEGER_FIELDS, ...DATE_FIELDS])
 
 const API_FIELD_NAMES = {
@@ -36,10 +37,8 @@ const isMissing = (value) => value === undefined || value === null ||
 const parseNumber = (value, integer = false) => {
   if (isMissing(value)) return null
   if (typeof value === 'number') return Number.isFinite(value) ? (integer ? Math.trunc(value) : value) : null
-
   const normalized = String(value).trim().replace(/[$,%\s,]/g, '')
   if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(normalized)) return null
-
   const parsed = Number(normalized)
   return Number.isFinite(parsed) ? (integer ? Math.trunc(parsed) : parsed) : null
 }
@@ -61,30 +60,39 @@ export const OVERVIEW_COLUMNS = [
 
 export const normalizeOverview = (data, { requireSymbol = true } = {}) => {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
-    throw new Error('Invalid or empty Alpha Vantage response')
+    throw new Error('Invalid or empty overview response')
   }
+
   if (data.Note || data.Information || data['Error Message']) {
     throw new Error(data.Note || data.Information || data['Error Message'])
   }
 
   const normalized = {}
+
   for (const field of FIELD_NAMES) {
     const apiField = API_FIELD_NAMES[field] || field
-    if (!Object.prototype.hasOwnProperty.call(data, apiField)) continue
+    const rawVal = Object.prototype.hasOwnProperty.call(data, apiField)
+      ? data[apiField]
+      : data[field]
 
-    if (TEXT_FIELDS.includes(field)) normalized[field] = parseText(data[apiField])
-    else if (NUMERIC_FIELDS.includes(field)) normalized[field] = parseNumber(data[apiField])
-    else if (INTEGER_FIELDS.includes(field)) normalized[field] = parseNumber(data[apiField], true)
-    else normalized[field] = parseDate(data[apiField])
+    if (rawVal === undefined) continue
+
+    if (TEXT_FIELDS.includes(field)) normalized[field] = parseText(rawVal)
+    else if (NUMERIC_FIELDS.includes(field)) normalized[field] = parseNumber(rawVal)
+    else if (INTEGER_FIELDS.includes(field)) normalized[field] = parseNumber(rawVal, true)
+    else normalized[field] = parseDate(rawVal)
   }
 
   for (const [field, apiField] of Object.entries(API_FIELD_NAMES)) {
-    if (Object.prototype.hasOwnProperty.call(normalized, field)) normalized[apiField] = normalized[field]
+    if (Object.prototype.hasOwnProperty.call(normalized, field)) {
+      normalized[apiField] = normalized[field]
+    }
   }
 
   if (requireSymbol && !normalized.Symbol) {
-    throw new Error('Alpha Vantage response did not contain a Symbol')
+    throw new Error('Overview response did not contain a Symbol')
   }
+
   return normalized
 }
 
@@ -95,14 +103,46 @@ export const filterOverviewColumns = (data) => {
 
   const filtered = {}
   for (const column of OVERVIEW_COLUMNS) {
-    if (Object.prototype.hasOwnProperty.call(data, column)) filtered[column] = data[column]
+    if (Object.prototype.hasOwnProperty.call(data, column)) {
+      filtered[column] = data[column]
+    }
   }
-  if (Object.keys(filtered).length === 0) throw new Error('No recognized data columns were provided')
+
+  if (Object.keys(filtered).length === 0) {
+    throw new Error('No recognized data columns were provided')
+  }
+
   return filtered
 }
 
-export const insertOverview = async (db, table, data) => {
+const tableColumnsCache = new Map()
+
+const getValidTableColumns = async (db, table) => {
+  if (tableColumnsCache.has(table)) {
+    return tableColumnsCache.get(table)
+  }
+  const [rows] = await db.query(`SHOW COLUMNS FROM \`${table}\``)
+  const colSet = new Set(rows.map((r) => r.Field))
+  tableColumnsCache.set(table, colSet)
+  return colSet
+}
+
+const filterForTable = async (db, table, data) => {
   const filtered = filterOverviewColumns(data)
+  const validCols = await getValidTableColumns(db, table)
+  const finalData = {}
+
+  for (const [key, val] of Object.entries(filtered)) {
+    if (validCols.has(key)) {
+      finalData[key] = val
+    }
+  }
+
+  return finalData
+}
+
+export const insertOverview = async (db, table, data) => {
+  const filtered = await filterForTable(db, table, data)
   const columns = Object.keys(filtered)
   const values = Object.values(filtered)
   const identifiers = columns.map((column) => `\`${column}\``).join(', ')
@@ -111,9 +151,11 @@ export const insertOverview = async (db, table, data) => {
 }
 
 export const updateOverview = async (db, table, id, data) => {
-  const filtered = filterOverviewColumns(data)
+  const filtered = await filterForTable(db, table, data)
   const columns = Object.keys(filtered)
   const values = Object.values(filtered)
   const assignments = columns.map((column) => `\`${column}\` = ?`).join(', ')
   await db.execute(`UPDATE \`${table}\` SET ${assignments} WHERE \`id\` = ?`, [...values, id])
 }
+
+export default normalizeOverview

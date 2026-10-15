@@ -1,21 +1,12 @@
 import { connection as db } from "../config/index.js"
-import axios from 'axios'
 import cron from 'node-cron'
-import { insertOverview, normalizeOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
-
-//Note- Free API Keys anybody can get on AlphaVantage in 30 seconds, zero need to hide them (I am aware of security and .env/gitignore)
-const apikey = 'UZKLRJ8NRMMH51PQ'
-const apikey2 = 'QDH8TZ6T7U3FFARZ'
-const apikey3 = 'OFXEEMU7MC6ZSWYL'
-const baseUrl = 'https://www.alphavantage.co/query'
+import { insertOverview, updateOverview } from '../services/AlphaVantage/normalizeOverview.js'
+import { fetchYahooOverview } from '../services/AlphaVantage/yahooOverview.js'
 
 class Retail {
   static async getRetailData() {
     try {
-      const query = `
-      SELECT * FROM Retail
-      `
-      const [rows] = await db.query(query)
+      const [rows] = await db.query(`SELECT * FROM Retail`)
       return rows
     } catch (error) {
       throw new Error(`Failed to retrieve retail data: ${error.message}`)
@@ -24,10 +15,7 @@ class Retail {
 
   static async getRetailDataById(id) {
     try {
-      const query = `
-      SELECT * FROM Retail WHERE id = ?
-      `
-      const [rows] = await db.query(query, [id])
+      const [rows] = await db.query(`SELECT * FROM Retail WHERE id = ?`, [id])
       return rows[0]
     } catch (error) {
       throw new Error(`Failed to retrieve retail data by ID: ${error.message}`)
@@ -36,10 +24,7 @@ class Retail {
 
   static async getRetailDataBySymbol(Symbol) {
     try {
-      const query = `
-      SELECT * FROM Retail WHERE Symbol = ?
-      `
-      const [rows] = await db.query(query, [Symbol])
+      const [rows] = await db.query(`SELECT * FROM Retail WHERE Symbol = ?`, [Symbol])
       return rows[0]
     } catch (error) {
       throw new Error(`Failed to retrieve retail data by Symbol: ${error.message}`)
@@ -48,10 +33,7 @@ class Retail {
 
   static async getAllRetailData() {
     try {
-      const query = `
-        SELECT * FROM Retail
-      `
-      const [rows] = await db.query(query)
+      const [rows] = await db.query(`SELECT * FROM Retail`)
       return rows
     } catch (error) {
       throw new Error(`Failed to retrieve all retail data: ${error.message}`)
@@ -76,10 +58,7 @@ class Retail {
 
   static async deleteRetailData(id) {
     try {
-      const query = `
-      DELETE FROM Retail WHERE id = ?
-      `
-      await db.execute(query, [id])
+      await db.execute(`DELETE FROM Retail WHERE id = ?`, [id])
     } catch (error) {
       throw new Error(`Failed to delete retail data: ${error.message}`)
     }
@@ -87,10 +66,8 @@ class Retail {
 
   static async updateRetailData() {
     try {
-      const symbol = 'COST'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey}`
-      const response = await axios.get(url)
-      await Retail.patchRetailData(1, normalizeOverview(response.data))
+      const data = await fetchYahooOverview('COST')
+      await Retail.patchRetailData(1, data)
     } catch (error) {
       throw new Error(`Failed to update retail data: ${error.message}`)
     }
@@ -98,10 +75,8 @@ class Retail {
 
   static async updateRetailData2() {
     try {
-      const symbol = 'BABA'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey2}`
-      const response = await axios.get(url)
-      await Retail.patchRetailData(2, normalizeOverview(response.data))
+      const data = await fetchYahooOverview('BABA')
+      await Retail.patchRetailData(2, data)
     } catch (error) {
       throw new Error(`Failed to update retail data: ${error.message}`)
     }
@@ -109,10 +84,8 @@ class Retail {
 
   static async updateRetailData3() {
     try {
-      const symbol = 'UL'
-      const url = `${baseUrl}?function=OVERVIEW&symbol=${symbol}&apikey=${apikey3}`
-      const response = await axios.get(url)
-      await Retail.patchRetailData(3, normalizeOverview(response.data))
+      const data = await fetchYahooOverview('UL')
+      await Retail.patchRetailData(3, data)
     } catch (error) {
       throw new Error(`Failed to update retail data: ${error.message}`)
     }
